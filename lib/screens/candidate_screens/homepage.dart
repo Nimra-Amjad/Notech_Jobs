@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,8 +31,6 @@ class CandidateHomePage extends StatefulWidget {
 
 class _CandidateHomePageState extends State<CandidateHomePage> {
   String text = "";
-  var data;
-  String output = "Initial output";
   User? user = FirebaseAuth.instance.currentUser;
 
   model.Candidate loggedinUser = model.Candidate();
@@ -118,20 +114,24 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
     await FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
-        .update({"pdfurl": fileurl, "pdfname": name,"pdftext":text});
+        .update({"pdfurl": fileurl, "pdfname": name, "pdftext": text});
     print(name);
   }
 
-  // String? ress;
-  // getapi(String job) async {
-  //   http.Response response = await http.get(Uri.parse(
-  //       'https://nimraamjad.pythonanywhere.com/api?querycv=text&queryjob=job'));
-  //   var match = jsonDecode(response.body);
-  //   print(match["matching percent"]);
-  //   setState(() {
-  //     match["matching percent"] = ress;
-  //   });
-  // }
+  Future<List> getLists() async {
+    List<String> userLists = [];
+    Query<Map<String, dynamic>> col_ref =
+        FirebaseFirestore.instance.collectionGroup("jobs");
+
+    QuerySnapshot docSnap = await col_ref.get();
+
+    docSnap.docs.forEach((elements) {
+      userLists.add(elements.id);
+    });
+    print(jobs.jobtitle);
+    print(userLists);
+    return userLists;
+  }
 
   apply(String uid1, String uid2) async {
     model.Applicants appl = model.Applicants(pdfurl: loggedinUser.pdfurl);
@@ -182,60 +182,58 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                       // getapi(jobs['jobdes']);
 
                       return Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(14.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      jobs['jobtitle'],
-                                      style: const TextStyle(
-                                          color: AppColors.blueColor),
-                                    ),
-                                    const SizedBox(
-                                      height: 12.0,
-                                    ),
-                                    const Text(
-                                      "Posted 1 min ago",
-                                      style: TextStyle(fontSize: 11),
-                                    ),
-                                    const Divider(
-                                      thickness: 0.5,
-                                      height: 20.0,
-                                      color: Colors.grey,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        apply(jobs['uid'], jobs['id']);
-                                      },
-                                      child: Container(
-                                        width: 150,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                            color: AppColors.blueColor,
-                                            borderRadius:
-                                                BorderRadius.circular(12)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            const Text(
-                                              "Apply Now",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            const Icon(
-                                              Icons.arrow_upward_outlined,
-                                              color: Colors.white,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                jobs['jobtitle'],
+                                style:
+                                    const TextStyle(color: AppColors.blueColor),
                               ),
-                            );
+                              const SizedBox(
+                                height: 12.0,
+                              ),
+                              const Text(
+                                "Posted 1 min ago",
+                                style: TextStyle(fontSize: 11),
+                              ),
+                              const Divider(
+                                thickness: 0.5,
+                                height: 20.0,
+                                color: Colors.grey,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  apply(jobs['uid'], jobs['id']);
+                                },
+                                child: Container(
+                                  width: 150,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.blueColor,
+                                      borderRadius: BorderRadius.circular(12)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: const [
+                                      Text(
+                                        "Apply Now",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_upward_outlined,
+                                        color: Colors.white,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
                     })
                 : CircularProgressIndicator();
           }),
@@ -278,13 +276,13 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
+                      children: const [
+                        Text(
                           "Personal Information",
                           style: TextStyle(
                               fontSize: 18, color: AppColors.blueColor),
                         ),
-                        const Icon(Icons.edit)
+                        Icon(Icons.edit)
                       ],
                     ),
                   ),
@@ -417,18 +415,13 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                   height: 20.0,
                   color: Colors.grey,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    // getapi();
-                  },
-                  child: const ListTile(
-                    title: Text(
-                      'Settings',
-                      style: TextStyle(color: AppColors.blueColor),
-                    ),
-                    leading: Icon(
-                      Icons.settings,
-                    ),
+                const ListTile(
+                  title: Text(
+                    'Settings',
+                    style: TextStyle(color: AppColors.blueColor),
+                  ),
+                  leading: Icon(
+                    Icons.settings,
                   ),
                 ),
                 const Divider(
