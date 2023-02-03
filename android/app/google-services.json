@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "628270408255",
+    "project_id": "notech-mobile-app",
+    "storage_bucket": "notech-mobile-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628270408255:android:f86200425bd9902e268e8a",
+        "android_client_info": {
+          "package_name": "com.example.notech_mobile_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628270408255-lponj1s11sm99bvdpm7047kb48g98b5q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.notech_mobile_app",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "628270408255-7sgvp3khn1npj9ro3u52pb6mcgo2d4g9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_V3ItaFHLLELurfAXI6JFgQhHiI0yCo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628270408255-7sgvp3khn1npj9ro3u52pb6mcgo2d4g9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
