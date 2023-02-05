@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:notech_mobile_app/components/widgets/custom_text.dart';
+import 'package:notech_mobile_app/components/text/custom_text.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/quizz_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-import '../../components/utils/colors.dart';
+import '../../components/utils/app_colors.dart';
 
 class CandidateJobApply extends StatefulWidget {
   const CandidateJobApply({super.key});

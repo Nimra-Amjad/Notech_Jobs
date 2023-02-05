@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-import 'package:notech_mobile_app/components/utils/colors.dart';
-import 'package:notech_mobile_app/components/widgets/custom_text.dart';
+import 'package:notech_mobile_app/components/utils/app_colors.dart';
+import 'package:notech_mobile_app/components/text/custom_text.dart';
 
-import '../../components/widgets/rounded_back_button.dart';
+import '../../components/buttons/rounded_back_button.dart';
 
 class CandidateViewResume extends StatelessWidget {
   String filename;

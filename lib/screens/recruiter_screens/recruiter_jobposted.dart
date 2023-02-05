@@ -3,9 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import 'package:notech_mobile_app/screens/recruiter_screens/recruiter_update_job.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../../components/utils/colors.dart';
+import '../../components/utils/app_colors.dart';
 
 class RecruiterJobPost extends StatefulWidget {
   const RecruiterJobPost({super.key});
@@ -27,15 +26,6 @@ class _RecruiterJobPostState extends State<RecruiterJobPost> {
         .doc(id)
         .delete();
   }
-
-  // removejob() async {
-  //   await FirebaseFirestore.instance
-  //       .collection("users")
-  //       .doc(user!.uid)
-  //       .collection("jobs")
-  //       .doc()
-  //       .delete();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -105,13 +95,13 @@ class _RecruiterJobPostState extends State<RecruiterJobPost> {
                                               color: AppColors.blueColor,
                                               borderRadius:
                                                   BorderRadius.circular(12)),
-                                          child: Text(
+                                          child: const Text(
                                             "Edit",
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           )),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 15,
                                     ),
                                     GestureDetector(
@@ -126,13 +116,13 @@ class _RecruiterJobPostState extends State<RecruiterJobPost> {
                                               color: AppColors.blueColor,
                                               borderRadius:
                                                   BorderRadius.circular(12)),
-                                          child: Text(
+                                          child: const Text(
                                             "Remove",
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           )),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 15,
                                     ),
                                     GestureDetector(
@@ -145,10 +135,10 @@ class _RecruiterJobPostState extends State<RecruiterJobPost> {
                                               color: AppColors.blueColor,
                                               borderRadius:
                                                   BorderRadius.circular(12)),
-                                          child: Text(
+                                          child: const Text(
                                             "Applicants",
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           )),
                                     )
                                   ],
@@ -158,7 +148,7 @@ class _RecruiterJobPostState extends State<RecruiterJobPost> {
                           ),
                         );
                       })
-                  : CircularProgressIndicator();
+                  : const CircularProgressIndicator();
             }));
   }
 }

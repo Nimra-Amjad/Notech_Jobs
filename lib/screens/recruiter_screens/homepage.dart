@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:notech_mobile_app/components/utils/colors.dart';
+import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import 'package:notech_mobile_app/screens/login.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/add_a_job_page.dart';
@@ -12,7 +12,7 @@ import 'package:notech_mobile_app/screens/recruiter_screens/update_homepage.dart
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../components/utils/custom_router.dart';
-import '../../components/widgets/custom_text.dart';
+import '../../components/text/custom_text.dart';
 import '../notification.dart';
 
 class RecruiterHomePage extends StatefulWidget {
@@ -37,8 +37,10 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
         .collection('users')
         .doc(user!.uid)
         .get();
-    this.loggedinUser = model.Recruiter.fromSnap(snap);
-    setState(() {});
+
+    setState(() {
+      loggedinUser = model.Recruiter.fromSnap(snap);
+    });
   }
 
   @override
@@ -54,9 +56,9 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
               fontColor: AppColors.primaryWhite),
           trailing: GestureDetector(
             onTap: () {
-              CustomRouter().push(context, NotificationScreen());
+              CustomRouter().push(context, const NotificationScreen());
             },
-            child: Icon(
+            child: const Icon(
               Icons.notifications,
               color: AppColors.primaryWhite,
             ),
@@ -65,7 +67,7 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
       ),
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: AppColors.primaryWhite,
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(30.0),
@@ -139,13 +141,13 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
+                    children: const [
+                      Text(
                         "Personal Information",
                         style:
                             TextStyle(fontSize: 18, color: AppColors.blueColor),
                       ),
-                      const Icon(Icons.edit)
+                      Icon(Icons.edit)
                     ],
                   ),
                 ),
@@ -232,36 +234,6 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                         fontWeight: FontWeight.w400,
                         fontColor: AppColors.blueColor)),
               ),
-              // Padding(
-              //   padding: EdgeInsets.only(left: 8.0),
-              //   child: loggedinUser.jobdescription1 == null ||
-              //           loggedinUser.jobdescription2 == null
-              //       ? GestureDetector(
-              //           onTap: () {
-              //             loggedinUser.jobdescription1 == null
-              //                 ? Navigator.push(
-              //                     context,
-              //                     MaterialPageRoute(
-              //                         builder: (context) =>
-              //                             const RecruiterJob1DesPage()))
-              //                 : Navigator.push(
-              //                     context,
-              //                     MaterialPageRoute(
-              //                         builder: (context) =>
-              //                             const RecruiterJob2DesPage()));
-              //           },
-              //           child: const Text(
-              //             "Post a job",
-              //             style: TextStyle(
-              //                 fontSize: 18, color: AppColors.blueColor),
-              //           ),
-              //         )
-              //       : const Text(
-              //           "You can't post more than 2 jobs",
-              //           style:
-              //               TextStyle(fontSize: 18, color: AppColors.blueColor),
-              //         ),
-              // ),
               const SizedBox(
                 height: 7,
               ),
@@ -272,12 +244,12 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                       MaterialPageRoute(
                           builder: (context) => const RecruiterJobPost()));
                 },
-                child: ListTile(
-                  title: const Text(
+                child: const ListTile(
+                  title: Text(
                     'Jobs Posted',
                     style: TextStyle(color: AppColors.blueColor),
                   ),
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.wallet_membership_rounded,
                   ),
                 ),
@@ -294,7 +266,7 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                       MaterialPageRoute(
                           builder: (context) => const ApplicantsPage()));
                 },
-                child: ListTile(
+                child: const ListTile(
                   title: Text(
                     'Applicants',
                     style: TextStyle(color: AppColors.blueColor),
@@ -339,10 +311,12 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()));
                 },
-                child: ListTile(
+                child: const ListTile(
                   title: Text(
                     'Logout',
                     style: TextStyle(color: AppColors.blueColor),

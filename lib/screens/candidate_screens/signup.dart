@@ -1,20 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:notech_mobile_app/components/utils/colors.dart';
-import 'package:notech_mobile_app/components/widgets/custom_text.dart';
+import 'package:notech_mobile_app/components/utils/app_colors.dart';
+import 'package:notech_mobile_app/components/text/custom_text.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/homepage.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 
-import '../../components/widgets/rounded_back_button.dart';
+import '../../components/buttons/rounded_back_button.dart';
+import '../../components/buttons/custom_button.dart';
+import '../../components/buttons/stadium_border_back_button.dart';
+import '../../components/theme/decorations.dart';
+import '../../components/utils/app_assets.dart';
+import '../../components/utils/app_size.dart';
+import '../../components/widgets/custom_icon.dart';
 import '../../components/widgets/snackbar.dart';
-import '../../components/widgets/textbutton.dart';
-import '../../components/widgets/textformfield.dart';
 import '../../resources/auth_methods.dart';
 import '../login.dart';
-import '../signup_candidate_recruiter.dart';
 
 class CandidateSignUpPage extends StatefulWidget {
   const CandidateSignUpPage({super.key});
@@ -34,7 +37,7 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
   final TextEditingController _passwordcontroller = TextEditingController();
   final TextEditingController _mobilenocontroller = TextEditingController();
   final TextEditingController _usernamecontroller = TextEditingController();
-  bool _isloading = false;
+  bool hidePassword = true;
 
   @override
   void dispose() {
@@ -46,18 +49,13 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
   }
 
   void signUpCandidate() async {
-    setState(() {
-      _isloading = true;
-    });
     String res = await AuthMethods().signupCandidate(
       email: _emailcontroller.text,
       username: _usernamecontroller.text,
       mobileno: _mobilenocontroller.text,
       password: _passwordcontroller.text,
     );
-    setState(() {
-      _isloading = false;
-    });
+
     if (res != "Account created successfully") {
       print("error occured");
       showSnackBar(context, res, Colors.red);
@@ -75,44 +73,39 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppSize().init(context);
     return Scaffold(
         backgroundColor: AppColors.primaryWhite,
         appBar: AppBar(
           backgroundColor: AppColors.primaryWhite,
-          leading: BackButtonRounded(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SignupCandidateRecruiter()));
-            },
-            color: AppColors.primaryWhite,
-            bordercolor: AppColors.primaryBlack,
-            iconcolor: AppColors.primaryBlack,
-          ),
+          leading: LeftTopBackButton(),
           elevation: 0.0,
         ),
         body: SafeArea(
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Image.asset("assets/images/candidate.png"),
-                  SizedBox(
-                    height: 8.sp,
-                  ),
-                  CustomText(
-                      textAlign: TextAlign.center,
-                      text:
-                          "Hey, Enter your details to get signup to your account",
-                      fontSize: 17.sp,
-                      fontWeight: FontWeight.w500,
-                      fontColor: AppColors.blueColor),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFieldInput(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                child: Column(
+                  children: [
+                    Image.asset(AppAssets.candidateSignup),
+                    CustomText(
+                        textAlign: TextAlign.center,
+                        text:
+                            "Hey, Enter your details to get signup to your account",
+                        fontSize: 17.sp,
+                        fontWeight: FontWeight.w500,
+                        fontColor: AppColors.blueColor),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    TextFormField(
+                      cursorHeight: AppSize.textSize * 1.2,
+                      style: TextStyle(
+                        color: AppColors.primaryBlack,
+                        fontSize: AppSize.textSize * 1.2,
+                      ),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "* Required";
@@ -126,13 +119,28 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
                           RegExp(r"[a-zA-Z]+|\s"),
                         )
                       ],
-                      textEditingController: _usernamecontroller,
-                      hintText: "Enter Full Name",
-                      textInputType: TextInputType.name),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  TextFieldInput(
+                      cursorColor: AppColors.blueColor,
+                      controller: _usernamecontroller,
+                      autovalidateMode: AutovalidateMode.disabled,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: AppDecorations.customTextFieldDecoration(
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(left: AppSize.paddingAll),
+                            child: CustomIcon(
+                              icon: Icons.person,
+                              iconColor: AppColors.blueColor,
+                              iconSize: AppSize.iconSize,
+                            ),
+                          ),
+                          hintText: "Full Name"),
+                    ),
+                    SizedBox(height: AppSize.paddingAll),
+                    TextFormField(
+                      cursorHeight: AppSize.textSize * 1.2,
+                      style: TextStyle(
+                        color: AppColors.primaryBlack,
+                        fontSize: AppSize.textSize * 1.2,
+                      ),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "* Required";
@@ -146,13 +154,28 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
                           RegExp(r"[0-9]"),
                         )
                       ],
-                      textEditingController: _mobilenocontroller,
-                      hintText: "Enter Mobile Number",
-                      textInputType: TextInputType.emailAddress),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  TextFieldInput(
+                      cursorColor: AppColors.blueColor,
+                      controller: _mobilenocontroller,
+                      autovalidateMode: AutovalidateMode.disabled,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: AppDecorations.customTextFieldDecoration(
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(left: AppSize.paddingAll),
+                            child: CustomIcon(
+                              icon: Icons.phone,
+                              iconColor: AppColors.blueColor,
+                              iconSize: AppSize.iconSize,
+                            ),
+                          ),
+                          hintText: "Mobile Number"),
+                    ),
+                    SizedBox(height: AppSize.paddingAll),
+                    TextFormField(
+                      cursorHeight: AppSize.textSize * 1.2,
+                      style: TextStyle(
+                        color: AppColors.primaryBlack,
+                        fontSize: AppSize.textSize * 1.2,
+                      ),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "* Required";
@@ -161,13 +184,16 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
                         } else
                           return "Invalid email address";
                       },
-                      textEditingController: _emailcontroller,
-                      hintText: "Enter email",
-                      textInputType: TextInputType.emailAddress),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  TextFieldInput(
+                      cursorColor: AppColors.blueColor,
+                      controller: _emailcontroller,
+                      autovalidateMode: AutovalidateMode.disabled,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: AppDecorations.customTextFieldDecoration(
+                          hintText: "Email Address"),
+                    ),
+                    SizedBox(height: AppSize.paddingAll),
+                    TextFormField(
+                      obscureText: hidePassword,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "* Required";
@@ -178,44 +204,73 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
                         } else
                           return null;
                       },
-                      isPass: true,
-                      textEditingController: _passwordcontroller,
-                      hintText: "Enter Passowrd",
-                      textInputType: TextInputType.text),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  TextButtonWidget(
-                      onpressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          signUpCandidate();
-                        }
-                      },
-                      text: _isloading ? "loading..." : "Signup as Candidate",
-                      width: MediaQuery.of(context).size.width,
-                      height: 57),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Already have an account?",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 204, 204, 208),
-                        ),
+                      cursorColor: AppColors.blueColor,
+                      autovalidateMode: AutovalidateMode.disabled,
+                      controller: _passwordcontroller,
+                      cursorHeight: AppSize.textSize * 1.2,
+                      style: TextStyle(
+                        color: AppColors.primaryBlack,
+                        fontSize: AppSize.textSize * 1.2,
                       ),
-                      GestureDetector(
-                        onTap: navigateToLogin,
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 36, 22, 222),
+                      decoration: AppDecorations.customTextFieldDecoration(
+                        hintText: "Password",
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(left: AppSize.paddingAll),
+                          child: CustomIcon(
+                            icon: Icons.lock_outlined,
+                            iconColor: AppColors.blueColor,
+                            iconSize: AppSize.iconSize,
                           ),
                         ),
+                        suffixIcon: IconButton(
+                            padding: EdgeInsets.only(right: AppSize.paddingAll),
+                            iconSize: AppSize.iconSize,
+                            onPressed: () {
+                              setState(() {
+                                hidePassword = !hidePassword;
+                              });
+                            },
+                            icon: CustomIcon(
+                              icon: hidePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              iconColor: AppColors.primaryGrey,
+                            )),
                       ),
-                    ],
-                  )
-                ],
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    CustomButton(
+                        text: "Signup as Candidate",
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            signUpCandidate();
+                          }
+                        }),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomText(
+                            text: "Already have an account? ",
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.normal,
+                            fontColor: AppColors.primaryGrey),
+                        GestureDetector(
+                          onTap: navigateToLogin,
+                          child: CustomText(
+                              text: "Login",
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w700,
+                              fontColor: AppColors.blueColor),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:notech_mobile_app/components/utils/colors.dart';
+import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:notech_mobile_app/screens/result_screen.dart';
 
 import '../../data/questions_example.dart';
@@ -50,17 +50,6 @@ class _QuizzScreenState extends State<QuizzScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // SizedBox(
-                  //   width: double.infinity,
-                  //   child: Text(
-                  //     "Question ${index + 1}/10",
-                  //     textAlign: TextAlign.start,
-                  //     style: TextStyle(
-                  //       color: AppColors.quizbluecolor,
-                  //       fontSize: 28.0,
-                  //     ),
-                  //   ),
-                  // ),
                   Divider(
                     color: AppColors.primaryGrey,
                   ),

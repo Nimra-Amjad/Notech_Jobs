@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notech_mobile_app/components/utils/colors.dart';
+import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'candidate_screens/jobapply_success.dart';

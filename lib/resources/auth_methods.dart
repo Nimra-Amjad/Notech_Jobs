@@ -9,7 +9,7 @@ class AuthMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user = FirebaseAuth.instance.currentUser;
 
-  //UPDATE CANDIDATE
+  //<---------------------------UPDATE CANDIDATE------------------------->
   Future<void> updateCandidate(username, email, mobileno) async {
     final userCollection = _firestore.collection("users");
     final docref = userCollection.doc(user!.uid);
@@ -24,7 +24,7 @@ class AuthMethods {
     }
   }
 
-  //UPDATE RECRUITER
+    //<---------------------------UPDATE RECRUITER------------------------->
   Future<void> updateRecruiter(username, email, mobileno, location) async {
     final userCollection = _firestore.collection("users");
     final docref = userCollection.doc(user!.uid);
@@ -42,26 +42,15 @@ class AuthMethods {
 
   model.JobPosted subcol = model.JobPosted();
 
+
+
   //UPDATE JOB DATA
   Future<void> updatejobdata(id, jobtitle, jobdes, jobtype) async {
-    // final subid = FirebaseFirestore.instance
-    //     .collection("users")
-    //     .doc(user!.uid)
-    //     .collection("jobs")
-    //     .id;
-    // final subid = querySnapshot.docs.id;
-
-    // final subid = FirebaseFirestore.instance
-    //     .collection('dishes')
-    //     .doc(user!.uid)
-    //     .collection('ingredients')
-    //     .snapshots();
-    //     final getid=subid.
+    
     final userCollection = _firestore.collection("users");
     final docref = userCollection.doc(user!.uid).collection("jobs").doc(id);
     try {
       await docref.update({
-        // 'id': subcol.id,
         'jobtitle': jobtitle,
         'jobdes': jobdes,
         'jobtype': jobtype,
@@ -71,20 +60,7 @@ class AuthMethods {
     }
   }
 
-  // //UPDATE JOB2 DATA
-  // Future<void> updatejob2data(jobtitle, jobdes, jobtype) async {
-  //   final userCollection = _firestore.collection("users");
-  //   final docref = userCollection.doc(user!.uid);
-  //   try {
-  //     await docref.update({
-  //       'jobtitle2': jobtitle,
-  //       'jobdescription2': jobdes,
-  //       'jobtitle2type': jobtype,
-  //     });
-  //   } catch (e) {
-  //     print("some error occured");
-  //   }
-  // }
+ 
 
   //SIGN UP RECRUITER
   Future<String> signupRecruiter({
@@ -172,7 +148,7 @@ class AuthMethods {
     return res;
   }
 
-  //LOGGING IN USER
+  //LOG IN USER
   Future<String> loginUser(
       {required String email, required String password}) async {
     String res = "Some error occured";

@@ -7,13 +7,6 @@ class Recruiter {
   String? email;
   String? mobileno;
   String? location;
-  // Map<String,int>? jobs;
-  // String? jobtitle1;
-  // String? jobdescription1;
-  // String? jobtitle1type;
-  // String? jobtitle2;
-  // String? jobdescription2;
-  // String? jobtitle2type;
 
   Recruiter({
     this.role,
@@ -22,13 +15,6 @@ class Recruiter {
     this.email,
     this.mobileno,
     this.location,
-    // this.jobs,
-    // this.jobtitle1,
-    // this.jobdescription1,
-    // this.jobtitle1type,
-    // this.jobtitle2,
-    // this.jobdescription2,
-    // this.jobtitle2type
   });
 
   static Recruiter fromSnap(DocumentSnapshot snap) {
@@ -40,13 +26,6 @@ class Recruiter {
       email: snapshot["email"],
       mobileno: snapshot["mobileno"],
       location: snapshot["location"],
-      // jobs: snapshot['jobs']
-      // jobtitle1: snapshot["jobtitle1"],
-      // jobdescription1: snapshot["jobdescription1"],
-      // jobtitle1type: snapshot["jobtitle1type"],
-      // jobtitle2: snapshot["jobtitle2"],
-      // jobdescription2: snapshot["jobdescription2"],
-      // jobtitle2type: snapshot["jobtitle2type"],
     );
   }
 
@@ -57,12 +36,6 @@ class Recruiter {
         "companyname": companyname,
         "mobileno": mobileno,
         'location': location,
-        // "jobtitle1": jobtitle1 != null ? jobtitle1 : null,
-        // "jobdescription1": jobdescription1 != null ? jobdescription1 : null,
-        // "jobtitle1type": jobtitle1type != null ? jobtitle1type : null,
-        // "jobtitle2": jobtitle2 != null ? jobtitle2 : null,
-        // "jobdescription2": jobdescription2 != null ? jobdescription2 : null,
-        // "jobtitle2type": jobtitle2type != null ? jobtitle2type : null,
       };
 }
 
@@ -116,16 +89,3 @@ class Applicants {
       };
 }
 
-// class Applicants {
-//   String? id;
-//   String? cv;
-
-//   Applicants({this.id, this.cv});
-
-//   static Applicants fromSnap(DocumentSnapshot snap) {
-//     var snapshot = snap.data() as Map<String, dynamic>;
-//     return Applicants(id: snapshot['id'], cv: snapshot['cv']);
-//   }
-
-//   Map<String, dynamic> toJson() => {"id": id, "cv": cv};
-// }

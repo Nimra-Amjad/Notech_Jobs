@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../components/utils/colors.dart';
-import '../components/widgets/custom_text.dart';
-import '../components/widgets/rounded_back_button.dart';
+import '../components/utils/app_colors.dart';
+import '../components/text/custom_text.dart';
+import '../components/buttons/rounded_back_button.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});

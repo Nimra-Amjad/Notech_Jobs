@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/signup.dart';
 import 'package:notech_mobile_app/screens/login.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/signup.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../components/utils/colors.dart';
-import '../components/widgets/rounded_back_button.dart';
-import '../components/widgets/textbutton.dart';
+import '../components/buttons/simple_text_button.dart';
+import '../components/utils/app_assets.dart';
+import '../components/utils/app_colors.dart';
+import '../components/buttons/rounded_back_button.dart';
+import '../components/buttons/textbutton.dart';
 
 class SignupCandidateRecruiter extends StatefulWidget {
   const SignupCandidateRecruiter({super.key});
@@ -39,36 +42,28 @@ class _SignupCandidateRecruiterState extends State<SignupCandidateRecruiter> {
                 context, MaterialPageRoute(builder: (context) => LoginPage()));
           },
           color: AppColors.primaryWhite,
-            bordercolor: AppColors.primaryBlack,
-            iconcolor: AppColors.primaryBlack,
+          bordercolor: AppColors.primaryBlack,
+          iconcolor: AppColors.primaryBlack,
         )),
         elevation: 0.0,
       ),
       body: Column(
         children: [
           Image.asset(
-            "assets/images/signup.jpg",
-            width: MediaQuery.of(context).size.width,
-            height: 300,
+            AppAssets.rcSignup,
+            width: 100.w,
+            height: 40.h,
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButtonWidget(
-                  onpressed: navigateToCandidateSignUp,
-                  text: "Signup as Candidate",
-                  width: 260,
-                  height: 60),
-              TextButtonWidget(
-                  onpressed: navigateToRecruiterSignUp,
-                  text: "Signup as Recruiter",
-                  width: 260,
-                  height: 60),
-            ],
-          ),
+          TextButtonWidget(
+              onpressed: navigateToCandidateSignUp,
+              text: "Signup as Candidate",
+              width: 260,
+              height: 60),
+          TextButtonWidget(
+              onpressed: navigateToRecruiterSignUp,
+              text: "Signup as Recruiter",
+              width: 260,
+              height: 60),
         ],
       ),
     );

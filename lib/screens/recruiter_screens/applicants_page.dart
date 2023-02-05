@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../../components/utils/colors.dart';
-import '../../components/widgets/custom_text.dart';
-import '../../components/widgets/rounded_back_button.dart';
+import '../../components/utils/app_colors.dart';
+import '../../components/text/custom_text.dart';
+import '../../components/buttons/rounded_back_button.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 
 class ApplicantsPage extends StatefulWidget {
@@ -33,7 +32,6 @@ class _ApplicantsPageState extends State<ApplicantsPage> {
         .collection("jobs")
         .doc()
         .get();
-    // this.loggedinUser = model.Candidate.fromSnap(snap);
     setState(() {
       loggedinUser = model.JobPosted.fromSnap(snap);
     });

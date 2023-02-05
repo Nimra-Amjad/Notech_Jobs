@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:notech_mobile_app/components/utils/custom_router.dart';
-import 'package:notech_mobile_app/components/widgets/custom_text.dart';
+import 'package:notech_mobile_app/components/text/custom_text.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import 'package:notech_mobile_app/screens/candidate_screens/candidate_jobapplypage.dart';
@@ -20,7 +21,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:http/http.dart' as http;
 
-import '../../components/utils/colors.dart';
+import '../../components/utils/app_colors.dart';
 
 class CandidateHomePage extends StatefulWidget {
   const CandidateHomePage({super.key});
@@ -41,37 +42,47 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
     getdata();
   }
 
+  ///<------------------------------Get Loggedin User Data------------------------------>
+
   Future<void> getdata() async {
     DocumentSnapshot snap = await FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
         .get();
-    // this.loggedinUser = model.Candidate.fromSnap(snap);
     setState(() {
       loggedinUser = model.Candidate.fromSnap(snap);
     });
   }
 
-  void getjobs() async {
-    FirebaseFirestore.instance
-        .collection("users")
-        .where("role", isEqualTo: "0")
-        .get()
-        .then((value) {
-      value.docs.forEach((result) {
-        FirebaseFirestore.instance
-            .collection("users")
-            .doc()
-            .collection("jobs")
-            .get()
-            .then((subcol) {
-          subcol.docs.forEach((element) {
-            print(element.data());
-          });
-        });
-      });
-    });
+  List<String> alljobs = [];
+  List<String> jobs_match = [];
+  var match;
+  getalljobs() async {
+    QuerySnapshot feed =
+        await FirebaseFirestore.instance.collectionGroup('jobs').get();
+    alljobs.clear();
+    for (var postDoc in feed.docs) {
+      model.JobPosted post = model.JobPosted.fromSnap(postDoc);
+
+      alljobs.add(post.jobdes.toString());
+    }
+    print(alljobs);
+
+    jobs_match.clear();
+    for (String a in alljobs) {
+      http.Response response = await http.get(Uri.parse(
+          'https://nimraamjad.pythonanywhere.com/api?querycv=$loggedinUser.pdftext&queryjob=$a'));
+      match = jsonDecode(response.body);
+
+      if (double.parse(match['matching percent']) > 15.0) {
+        jobs_match.add(a);
+      }
+    }
+    print("0000000000000000000000000000000");
+    print(jobs_match);
   }
+
+  ///<------------------------------Pick Resume------------------------------>
 
   pickpdf() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -118,20 +129,7 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
     print(name);
   }
 
-  Future<List> getLists() async {
-    List<String> userLists = [];
-    Query<Map<String, dynamic>> col_ref =
-        FirebaseFirestore.instance.collectionGroup("jobs");
-
-    QuerySnapshot docSnap = await col_ref.get();
-
-    docSnap.docs.forEach((elements) {
-      userLists.add(elements.id);
-    });
-    print(jobs.jobtitle);
-    print(userLists);
-    return userLists;
-  }
+  ///<------------------------------Candidate apply to jobs------------------------------>
 
   apply(String uid1, String uid2) async {
     model.Applicants appl = model.Applicants(pdfurl: loggedinUser.pdfurl);
@@ -143,8 +141,8 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
         .update({
       "applicants": FieldValue.arrayUnion([appl.toJson()])
     });
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const CandidateJobApply()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CandidateJobApply()));
   }
 
   @override
@@ -162,7 +160,7 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
             onTap: () {
               CustomRouter().push(context, NotificationScreen());
             },
-            child: Icon(
+            child: const Icon(
               Icons.notifications,
               color: AppColors.primaryWhite,
             ),
@@ -235,7 +233,7 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                         ),
                       );
                     })
-                : CircularProgressIndicator();
+                : const CircularProgressIndicator();
           }),
       drawer: SafeArea(
         child: Drawer(
@@ -340,9 +338,9 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                 const SizedBox(
                   height: 7,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: const Text(
+                const Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Text(
                     "Resume",
                     style: TextStyle(fontSize: 18, color: AppColors.blueColor),
                   ),
@@ -368,7 +366,7 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                                                     loggedinUser.pdfurl!)));
                               },
                               child: Text('${loggedinUser.pdfname}'))
-                          : Text("Add Resume"),
+                          : const Text("Add Resume"),
                       GestureDetector(
                           onTap: pickpdf, child: const Icon(Icons.attachment))
                     ],
@@ -386,7 +384,7 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                         MaterialPageRoute(
                             builder: (context) => const CandidateJobPage()));
                   },
-                  child: ListTile(
+                  child: const ListTile(
                     title: Text(
                       'Jobs',
                       style: TextStyle(color: AppColors.blueColor),
@@ -415,13 +413,18 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                   height: 20.0,
                   color: Colors.grey,
                 ),
-                const ListTile(
-                  title: Text(
-                    'Settings',
-                    style: TextStyle(color: AppColors.blueColor),
-                  ),
-                  leading: Icon(
-                    Icons.settings,
+                GestureDetector(
+                  onTap: () {
+                    getalljobs();
+                  },
+                  child: const ListTile(
+                    title: Text(
+                      'Settings',
+                      style: TextStyle(color: AppColors.blueColor),
+                    ),
+                    leading: Icon(
+                      Icons.settings,
+                    ),
                   ),
                 ),
                 const Divider(
@@ -434,7 +437,7 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => LoginPage()));
                   },
-                  child: ListTile(
+                  child: const ListTile(
                     title: Text(
                       'Logout',
                       style: TextStyle(color: AppColors.blueColor),

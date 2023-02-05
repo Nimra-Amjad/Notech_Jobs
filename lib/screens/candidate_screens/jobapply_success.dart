@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/homepage.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../../components/utils/colors.dart';
+import '../../components/utils/app_colors.dart';
 import '../../components/utils/custom_router.dart';
 
 class JobApplySuccess extends StatefulWidget {
