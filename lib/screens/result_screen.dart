@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/components/buttons/custom_button.dart';
+import 'package:notech_mobile_app/components/text/custom_text.dart';
 import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -23,24 +24,22 @@ class _ResultScreenState extends State<ResultScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Text(
-            //   "You Score is",
-            //   style: TextStyle(color: AppColors.quizbluecolor, fontSize: 34.0),
-            // ),
-            // SizedBox(
-            //   height: 20.0,
-            // ),
-            // Text(
-            //   "${widget.score}",
-            //   style: TextStyle(
-            //     color: Colors.orange,
-            //     fontSize: 85.0,
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: 20.0,
-            // ),
+            CustomText(
+                text: "Your Score",
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                fontColor: AppColors.quizbluecolor),
+            SizedBox(
+              height: 6.h,
+            ),
+            CustomText(
+                text: "${widget.score}",
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                fontColor: AppColors.quizbluecolor),
+            SizedBox(
+              height: 8.h,
+            ),
             CustomButton(
               text: "Back To HomePage",
               onTap: () {

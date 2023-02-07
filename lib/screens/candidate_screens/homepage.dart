@@ -18,6 +18,7 @@ import 'package:notech_mobile_app/screens/candidate_screens/view_resumepdf.dart'
 import 'package:notech_mobile_app/screens/login.dart';
 import 'package:notech_mobile_app/screens/notification.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:simple_shadow/simple_shadow.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:http/http.dart' as http;
 
@@ -133,7 +134,8 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
   ///<------------------------------Candidate apply to jobs------------------------------>
 
   apply(String uid1, String uid2) async {
-    model.Applicants appl = model.Applicants(pdfurl: loggedinUser.pdfurl);
+    model.Applicants appl = model.Applicants(
+        pdfurl: loggedinUser.pdfurl, pdfname: loggedinUser.pdfname);
     await FirebaseFirestore.instance
         .collection("users")
         .doc(uid1)
@@ -186,65 +188,74 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
 
                         // getapi(jobs['jobdes']);
 
-                        return Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  jobs['jobtitle'],
-                                  style: const TextStyle(
-                                      color: AppColors.blueColor),
-                                ),
-                                const SizedBox(
-                                  height: 12.0,
-                                ),
-                                Text(
-                                  jobs['jobdes'],
-                                  style: const TextStyle(
-                                      color: AppColors.blueColor),
-                                ),
-                                const SizedBox(
-                                  height: 12.0,
-                                ),
-                                const Text(
-                                  "Posted 1 min ago",
-                                  style: TextStyle(fontSize: 11),
-                                ),
-                                const Divider(
-                                  thickness: 0.5,
-                                  height: 20.0,
-                                  color: Colors.grey,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    apply(jobs['uid'], jobs['id']);
-                                  },
-                                  child: Container(
-                                    width: 150,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.blueColor,
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: const [
-                                        Text(
-                                          "Apply Now",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Icon(
-                                          Icons.arrow_upward_outlined,
-                                          color: Colors.white,
-                                        )
-                                      ],
+                        return Padding(
+                          padding: EdgeInsets.all(14.sp),
+                          child: SimpleShadow(
+                            offset: const Offset(1, 1),
+                            sigma: 8,
+                            color: AppColors.primaryBlack.withOpacity(0.4),
+                            child: Card(
+                              child: Padding(
+                                padding: EdgeInsets.all(14.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomText(
+                                        text: jobs['jobtitle'],
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold,
+                                        fontColor: AppColors.blueColor),
+                                    SizedBox(
+                                      height: 2.h,
                                     ),
-                                  ),
-                                )
-                              ],
+                                    CustomText(
+                                        text: jobs['jobdes'],
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.normal,
+                                        fontColor: AppColors.quizbluecolor),
+                                    SizedBox(
+                                      height: 2.h,
+                                    ),
+                                    const Text(
+                                      "Posted 1 min ago",
+                                      style: TextStyle(fontSize: 11),
+                                    ),
+                                    const Divider(
+                                      thickness: 0.5,
+                                      height: 20.0,
+                                      color: Colors.grey,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        apply(jobs['uid'], jobs['id']);
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.blueColor,
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: const [
+                                            Text(
+                                              "Apply Now",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Icon(
+                                              Icons.arrow_upward_outlined,
+                                              color: Colors.white,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         );
