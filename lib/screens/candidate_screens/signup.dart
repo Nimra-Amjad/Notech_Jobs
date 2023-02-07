@@ -7,10 +7,8 @@ import 'package:notech_mobile_app/screens/candidate_screens/homepage.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
-
 import '../../components/buttons/rounded_back_button.dart';
 import '../../components/buttons/custom_button.dart';
-import '../../components/buttons/stadium_border_back_button.dart';
 import '../../components/theme/decorations.dart';
 import '../../components/utils/app_assets.dart';
 import '../../components/utils/app_size.dart';
@@ -75,14 +73,22 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
   Widget build(BuildContext context) {
     AppSize().init(context);
     return Scaffold(
-        backgroundColor: AppColors.primaryWhite,
-        appBar: AppBar(
-          backgroundColor: AppColors.primaryWhite,
-          leading: LeftTopBackButton(),
-          elevation: 0.0,
-        ),
         body: SafeArea(
-          child: Form(
+          child: Column(
+              children: [
+          Padding(
+            padding: EdgeInsets.only(left: 12.sp),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: BackButtonRounded(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: AppSize.paddingAll),
+          Form(
             key: _formKey,
             child: SingleChildScrollView(
               child: Padding(
@@ -127,7 +133,7 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
                           prefixIcon: Padding(
                             padding: EdgeInsets.only(left: AppSize.paddingAll),
                             child: CustomIcon(
-                              icon: Icons.person,
+                              icon: Icons.person_2_outlined,
                               iconColor: AppColors.blueColor,
                               iconSize: AppSize.iconSize,
                             ),
@@ -162,7 +168,7 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
                           prefixIcon: Padding(
                             padding: EdgeInsets.only(left: AppSize.paddingAll),
                             child: CustomIcon(
-                              icon: Icons.phone,
+                              icon: Icons.phone_outlined,
                               iconColor: AppColors.blueColor,
                               iconSize: AppSize.iconSize,
                             ),
@@ -274,6 +280,8 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
               ),
             ),
           ),
+              ],
+            ),
         ));
   }
 }

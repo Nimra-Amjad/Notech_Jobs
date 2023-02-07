@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:notech_mobile_app/screens/result_screen.dart';
 
+import '../../components/buttons/custom_button.dart';
 import '../../data/questions_example.dart';
 
 class QuizzScreen extends StatefulWidget {
@@ -81,7 +81,7 @@ class _QuizzScreenState extends State<QuizzScreen> {
                             ? questions[index].answers!.values.toList()[i]
                                 ? Colors.green
                                 : Colors.red
-                            :AppColors.quizbluecolor,
+                            : AppColors.quizbluecolor,
                         onPressed: !answered
                             ? () {
                                 if (questions[index]
@@ -109,32 +109,26 @@ class _QuizzScreenState extends State<QuizzScreen> {
                   SizedBox(
                     height: 40.0,
                   ),
-                  RawMaterialButton(
-                    onPressed: () {
-                      if (_controller!.page?.toInt() == questions.length - 1) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ResultScreen(score)));
-                      } else {
-                        _controller!.nextPage(
-                            duration: Duration(milliseconds: 250),
-                            curve: Curves.easeInExpo);
+                  CustomButton(
+                      buttonColor: AppColors.blueLight,
+                      text: btnText,
+                      onTap: () {
+                        if (_controller!.page?.toInt() ==
+                            questions.length - 1) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ResultScreen(score)));
+                        } else {
+                          _controller!.nextPage(
+                              duration: Duration(milliseconds: 250),
+                              curve: Curves.easeInExpo);
 
-                        setState(() {
-                          btnPressed = false;
-                        });
-                      }
-                    },
-                    shape: StadiumBorder(),
-                    fillColor: Colors.blue,
-                    padding: EdgeInsets.all(18.0),
-                    elevation: 0.0,
-                    child: Text(
-                      btnText,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
+                          setState(() {
+                            btnPressed = false;
+                          });
+                        }
+                      }),
                 ],
               );
             },

@@ -7,7 +7,10 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
+import '../../components/buttons/custom_button.dart';
+import '../../components/buttons/rounded_back_button.dart';
 import '../../components/utils/app_colors.dart';
+import '../../components/utils/app_size.dart';
 
 class CandidateJobApply extends StatefulWidget {
   const CandidateJobApply({super.key});
@@ -43,33 +46,33 @@ class _CandidateJobApplyState extends State<CandidateJobApply> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              width: double.infinity,
-              height: 40,
-              child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 12.0),
-                    child: Icon(Icons.arrow_back_ios),
-                  )),
+            SizedBox(height: 2.h),
+            Row(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: BackButtonRounded(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20.sp),
+                  child: CustomText(
+                      text: "Applicant's CV",
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                      fontColor: AppColors.primaryGrey),
+                ),
+              ],
             ),
             SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 12.sp),
-                    child: CustomText(
-                        text: "Applicant's CV",
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600,
-                        fontColor: AppColors.primaryGrey),
-                  ),
                   SizedBox(
-                    height: 15.sp,
+                    height: 10.sp,
                   ),
                   loggedinUser.pdfurl != null
                       ? Container(
@@ -91,29 +94,17 @@ class _CandidateJobApplyState extends State<CandidateJobApply> {
                   SizedBox(
                     height: 15.sp,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => QuizzScreen()));
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.sp),
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: double.infinity,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: AppColors.blueColor,
-                            borderRadius: BorderRadius.circular(12)),
-                        child: const Text(
-                          "Continue",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  )
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12.sp),
+                    child: CustomButton(
+                        text: "Continue",
+                        onTap: () { 
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const QuizzScreen()));
+                        }),
+                  ),
                 ],
               ),
             )

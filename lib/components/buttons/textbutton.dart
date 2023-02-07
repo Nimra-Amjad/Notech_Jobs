@@ -15,22 +15,19 @@ class TextButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: SizedBox(
-        width: width,
-        height: height,
-        child: TextButton(
-          style: TextButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: const Color.fromARGB(255, 36, 22, 222),
-              padding: const EdgeInsets.all(16.0),
-              textStyle: const TextStyle(fontSize: 18),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10))),
-          onPressed: onpressed,
-          child: Text(text),
-        ),
+    return SizedBox(
+      width: width,
+      height: height,
+      child: TextButton(
+        style: TextButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: const Color.fromARGB(255, 36, 22, 222),
+            padding: const EdgeInsets.all(16.0),
+            textStyle: const TextStyle(fontSize: 18),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10))),
+        onPressed: onpressed,
+        child: Text(text),
       ),
     );
   }

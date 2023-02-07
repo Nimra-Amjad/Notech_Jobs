@@ -2,15 +2,19 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:notech_mobile_app/components/widgets/custom_icon.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/recruiter_jobposted.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../components/buttons/custom_button.dart';
+import '../../components/buttons/rounded_back_button.dart';
+import '../../components/text/custom_text.dart';
 import '../../components/theme/decorations.dart';
 import '../../components/utils/app_colors.dart';
 import '../../components/utils/app_size.dart';
+import '../../components/widgets/message_card.dart';
 
 class RecruiterAddJob extends StatefulWidget {
   const RecruiterAddJob({super.key});
@@ -61,121 +65,138 @@ class _RecruiterAddJobState extends State<RecruiterAddJob> {
   Widget build(BuildContext context) {
     AppSize().init(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Add Job Description"),
-        backgroundColor: AppColors.blueColor,
-      ),
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.sp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 14.0),
-                  child: Text("Job Title :",
-                      style:
-                          TextStyle(fontSize: 18, color: AppColors.blueColor)),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                  cursorHeight: AppSize.textSize * 1.2,
-                  style: TextStyle(
-                    color: AppColors.primaryBlack,
-                    fontSize: AppSize.textSize * 1.2,
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "* Required";
-                    }
-                    return null;
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 2.h),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: BackButtonRounded(
+                  onTap: () {
+                    Navigator.pop(context);
                   },
-                  cursorColor: AppColors.blueColor,
-                  controller: _jobtitlecontroller,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: AppDecorations.customTextFieldDecoration(
-                      hintText: "Job Title"),
                 ),
-                SizedBox(height: AppSize.paddingAll),
-                const Padding(
-                  padding: EdgeInsets.only(left: 14.0),
-                  child: Text("Job Description :",
-                      style:
-                          TextStyle(fontSize: 18, color: AppColors.blueColor)),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                  cursorHeight: AppSize.textSize * 1.2,
-                  style: TextStyle(
-                    color: AppColors.primaryBlack,
-                    fontSize: AppSize.textSize * 1.2,
+              ),
+              SizedBox(height: AppSize.paddingAll),
+              CustomText(
+                  textAlign: TextAlign.center,
+                  text: "Add a Job",
+                  fontSize: 22.sp,
+                  fontWeight: FontWeight.w600,
+                  fontColor: AppColors.blueColor),
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 6.h,
+                      ),
+                      CustomText(
+                          text: "Job Title : ",
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                          fontColor: AppColors.primaryBlack),
+                      SizedBox(height: AppSize.paddingAll),
+                      TextFormField(
+                        cursorHeight: AppSize.textSize * 1.2,
+                        style: TextStyle(
+                          color: AppColors.primaryBlack,
+                          fontSize: AppSize.textSize * 1.2,
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "* Required";
+                          }
+                          return null;
+                        },
+                        cursorColor: AppColors.blueColor,
+                        controller: _jobtitlecontroller,
+                        autovalidateMode: AutovalidateMode.disabled,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: AppDecorations.customTextFieldDecoration(
+                            prefixIcon: CustomIcon(
+                                icon: Icons.work_outline,
+                                iconColor: AppColors.blueColor),
+                            hintText: "Job Title"),
+                      ),
+                      SizedBox(height: AppSize.paddingAll),
+                      CustomText(
+                          text: "Job Description : ",
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                          fontColor: AppColors.primaryBlack),
+                      SizedBox(height: AppSize.paddingAll),
+                      TextFormField(
+                        cursorHeight: AppSize.textSize * 1.2,
+                        style: TextStyle(
+                          color: AppColors.primaryBlack,
+                          fontSize: AppSize.textSize * 1.2,
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "* Required";
+                          }
+                          return null;
+                        },
+                        cursorColor: AppColors.blueColor,
+                        controller: _jobdescontroller,
+                        autovalidateMode: AutovalidateMode.disabled,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: AppDecorations.customTextFieldDecoration(
+                            prefixIcon: CustomIcon(
+                                icon: Icons.work_outline,
+                                iconColor: AppColors.blueColor),
+                            hintText: "Job Description"),
+                      ),
+                      SizedBox(height: AppSize.paddingAll),
+                      CustomText(
+                          text: "Job Type : ",
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                          fontColor: AppColors.primaryBlack),
+                      SizedBox(height: AppSize.paddingAll),
+                      TextFormField(
+                        cursorHeight: AppSize.textSize * 1.2,
+                        style: TextStyle(
+                          color: AppColors.primaryBlack,
+                          fontSize: AppSize.textSize * 1.2,
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "* Required";
+                          }
+                          return null;
+                        },
+                        cursorColor: AppColors.blueColor,
+                        controller: _jobtypecontroller,
+                        autovalidateMode: AutovalidateMode.disabled,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: AppDecorations.customTextFieldDecoration(
+                            prefixIcon: CustomIcon(
+                                icon: Icons.work_outline,
+                                iconColor: AppColors.blueColor),
+                            hintText: "Job Type"),
+                      ),
+                      SizedBox(height: 10.h),
+                      CustomButton(
+                          text: "Save",
+                          onTap: () {
+                            if (_formKey.currentState!.validate()) {
+                              addjob();
+                            }
+                          }),
+                    ],
                   ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "* Required";
-                    }
-                    return null;
-                  },
-                  cursorColor: AppColors.blueColor,
-                  controller: _jobdescontroller,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: AppDecorations.customTextFieldDecoration(
-                      hintText: "Job Description"),
                 ),
-                SizedBox(height: AppSize.paddingAll),
-                const Padding(
-                  padding: EdgeInsets.only(left: 14.0),
-                  child: Text("Job Type :",
-                      style:
-                          TextStyle(fontSize: 18, color: AppColors.blueColor)),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                  cursorHeight: AppSize.textSize * 1.2,
-                  style: TextStyle(
-                    color: AppColors.primaryBlack,
-                    fontSize: AppSize.textSize * 1.2,
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "* Required";
-                    }
-                    return null;
-                  },
-                  cursorColor: AppColors.blueColor,
-                  controller: _jobtypecontroller,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: AppDecorations.customTextFieldDecoration(
-                      hintText: "Job Type"),
-                ),
-                SizedBox(height: AppSize.paddingAll),
-                CustomButton(
-                    text: "Save",
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        addjob();
-                      }
-                    }),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      )),
+      ),
     );
   }
 }

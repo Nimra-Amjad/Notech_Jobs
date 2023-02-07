@@ -20,12 +20,9 @@ class MyApp extends StatelessWidget {
       Orientation orientation,
       ScreenType screenType,
     ) {
-      return MaterialApp(
+      return const MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const LoginPage(),
+        home: LoginPage(),
       );
     });
   }

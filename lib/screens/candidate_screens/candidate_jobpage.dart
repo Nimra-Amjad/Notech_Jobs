@@ -7,7 +7,9 @@ import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import 'package:http/http.dart' as http;
 import 'package:notech_mobile_app/screens/candidate_screens/candidate_jobapplypage.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
+import '../../components/text/custom_text.dart';
 import '../../components/utils/app_colors.dart';
 
 class CandidateJobPage extends StatefulWidget {
@@ -68,10 +70,9 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
   }
 
   apply(String uid1, String uid2) async {
-    model.Applicants appl = model.Applicants(pdfurl: loggedinUser.pdfurl);
-    print('------00000000000000000000---------');
-    print(loggedinUser.pdfurl);
-    print('------00000000000000000000---------');
+    model.Applicants appl = model.Applicants(
+        pdfurl: loggedinUser.pdfurl, pdfname: loggedinUser.pdfname);
+
     await FirebaseFirestore.instance
         .collection("users")
         .doc(uid1)
@@ -80,8 +81,8 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
         .update({
       "applicants": FieldValue.arrayUnion([appl.toJson()])
     });
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) =>  CandidateJobApply()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CandidateJobApply()));
   }
 
   @override
@@ -104,7 +105,7 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
                       return snapshot.hasData
                           ? ListView.builder(
                               itemCount: jobs_match.length,
-                              scrollDirection: Axis.horizontal,
+                              // scrollDirection: Axis.horizontal,
                               itemBuilder: (BuildContext context, int index) {
                                 DocumentSnapshot jobs =
                                     snapshot.data!.docs[index];
@@ -117,18 +118,32 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          '${jobs_match}',
-                                          style: const TextStyle(
-                                              color: AppColors.blueColor),
+                                        CustomText(
+                                            text: "php",
+                                            fontSize: 17.sp,
+                                            fontWeight: FontWeight.bold,
+                                            fontColor: AppColors.blueColor),
+                                        SizedBox(
+                                          height: 1.h,
                                         ),
-                                        const SizedBox(
-                                          height: 12.0,
+                                        Container(
+                                          padding: EdgeInsets.only(left: 6.sp),
+                                          width: 80.w,
+                                          child: CustomText(
+                                              text: '${jobs_match}',
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.normal,
+                                              fontColor:
+                                                  AppColors.quizbluecolor),
                                         ),
-                                        const Text(
-                                          "Posted 1 min ago",
-                                          style: TextStyle(fontSize: 11),
+                                        SizedBox(
+                                          height: 1.h,
                                         ),
+                                        CustomText(
+                                            text: "Posted 1 min ago",
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.normal,
+                                            fontColor: AppColors.primaryBlack),
                                         const Divider(
                                           thickness: 0.5,
                                           height: 20.0,
@@ -142,7 +157,7 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
                                             width: 150,
                                             height: 50,
                                             decoration: BoxDecoration(
-                                                color: AppColors.blueColor,
+                                                color: AppColors.blueLight,
                                                 borderRadius:
                                                     BorderRadius.circular(12)),
                                             child: Row(

@@ -119,7 +119,7 @@ class _CandidateUpdatePageState extends State<CandidateUpdatePage> {
                       prefixIcon: Padding(
                         padding: EdgeInsets.only(left: AppSize.paddingAll),
                         child: CustomIcon(
-                          icon: Icons.person,
+                          icon: Icons.person_2_outlined,
                           iconColor: AppColors.blueColor,
                           iconSize: AppSize.iconSize,
                         ),
@@ -154,7 +154,7 @@ class _CandidateUpdatePageState extends State<CandidateUpdatePage> {
                       prefixIcon: Padding(
                         padding: EdgeInsets.only(left: AppSize.paddingAll),
                         child: CustomIcon(
-                          icon: Icons.phone,
+                          icon: Icons.phone_outlined,
                           iconColor: AppColors.blueColor,
                           iconSize: AppSize.iconSize,
                         ),

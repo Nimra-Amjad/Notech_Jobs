@@ -21,6 +21,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:http/http.dart' as http;
 
+import '../../components/utils/app_assets.dart';
 import '../../components/utils/app_colors.dart';
 
 class CandidateHomePage extends StatefulWidget {
@@ -54,33 +55,33 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
     });
   }
 
-  List<String> alljobs = [];
-  List<String> jobs_match = [];
-  var match;
-  getalljobs() async {
-    QuerySnapshot feed =
-        await FirebaseFirestore.instance.collectionGroup('jobs').get();
-    alljobs.clear();
-    for (var postDoc in feed.docs) {
-      model.JobPosted post = model.JobPosted.fromSnap(postDoc);
+  // List<String> alljobs = [];
+  // List<String> jobs_match = [];
+  // var match;
+  // getalljobs() async {
+  //   QuerySnapshot feed =
+  //       await FirebaseFirestore.instance.collectionGroup('jobs').get();
+  //   alljobs.clear();
+  //   for (var postDoc in feed.docs) {
+  //     model.JobPosted post = model.JobPosted.fromSnap(postDoc);
 
-      alljobs.add(post.jobdes.toString());
-    }
-    print(alljobs);
+  //     alljobs.add(post.jobdes.toString());
+  //   }
+  //   print(alljobs);
 
-    jobs_match.clear();
-    for (String a in alljobs) {
-      http.Response response = await http.get(Uri.parse(
-          'https://nimraamjad.pythonanywhere.com/api?querycv=$loggedinUser.pdftext&queryjob=$a'));
-      match = jsonDecode(response.body);
+  //   jobs_match.clear();
+  //   for (String a in alljobs) {
+  //     http.Response response = await http.get(Uri.parse(
+  //         'https://nimraamjad.pythonanywhere.com/api?querycv=$loggedinUser.pdftext&queryjob=$a'));
+  //     match = jsonDecode(response.body);
 
-      if (double.parse(match['matching percent']) > 15.0) {
-        jobs_match.add(a);
-      }
-    }
-    print("0000000000000000000000000000000");
-    print(jobs_match);
-  }
+  //     if (double.parse(match['matching percent']) > 15.0) {
+  //       jobs_match.add(a);
+  //     }
+  //   }
+  //   print("0000000000000000000000000000000");
+  //   print(jobs_match);
+  // }
 
   ///<------------------------------Pick Resume------------------------------>
 
@@ -109,10 +110,10 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
     //Display the text.
     print(text);
 
-    http.Response response = await http.get(Uri.parse(
-        'https://nimraamjad.pythonanywhere.com/api?querycv=text&queryjob=mobile%20flutter%20developer'));
+    // http.Response response = await http.get(Uri.parse(
+    //     'https://nimraamjad.pythonanywhere.com/api?querycv=text&queryjob=mobile%20flutter%20developer'));
 
-    print(response.body);
+    // print(response.body);
 
     //uploading file to firebase storage
     var pdfFile = FirebaseStorage.instance.ref().child(name).child("/.pdf");
@@ -167,74 +168,82 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
           ),
         ),
       ),
-      body: StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collectionGroup("jobs").snapshots(),
-          builder: (context, snapshot) {
-            return snapshot.hasData
-                ? ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot jobs = snapshot.data!.docs[index];
+      body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage(AppAssets.homebackground),
+                // scale: 1,
+                fit: BoxFit.fill)),
+        // child: StreamBuilder(
+        //     stream:
+        //         FirebaseFirestore.instance.collectionGroup("jobs").snapshots(),
+        //     builder: (context, snapshot) {
+        //       return snapshot.hasData
+        //           ? ListView.builder(
+        //               itemCount: snapshot.data!.docs.length,
+        //               itemBuilder: (context, index) {
+        //                 DocumentSnapshot jobs = snapshot.data!.docs[index];
 
-                      // getapi(jobs['jobdes']);
+        //                 // getapi(jobs['jobdes']);
 
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                jobs['jobtitle'],
-                                style:
-                                    const TextStyle(color: AppColors.blueColor),
-                              ),
-                              const SizedBox(
-                                height: 12.0,
-                              ),
-                              const Text(
-                                "Posted 1 min ago",
-                                style: TextStyle(fontSize: 11),
-                              ),
-                              const Divider(
-                                thickness: 0.5,
-                                height: 20.0,
-                                color: Colors.grey,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  apply(jobs['uid'], jobs['id']);
-                                },
-                                child: Container(
-                                  width: 150,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: AppColors.blueColor,
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: const [
-                                      Text(
-                                        "Apply Now",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      Icon(
-                                        Icons.arrow_upward_outlined,
-                                        color: Colors.white,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    })
-                : const CircularProgressIndicator();
-          }),
+        //                 return Card(
+        //                   child: Padding(
+        //                     padding: const EdgeInsets.all(14.0),
+        //                     child: Column(
+        //                       crossAxisAlignment: CrossAxisAlignment.start,
+        //                       children: [
+        //                         Text(
+        //                           jobs['jobtitle'],
+        //                           style: const TextStyle(
+        //                               color: AppColors.blueColor),
+        //                         ),
+        //                         const SizedBox(
+        //                           height: 12.0,
+        //                         ),
+        //                         const Text(
+        //                           "Posted 1 min ago",
+        //                           style: TextStyle(fontSize: 11),
+        //                         ),
+        //                         const Divider(
+        //                           thickness: 0.5,
+        //                           height: 20.0,
+        //                           color: Colors.grey,
+        //                         ),
+        //                         GestureDetector(
+        //                           onTap: () {
+        //                             apply(jobs['uid'], jobs['id']);
+        //                           },
+        //                           child: Container(
+        //                             width: 150,
+        //                             height: 50,
+        //                             decoration: BoxDecoration(
+        //                                 color: AppColors.blueColor,
+        //                                 borderRadius:
+        //                                     BorderRadius.circular(12)),
+        //                             child: Row(
+        //                               mainAxisAlignment:
+        //                                   MainAxisAlignment.spaceAround,
+        //                               children: const [
+        //                                 Text(
+        //                                   "Apply Now",
+        //                                   style: TextStyle(color: Colors.white),
+        //                                 ),
+        //                                 Icon(
+        //                                   Icons.arrow_upward_outlined,
+        //                                   color: Colors.white,
+        //                                 )
+        //                               ],
+        //                             ),
+        //                           ),
+        //                         )
+        //                       ],
+        //                     ),
+        //                   ),
+        //                 );
+        //               })
+        //           : const CircularProgressIndicator();
+        //     }),
+      ),
       drawer: SafeArea(
         child: Drawer(
           child: RefreshIndicator(
@@ -246,18 +255,23 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                   height: 45.sp,
                   child: DrawerHeader(
                     decoration: const BoxDecoration(
-                      color: Colors.blue,
+                      color: AppColors.blueLight,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20.0),
+                        bottomRight: Radius.circular(20.0),
+                      ),
                     ),
                     child: Container(
                         alignment: Alignment.bottomLeft,
-                        child: Text(
-                          '${loggedinUser.username}',
-                          style: TextStyle(fontSize: 20.sp),
-                        )),
+                        child: CustomText(
+                          text: '${loggedinUser.username}',
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          fontColor: AppColors.primaryWhite)),
                   ),
                 ),
-                const SizedBox(
-                  height: 7,
+                 SizedBox(
+                  height: 1.h,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 6.0, right: 6.0),
@@ -274,19 +288,22 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
-                          "Personal Information",
-                          style: TextStyle(
-                              fontSize: 18, color: AppColors.blueColor),
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.sp),
+                          child: CustomText(
+                              text: "Personal Details",
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w400,
+                              fontColor: AppColors.blueColor),
                         ),
                         Icon(Icons.edit)
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
+                 SizedBox(
+                  height: 1.h,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 6.0, right: 6.0),
@@ -295,7 +312,7 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                     width: MediaQuery.of(context).size.width,
                     height: 100,
                     decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 204, 204, 208),
+                        color: AppColors.lightGrey,
                         borderRadius: BorderRadius.circular(8.0)),
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0, top: 5.0),
@@ -306,28 +323,46 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                           Row(
                             children: [
                               const Icon(Icons.email),
-                              const SizedBox(
-                                width: 3,
+                              SizedBox(
+                                width: 4.w,
                               ),
-                              Text(
-                                '${loggedinUser.email}',
-                                style: const TextStyle(fontSize: 15),
-                              ),
+                              CustomText(
+                                  text: '${loggedinUser.email}',
+                                  fontSize: 17.sp,
+                                  fontWeight: FontWeight.w400,
+                                  fontColor: AppColors.primaryBlack),
                             ],
                           ),
-                          const SizedBox(
-                            height: 7,
+                          SizedBox(
+                            height: 1.h,
                           ),
                           Row(
                             children: [
                               const Icon(Icons.call),
-                              const SizedBox(
-                                width: 3,
+                              SizedBox(
+                                width: 4.w,
                               ),
-                              Text(
-                                '${loggedinUser.mobileno}',
-                                style: const TextStyle(fontSize: 15),
+                              CustomText(
+                                  text: '${loggedinUser.mobileno}',
+                                  fontSize: 17.sp,
+                                  fontWeight: FontWeight.w400,
+                                  fontColor: AppColors.primaryBlack),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 1.h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(Icons.location_city),
+                              SizedBox(
+                                width: 4.w,
                               ),
+                              CustomText(
+                                  text: "Drigh Road",
+                                  fontSize: 17.sp,
+                                  fontWeight: FontWeight.w400,
+                                  fontColor: AppColors.primaryBlack),
                             ],
                           ),
                         ],
@@ -335,18 +370,19 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 7,
+                SizedBox(
+                  height: 2.h,
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    "Resume",
-                    style: TextStyle(fontSize: 18, color: AppColors.blueColor),
-                  ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10.sp),
+                  child: CustomText(
+                      text: "Resume",
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w400,
+                      fontColor: AppColors.blueColor),
                 ),
-                const SizedBox(
-                  height: 7,
+                SizedBox(
+                  height: 1.h,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 12.0),
@@ -365,8 +401,24 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                                                 fileurl:
                                                     loggedinUser.pdfurl!)));
                               },
-                              child: Text('${loggedinUser.pdfname}'))
-                          : const Text("Add Resume"),
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: 60.w,
+                                height: 5.h,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(22.0),
+                                    color: AppColors.lightGrey),
+                                child: CustomText(
+                                    text: '${loggedinUser.pdfname}',
+                                    fontSize: 17.sp,
+                                    fontWeight: FontWeight.normal,
+                                    fontColor: AppColors.quizbluecolor),
+                              ))
+                          : CustomText(
+                              text: "Add Resume",
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.normal,
+                              fontColor: AppColors.quizbluecolor),
                       GestureDetector(
                           onTap: pickpdf, child: const Icon(Icons.attachment))
                     ],
@@ -384,11 +436,12 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                         MaterialPageRoute(
                             builder: (context) => const CandidateJobPage()));
                   },
-                  child: const ListTile(
-                    title: Text(
-                      'Jobs',
-                      style: TextStyle(color: AppColors.blueColor),
-                    ),
+                  child: ListTile(
+                    title: CustomText(
+                        text: "Jobs",
+                        fontSize: 17.sp,
+                        fontWeight: FontWeight.normal,
+                        fontColor: AppColors.blueColor),
                     leading: Icon(
                       Icons.wallet_membership_rounded,
                     ),
@@ -399,11 +452,12 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                   height: 20.0,
                   color: Colors.grey,
                 ),
-                const ListTile(
-                  title: Text(
-                    'Help',
-                    style: TextStyle(color: AppColors.blueColor),
-                  ),
+                ListTile(
+                  title: CustomText(
+                      text: "Help",
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.normal,
+                      fontColor: AppColors.blueColor),
                   leading: Icon(
                     Icons.help,
                   ),
@@ -415,13 +469,14 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    getalljobs();
+                    // getalljobs();
                   },
-                  child: const ListTile(
-                    title: Text(
-                      'Settings',
-                      style: TextStyle(color: AppColors.blueColor),
-                    ),
+                  child: ListTile(
+                    title: CustomText(
+                        text: "Settings",
+                        fontSize: 17.sp,
+                        fontWeight: FontWeight.normal,
+                        fontColor: AppColors.blueColor),
                     leading: Icon(
                       Icons.settings,
                     ),
@@ -437,11 +492,12 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => LoginPage()));
                   },
-                  child: const ListTile(
-                    title: Text(
-                      'Logout',
-                      style: TextStyle(color: AppColors.blueColor),
-                    ),
+                  child: ListTile(
+                    title: CustomText(
+                        text: "Logout",
+                        fontSize: 17.sp,
+                        fontWeight: FontWeight.normal,
+                        fontColor: AppColors.blueColor),
                     leading: Icon(Icons.logout),
                   ),
                 ),

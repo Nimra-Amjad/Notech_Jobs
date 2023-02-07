@@ -77,15 +77,22 @@ class JobPosted {
 
 class Applicants {
   final String? pdfurl;
-  Applicants({this.pdfurl});
+  final String? pdfname;
+  Applicants({
+    this.pdfurl,
+    this.pdfname,
+  });
 
   static Applicants fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
-    return Applicants(pdfurl: snapshot['pdfurl']);
+    return Applicants(
+      pdfurl: snapshot['pdfurl'],
+      pdfname: snapshot['pdfname'],
+    );
   }
 
   Map<String, dynamic> toJson() => {
         "pdfurl": pdfurl,
+        "pdfname": pdfname,
       };
 }
-

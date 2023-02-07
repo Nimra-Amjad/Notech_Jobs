@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:notech_mobile_app/screens/recruiter_screens/view_applicant_cv.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../components/utils/app_colors.dart';
@@ -9,7 +10,8 @@ import '../../components/buttons/rounded_back_button.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 
 class ApplicantsPage extends StatefulWidget {
-  const ApplicantsPage({super.key});
+  final String jobid;
+  const ApplicantsPage({super.key, required this.jobid});
 
   @override
   State<ApplicantsPage> createState() => _ApplicantsPageState();
@@ -19,166 +21,76 @@ class _ApplicantsPageState extends State<ApplicantsPage> {
   User? user = FirebaseAuth.instance.currentUser;
 
   model.JobPosted loggedinUser = model.JobPosted();
+
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    getdata();
+    getapplicantsnames();
   }
 
-  Future<void> getdata() async {
-    DocumentSnapshot snap = await FirebaseFirestore.instance
+  List applicantslist = [];
+
+  void getapplicantsnames() async {
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
         .collection("jobs")
-        .doc()
-        .get();
-    setState(() {
-      loggedinUser = model.JobPosted.fromSnap(snap);
+        .doc(widget.jobid)
+        .get()
+        .then((value) {
+      setState(() {
+        applicantslist = value['applicants'];
+      });
+      print("0000000000000000000000");
+      print(applicantslist);
+      print("0000000000000000000000");
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: BottomAppBar(color: Colors.white),
-        backgroundColor: AppColors.gradientcolor1,
+        appBar: AppBar(
+          backgroundColor: AppColors.blueColor,
+          title: CustomText(
+              text: "Applicant's CVs",
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              fontColor: AppColors.primaryWhite),
+        ),
         body: SafeArea(
-          child: Column(
-            children: [
-              Container(
-                child: Padding(
-                    padding: EdgeInsets.all(18.sp),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: BackButtonRounded(
-                            color: AppColors.primaryWhite,
-                            iconcolor: AppColors.primaryBlack,
-                            bordercolor: AppColors.primaryGrey,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 35.sp,
-                        ),
-                        CustomText(
-                            text: "Applicants",
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w700,
-                            fontColor: AppColors.primaryBlack),
-                      ],
-                    )),
-              ),
-              Expanded(
-                  child: StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection("users")
-                          .doc(user!.uid)
-                          .collection('jobs')
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        return ListView.builder(
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (context, index) {
-                              DocumentSnapshot jobs =
-                                  snapshot.data!.docs[index];
-                              return Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(14.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        jobs[index]['pdfurl'],
-                                        style: const TextStyle(
-                                            color: AppColors.blueColor),
-                                      ),
-                                      const SizedBox(
-                                        height: 12.0,
-                                      ),
-                                      const Text(
-                                        "Posted 1 min ago",
-                                        style: TextStyle(fontSize: 11),
-                                      ),
-                                      const Divider(
-                                        thickness: 0.5,
-                                        height: 20.0,
-                                        color: Colors.grey,
-                                      ),
-                                      Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {},
-                                            child: Container(
-                                                width: 80,
-                                                height: 50,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    color: AppColors.blueColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                                child: Text(
-                                                  "Edit",
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                )),
-                                          ),
-                                          SizedBox(
-                                            width: 15,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              // deleteNestedSubcollections(jobs['id']);
-                                            },
-                                            child: Container(
-                                                width: 80,
-                                                height: 50,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    color: AppColors.blueColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                                child: Text(
-                                                  "Remove",
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                )),
-                                          ),
-                                          SizedBox(
-                                            width: 15,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {},
-                                            child: Container(
-                                                width: 80,
-                                                height: 50,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    color: AppColors.blueColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                                child: Text(
-                                                  "Applicants",
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                )),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            });
-                      })),
-            ],
-          ),
+          child: ListView.builder(
+              itemCount: applicantslist.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 15.sp, vertical: 8.sp),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewApplicantsResume(
+                                  filename: applicantslist[index]['pdfname'],
+                                  fileurl: applicantslist[index]['pdfurl'])));
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      height: 7.h,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: AppColors.lightGrey),
+                      child: CustomText(
+                          text: applicantslist[index]['pdfname'],
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                          fontColor: AppColors.primaryBlack),
+                    ),
+                  ),
+                );
+              }),
         ));
   }
 }

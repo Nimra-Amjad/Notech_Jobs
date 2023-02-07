@@ -13,8 +13,8 @@ class BackButtonRounded extends StatelessWidget {
   const BackButtonRounded({
     Key? key,
     this.onTap,
-    this.color = AppColors.primaryBlack,
-    this.iconcolor = AppColors.primaryWhite,
+    this.color = AppColors.primaryWhite,
+    this.iconcolor = AppColors.primaryBlack,
     this.bordercolor = AppColors.primaryBlack,
   }) : super(key: key);
 
@@ -25,6 +25,8 @@ class BackButtonRounded extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
+          width: 10.w,
+          height: 5.h,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: color,
@@ -32,7 +34,7 @@ class BackButtonRounded extends StatelessWidget {
             border: Border.all(color: bordercolor),
           ),
           child: Icon(
-            AppIcons.backArrowIcon,
+            Icons.arrow_back,
             color: AppColors.primaryBlack,
           ),
         ),

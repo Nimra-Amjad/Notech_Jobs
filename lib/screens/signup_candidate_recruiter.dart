@@ -9,6 +9,7 @@ import '../components/utils/app_assets.dart';
 import '../components/utils/app_colors.dart';
 import '../components/buttons/rounded_back_button.dart';
 import '../components/buttons/textbutton.dart';
+import '../components/utils/app_size.dart';
 
 class SignupCandidateRecruiter extends StatefulWidget {
   const SignupCandidateRecruiter({super.key});
@@ -32,39 +33,43 @@ class _SignupCandidateRecruiterState extends State<SignupCandidateRecruiter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryWhite,
-        leading: ListTile(
-            leading: BackButtonRounded(
-          onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => LoginPage()));
-          },
-          color: AppColors.primaryWhite,
-          bordercolor: AppColors.primaryBlack,
-          iconcolor: AppColors.primaryBlack,
-        )),
-        elevation: 0.0,
-      ),
-      body: Column(
-        children: [
-          Image.asset(
-            AppAssets.rcSignup,
-            width: 100.w,
-            height: 40.h,
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(AppAssets.background),
+                  scale: 1,
+                  fit: BoxFit.fill)),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.sp),
+            child: Column(
+              children: [
+                SizedBox(height: AppSize.paddingAll),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: BackButtonRounded(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                SizedBox(height: AppSize.paddingAll),
+                Image.asset(AppAssets.rcSignup, scale: 1, fit: BoxFit.fill),
+                TextButtonWidget(
+                    onpressed: navigateToCandidateSignUp,
+                    text: "Signup as Candidate",
+                    width: 80.w,
+                    height: 7.h),
+                SizedBox(height: AppSize.paddingAll),
+                TextButtonWidget(
+                    onpressed: navigateToRecruiterSignUp,
+                    text: "Signup as Recruiter",
+                    width: 80.w,
+                    height: 7.h),
+              ],
+            ),
           ),
-          TextButtonWidget(
-              onpressed: navigateToCandidateSignUp,
-              text: "Signup as Candidate",
-              width: 260,
-              height: 60),
-          TextButtonWidget(
-              onpressed: navigateToRecruiterSignUp,
-              text: "Signup as Recruiter",
-              width: 260,
-              height: 60),
-        ],
+        ),
       ),
     );
   }

@@ -2,70 +2,50 @@ import '../model/question_model.dart';
 
 List<QuestionModel> questions = [
   QuestionModel(
-    "How Many Whiskers does the average cat have on each side of its face ?",
+    "'OS' computer abbreviation usually means?",
     {
-      "1": false,
-      "3": false,
-      "12": true,
-      "5,007": false,
+      "Order of Significance": false,
+      "Open Software": false,
+      "Operating System": true,
+      "Optical Sensor": false,
     },
   ),
-  QuestionModel("When does a cat purr ?", {
-    "When it cares for its kittens": false,
-    "When it needs confort": false,
-    "When it feels content": false,
-    "All of the above": true,
+  QuestionModel("Android is", {
+    "an operating system": false,
+    "a web browser": false,
+    "a web server": false,
+    "None of the above": true,
   }),
-  QuestionModel("What is the averge nulber of kittens in a litter ?", {
-    "1 to 2": false,
-    "3 to 5": true,
-    "8 to 10": false,
-    "12 to 14": false,
-  }),
-  QuestionModel("How many moons does Mars have ?", {
-    "1": false,
-    "2": false,
-    "4": true,
-    "8": false,
-  }),
-  QuestionModel("What is Mars's nickname ?", {
-    "The red planet": true,
-    "The dusty planet": false,
-    "The hot planet": false,
-    "The smelly planet": false,
-  }),
-  QuestionModel("About How long would it take to travel to Mars ?", {
-    "Three days": false,
-    "A month": false,
-    "Eight months": true,
-    "Two years": false,
+  QuestionModel("Under which of the following Android is licensed?", {
+    "OSS": false,
+    "Sourceforge": false,
+    "Apache/MIT": true,
+    "None of the above": false,
   }),
   QuestionModel(
-      "Mars is Named after the Roman god Mars. What is he the god of ?", {
-    "Fire": false,
-    "Love": false,
-    "Agriculture": false,
-    "War": true,
-  }),
-  QuestionModel("Mars Is the ___ planet from the sun ?", {
-    "Secon": false,
-    "Third": false,
-    "Fourth": true,
-    "Sixth": false,
-  }),
-  QuestionModel(
-      "Where did Orville and Wilbur Wright build their first flying airplane ?",
+      "Which of the following virtual machine is used by the Android operating system?",
       {
-        "Paris, France": false,
-        "Boston, Massachusetts": false,
-        "Kitty Hawk, North Carolina": true,
-        "Tokyou, Japan": false,
+        "JVM": false,
+        "Dalvik virtual machine": true,
+        "Simple virtual machine": false,
+        "None of the above": false,
       }),
-  QuestionModel(
-      "The First astronuts to travel to space came from which country ?", {
-    "United States": false,
-    "Soviet Union (now Russia)": true,
-    "China": false,
-    "Rocketonia": false,
+  QuestionModel("Android is based on which of the following language?", {
+    "Java": true,
+    "C++": false,
+    "C": false,
+    "None of the above": false,
+  }),
+  QuestionModel("APK stands for -", {
+    "Android Phone Kit": false,
+    "Android Page Kit": false,
+    "Android Package Kit": true,
+    "None of the above": false,
+  }),
+  QuestionModel("What does API stand for?", {
+    "Application Programming Interface": true,
+    "Android Programming Interface": false,
+    "Android Page Interface": false,
+    "Application Page Interface": false,
   }),
 ];

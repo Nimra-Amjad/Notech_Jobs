@@ -112,18 +112,23 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                 height: 45.sp,
                 child: DrawerHeader(
                   decoration: const BoxDecoration(
-                    color: Colors.blue,
+                    color: AppColors.blueLight,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20.0),
+                      bottomRight: Radius.circular(20.0),
+                    ),
                   ),
                   child: Container(
                       alignment: Alignment.bottomLeft,
-                      child: Text(
-                        '${loggedinUser.companyname}',
-                        style: const TextStyle(fontSize: 20),
-                      )),
+                      child: CustomText(
+                          text: '${loggedinUser.companyname}',
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          fontColor: AppColors.primaryWhite)),
                 ),
               ),
-              const SizedBox(
-                height: 7,
+              SizedBox(
+                height: 1.h,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 6.0, right: 6.0),
@@ -141,19 +146,19 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
-                        "Personal Information",
-                        style:
-                            TextStyle(fontSize: 18, color: AppColors.blueColor),
-                      ),
+                    children: [
+                      CustomText(
+                          text: "Personal Details",
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w400,
+                          fontColor: AppColors.blueColor),
                       Icon(Icons.edit)
                     ],
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
+              SizedBox(
+                height: 1.h,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 6.0, right: 6.0),
@@ -172,28 +177,30 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                         Row(
                           children: [
                             const Icon(Icons.email),
-                            const SizedBox(
-                              width: 3,
+                            SizedBox(
+                              width: 4.w,
                             ),
-                            Text(
-                              '${loggedinUser.email}',
-                              style: const TextStyle(fontSize: 15),
-                            ),
+                            CustomText(
+                                text: '${loggedinUser.email}',
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w400,
+                                fontColor: AppColors.primaryBlack),
                           ],
                         ),
-                        const SizedBox(
-                          height: 7,
+                        SizedBox(
+                          height: 1.h,
                         ),
                         Row(
                           children: [
                             const Icon(Icons.location_pin),
-                            const SizedBox(
-                              width: 3,
+                            SizedBox(
+                              width: 4.w,
                             ),
-                            Text(
-                              '${loggedinUser.location}',
-                              style: const TextStyle(fontSize: 15),
-                            ),
+                            CustomText(
+                                text: '${loggedinUser.location}',
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w400,
+                                fontColor: AppColors.primaryBlack),
                           ],
                         ),
                         const SizedBox(
@@ -202,13 +209,14 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                         Row(
                           children: [
                             const Icon(Icons.call),
-                            const SizedBox(
-                              width: 3,
+                            SizedBox(
+                              width: 4.w,
                             ),
-                            Text(
-                              '${loggedinUser.mobileno}',
-                              style: const TextStyle(fontSize: 15),
-                            ),
+                            CustomText(
+                                text: '${loggedinUser.mobileno}',
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w400,
+                                fontColor: AppColors.primaryBlack),
                           ],
                         ),
                       ],
@@ -216,11 +224,11 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 7,
+              SizedBox(
+                height: 2.h,
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0),
+                padding: EdgeInsets.only(left: 10.sp),
                 child: GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -228,14 +236,22 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                           MaterialPageRoute(
                               builder: (context) => const RecruiterAddJob()));
                     },
-                    child: CustomText(
-                        text: "Post a Job",
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.w400,
-                        fontColor: AppColors.blueColor)),
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 68.w,
+                      height: 5.h,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(22.0),
+                          color: AppColors.lightGrey),
+                      child: CustomText(
+                          text: "Post a Job",
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w400,
+                          fontColor: AppColors.quizbluecolor),
+                    )),
               ),
-              const SizedBox(
-                height: 7,
+              SizedBox(
+                height: 1.h,
               ),
               GestureDetector(
                 onTap: () {
@@ -244,11 +260,12 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                       MaterialPageRoute(
                           builder: (context) => const RecruiterJobPost()));
                 },
-                child: const ListTile(
-                  title: Text(
-                    'Jobs Posted',
-                    style: TextStyle(color: AppColors.blueColor),
-                  ),
+                child: ListTile(
+                  title: CustomText(
+                      text: "Jobs Posted",
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.normal,
+                      fontColor: AppColors.blueColor),
                   leading: Icon(
                     Icons.wallet_membership_rounded,
                   ),
@@ -261,16 +278,17 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ApplicantsPage()));
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => const ApplicantsPage()));
                 },
-                child: const ListTile(
-                  title: Text(
-                    'Applicants',
-                    style: TextStyle(color: AppColors.blueColor),
-                  ),
+                child: ListTile(
+                  title: CustomText(
+                      text: "Applicants",
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.normal,
+                      fontColor: AppColors.blueColor),
                   leading: Icon(
                     Icons.group,
                   ),
@@ -281,11 +299,12 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                 height: 20.0,
                 color: Colors.grey,
               ),
-              const ListTile(
-                title: Text(
-                  'Help',
-                  style: TextStyle(color: AppColors.blueColor),
-                ),
+              ListTile(
+                title: CustomText(
+                    text: "Help",
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.normal,
+                    fontColor: AppColors.blueColor),
                 leading: Icon(
                   Icons.help,
                 ),
@@ -295,11 +314,12 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                 height: 20.0,
                 color: Colors.grey,
               ),
-              const ListTile(
-                title: Text(
-                  'Settings',
-                  style: TextStyle(color: AppColors.blueColor),
-                ),
+              ListTile(
+                title: CustomText(
+                    text: "Settings",
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.normal,
+                    fontColor: AppColors.blueColor),
                 leading: Icon(
                   Icons.settings,
                 ),
@@ -316,11 +336,12 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                       MaterialPageRoute(
                           builder: (context) => const LoginPage()));
                 },
-                child: const ListTile(
-                  title: Text(
-                    'Logout',
-                    style: TextStyle(color: AppColors.blueColor),
-                  ),
+                child: ListTile(
+                  title: CustomText(
+                      text: "Logout",
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.normal,
+                      fontColor: AppColors.blueColor),
                   leading: Icon(Icons.logout),
                 ),
               ),
