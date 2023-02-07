@@ -74,23 +74,23 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
     AppSize().init(context);
     return Scaffold(
         body: SafeArea(
-          child: Column(
-              children: [
-          Padding(
-            padding: EdgeInsets.only(left: 12.sp),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: BackButtonRounded(
-                onTap: () {
-                  Navigator.pop(context);
-                },
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 12.sp),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: BackButtonRounded(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ),
             ),
-          ),
-          SizedBox(height: AppSize.paddingAll),
-          Form(
-            key: _formKey,
-            child: SingleChildScrollView(
+            SizedBox(height: AppSize.paddingAll),
+            Form(
+              key: _formKey,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.sp),
                 child: Column(
@@ -279,9 +279,9 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
                 ),
               ),
             ),
-          ),
-              ],
-            ),
-        ));
+          ],
+        ),
+      ),
+    ));
   }
 }

@@ -53,20 +53,20 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
       model.JobPosted post = model.JobPosted.fromSnap(postDoc);
       alljobs.add(post.jobdes.toString());
     }
-    print(alljobs);
 
     jobs_match.clear();
     for (String a in alljobs) {
       http.Response response = await http.get(Uri.parse(
           'https://nimraamjad.pythonanywhere.com/api?querycv=$loggedinUser.pdftext&queryjob=$a'));
       match = jsonDecode(response.body);
-
-      if (double.parse(match['matching percent']) > 15.0) {
+      jobs_match.clear();
+      if (double.parse(match['matching percent']) > 2.0) {
         jobs_match.add(a);
       }
     }
-    print("0000000000000000000000000000000");
+    print("000000000000000000000");
     print(jobs_match);
+    print("000000000000000000000");
   }
 
   apply(String uid1, String uid2) async {
@@ -119,7 +119,7 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         CustomText(
-                                            text: "php",
+                                            text: "Job description",
                                             fontSize: 17.sp,
                                             fontWeight: FontWeight.bold,
                                             fontColor: AppColors.blueColor),
@@ -130,7 +130,7 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
                                           padding: EdgeInsets.only(left: 6.sp),
                                           width: 80.w,
                                           child: CustomText(
-                                              text: '${jobs_match}',
+                                              text: '${jobs_match[index]}',
                                               fontSize: 15.sp,
                                               fontWeight: FontWeight.normal,
                                               fontColor:

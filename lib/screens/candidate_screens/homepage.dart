@@ -174,75 +174,83 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                 image: AssetImage(AppAssets.homebackground),
                 // scale: 1,
                 fit: BoxFit.fill)),
-        // child: StreamBuilder(
-        //     stream:
-        //         FirebaseFirestore.instance.collectionGroup("jobs").snapshots(),
-        //     builder: (context, snapshot) {
-        //       return snapshot.hasData
-        //           ? ListView.builder(
-        //               itemCount: snapshot.data!.docs.length,
-        //               itemBuilder: (context, index) {
-        //                 DocumentSnapshot jobs = snapshot.data!.docs[index];
+        child: StreamBuilder(
+            stream:
+                FirebaseFirestore.instance.collectionGroup("jobs").snapshots(),
+            builder: (context, snapshot) {
+              return snapshot.hasData
+                  ? ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot jobs = snapshot.data!.docs[index];
 
-        //                 // getapi(jobs['jobdes']);
+                        // getapi(jobs['jobdes']);
 
-        //                 return Card(
-        //                   child: Padding(
-        //                     padding: const EdgeInsets.all(14.0),
-        //                     child: Column(
-        //                       crossAxisAlignment: CrossAxisAlignment.start,
-        //                       children: [
-        //                         Text(
-        //                           jobs['jobtitle'],
-        //                           style: const TextStyle(
-        //                               color: AppColors.blueColor),
-        //                         ),
-        //                         const SizedBox(
-        //                           height: 12.0,
-        //                         ),
-        //                         const Text(
-        //                           "Posted 1 min ago",
-        //                           style: TextStyle(fontSize: 11),
-        //                         ),
-        //                         const Divider(
-        //                           thickness: 0.5,
-        //                           height: 20.0,
-        //                           color: Colors.grey,
-        //                         ),
-        //                         GestureDetector(
-        //                           onTap: () {
-        //                             apply(jobs['uid'], jobs['id']);
-        //                           },
-        //                           child: Container(
-        //                             width: 150,
-        //                             height: 50,
-        //                             decoration: BoxDecoration(
-        //                                 color: AppColors.blueColor,
-        //                                 borderRadius:
-        //                                     BorderRadius.circular(12)),
-        //                             child: Row(
-        //                               mainAxisAlignment:
-        //                                   MainAxisAlignment.spaceAround,
-        //                               children: const [
-        //                                 Text(
-        //                                   "Apply Now",
-        //                                   style: TextStyle(color: Colors.white),
-        //                                 ),
-        //                                 Icon(
-        //                                   Icons.arrow_upward_outlined,
-        //                                   color: Colors.white,
-        //                                 )
-        //                               ],
-        //                             ),
-        //                           ),
-        //                         )
-        //                       ],
-        //                     ),
-        //                   ),
-        //                 );
-        //               })
-        //           : const CircularProgressIndicator();
-        //     }),
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  jobs['jobtitle'],
+                                  style: const TextStyle(
+                                      color: AppColors.blueColor),
+                                ),
+                                const SizedBox(
+                                  height: 12.0,
+                                ),
+                                Text(
+                                  jobs['jobdes'],
+                                  style: const TextStyle(
+                                      color: AppColors.blueColor),
+                                ),
+                                const SizedBox(
+                                  height: 12.0,
+                                ),
+                                const Text(
+                                  "Posted 1 min ago",
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                                const Divider(
+                                  thickness: 0.5,
+                                  height: 20.0,
+                                  color: Colors.grey,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    apply(jobs['uid'], jobs['id']);
+                                  },
+                                  child: Container(
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.blueColor,
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: const [
+                                        Text(
+                                          "Apply Now",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Icon(
+                                          Icons.arrow_upward_outlined,
+                                          color: Colors.white,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      })
+                  : const CircularProgressIndicator();
+            }),
       ),
       drawer: SafeArea(
         child: Drawer(
@@ -264,13 +272,13 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                     child: Container(
                         alignment: Alignment.bottomLeft,
                         child: CustomText(
-                          text: '${loggedinUser.username}',
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                          fontColor: AppColors.primaryWhite)),
+                            text: '${loggedinUser.username}',
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            fontColor: AppColors.primaryWhite)),
                   ),
                 ),
-                 SizedBox(
+                SizedBox(
                   height: 1.h,
                 ),
                 Padding(
@@ -302,7 +310,7 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                     ),
                   ),
                 ),
-                 SizedBox(
+                SizedBox(
                   height: 1.h,
                 ),
                 Padding(
