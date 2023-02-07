@@ -78,7 +78,6 @@ class _CandidateJobApplyState extends State<CandidateJobApply> {
                       ? Container(
                           width: double.infinity,
                           height: 100.sp,
-                          // decoration: BoxDecoration(color: Colors.amber),
                           child: SfPdfViewer.network('${loggedinUser.pdfurl}'),
                         )
                       : Container(

@@ -9,7 +9,8 @@ class AuthMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? user = FirebaseAuth.instance.currentUser;
 
-  //<---------------------------UPDATE CANDIDATE------------------------->
+  ///<---------------------------UPDATE CANDIDATE------------------------->
+
   Future<void> updateCandidate(username, email, mobileno) async {
     final userCollection = _firestore.collection("users");
     final docref = userCollection.doc(user!.uid);
@@ -24,7 +25,8 @@ class AuthMethods {
     }
   }
 
-    //<---------------------------UPDATE RECRUITER------------------------->
+  ///<---------------------------UPDATE RECRUITER------------------------->
+
   Future<void> updateRecruiter(username, email, mobileno, location) async {
     final userCollection = _firestore.collection("users");
     final docref = userCollection.doc(user!.uid);
@@ -42,11 +44,9 @@ class AuthMethods {
 
   model.JobPosted subcol = model.JobPosted();
 
+  ///<-------------------------------UPDATE JOB DATA--------------------------------->
 
-
-  //UPDATE JOB DATA
   Future<void> updatejobdata(id, jobtitle, jobdes, jobtype) async {
-    
     final userCollection = _firestore.collection("users");
     final docref = userCollection.doc(user!.uid).collection("jobs").doc(id);
     try {
@@ -60,9 +60,8 @@ class AuthMethods {
     }
   }
 
- 
+  ///<-------------------------------SIGNUP RECRUITER--------------------------------->
 
-  //SIGN UP RECRUITER
   Future<String> signupRecruiter({
     required String email,
     required String companyname,
@@ -106,7 +105,8 @@ class AuthMethods {
     return res;
   }
 
-  //SIGN UP CANDIDATE
+  ///<-------------------------------SIGNUP CANDIDATE--------------------------------->
+
   Future<String> signupCandidate({
     required String email,
     required String username,
@@ -148,7 +148,8 @@ class AuthMethods {
     return res;
   }
 
-  //LOG IN USER
+  ///<-------------------------------LOGIN USER--------------------------------->
+
   Future<String> loginUser(
       {required String email, required String password}) async {
     String res = "Some error occured";

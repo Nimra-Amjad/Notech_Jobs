@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
+///<-------------------------------Candidate Model--------------------------------->
 class Candidate {
   String? role = "1";
   String? uid;

@@ -10,7 +10,6 @@ import '../../components/buttons/rounded_back_button.dart';
 import '../../components/text/custom_text.dart';
 import '../../components/theme/decorations.dart';
 import '../../components/utils/app_size.dart';
-import '../../components/widgets/message_card.dart';
 import '../../resources/auth_methods.dart';
 
 class RecruiterJobUpdate extends StatefulWidget {

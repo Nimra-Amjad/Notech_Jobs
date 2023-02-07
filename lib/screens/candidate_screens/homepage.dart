@@ -12,7 +12,7 @@ import 'package:notech_mobile_app/components/text/custom_text.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import 'package:notech_mobile_app/screens/candidate_screens/candidate_jobapplypage.dart';
-import 'package:notech_mobile_app/screens/candidate_screens/candidate_jobpage.dart';
+import 'package:notech_mobile_app/screens/candidate_screens/candidate_matching_jobpage.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/update_homepage.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/view_resumepdf.dart';
 import 'package:notech_mobile_app/screens/login.dart';
@@ -20,8 +20,6 @@ import 'package:notech_mobile_app/screens/notification.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
-import 'package:http/http.dart' as http;
-
 import '../../components/utils/app_assets.dart';
 import '../../components/utils/app_colors.dart';
 
@@ -56,34 +54,6 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
     });
   }
 
-  // List<String> alljobs = [];
-  // List<String> jobs_match = [];
-  // var match;
-  // getalljobs() async {
-  //   QuerySnapshot feed =
-  //       await FirebaseFirestore.instance.collectionGroup('jobs').get();
-  //   alljobs.clear();
-  //   for (var postDoc in feed.docs) {
-  //     model.JobPosted post = model.JobPosted.fromSnap(postDoc);
-
-  //     alljobs.add(post.jobdes.toString());
-  //   }
-  //   print(alljobs);
-
-  //   jobs_match.clear();
-  //   for (String a in alljobs) {
-  //     http.Response response = await http.get(Uri.parse(
-  //         'https://nimraamjad.pythonanywhere.com/api?querycv=$loggedinUser.pdftext&queryjob=$a'));
-  //     match = jsonDecode(response.body);
-
-  //     if (double.parse(match['matching percent']) > 15.0) {
-  //       jobs_match.add(a);
-  //     }
-  //   }
-  //   print("0000000000000000000000000000000");
-  //   print(jobs_match);
-  // }
-
   ///<------------------------------Pick Resume------------------------------>
 
   pickpdf() async {
@@ -101,7 +71,7 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
     //Create a new instance of the PdfTextExtractor.
     PdfTextExtractor extractor = PdfTextExtractor(document);
 
-    //Extract all the text from the document.
+    ///<------------------------------Extract text from pdf------------------------------>
     String extracttext = extractor.extractText();
 
     setState(() {
@@ -110,11 +80,6 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
 
     //Display the text.
     print(text);
-
-    // http.Response response = await http.get(Uri.parse(
-    //     'https://nimraamjad.pythonanywhere.com/api?querycv=text&queryjob=mobile%20flutter%20developer'));
-
-    // print(response.body);
 
     //uploading file to firebase storage
     var pdfFile = FirebaseStorage.instance.ref().child(name).child("/.pdf");

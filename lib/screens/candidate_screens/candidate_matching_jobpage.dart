@@ -64,9 +64,6 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
         jobs_match.add(a);
       }
     }
-    print("000000000000000000000");
-    print(jobs_match);
-    print("000000000000000000000");
   }
 
   apply(String uid1, String uid2) async {

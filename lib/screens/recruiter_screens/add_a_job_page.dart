@@ -14,7 +14,6 @@ import '../../components/text/custom_text.dart';
 import '../../components/theme/decorations.dart';
 import '../../components/utils/app_colors.dart';
 import '../../components/utils/app_size.dart';
-import '../../components/widgets/message_card.dart';
 
 class RecruiterAddJob extends StatefulWidget {
   const RecruiterAddJob({super.key});
@@ -51,6 +50,8 @@ class _RecruiterAddJobState extends State<RecruiterAddJob> {
       uid: user!.uid,
     );
 
+
+//add jobs to firestore collection
     await FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)

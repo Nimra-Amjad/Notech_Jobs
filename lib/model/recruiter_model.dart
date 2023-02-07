@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
+///<-------------------------------Recruiter Model--------------------------------->
 class Recruiter {
   String? role = "0";
   String? uid;
@@ -39,6 +41,7 @@ class Recruiter {
       };
 }
 
+///<-------------------------------Jobposted Model--------------------------------->
 class JobPosted {
   String? id;
   String? jobtitle;
@@ -75,6 +78,8 @@ class JobPosted {
       };
 }
 
+
+///<-------------------------------Applicants Model--------------------------------->
 class Applicants {
   final String? pdfurl;
   final String? pdfname;

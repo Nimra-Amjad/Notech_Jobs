@@ -44,6 +44,7 @@ class _RecruiterSignUpPageState extends State<RecruiterSignUpPage> {
 
   void signUpRecruiter() async {
     String res = await AuthMethods().signupRecruiter(
+     
         email: _emailcontroller.text,
         companyname: _companynamecontroller.text,
         mobileno: _mobilenocontroller.text,

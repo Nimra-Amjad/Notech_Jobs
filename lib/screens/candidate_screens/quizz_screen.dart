@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/components/utils/app_colors.dart';
-import 'package:notech_mobile_app/screens/result_screen.dart';
+import 'package:notech_mobile_app/screens/candidate_screens/result_screen.dart';
 
 import '../../components/buttons/custom_button.dart';
-import '../../data/questions_example.dart';
+import '../../questions/questions_example.dart';
 
 class QuizzScreen extends StatefulWidget {
   const QuizzScreen({Key? key}) : super(key: key);
@@ -44,7 +44,7 @@ class _QuizzScreenState extends State<QuizzScreen> {
                 answered = false;
               });
             },
-            physics: new NeverScrollableScrollPhysics(),
+            physics:  NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,

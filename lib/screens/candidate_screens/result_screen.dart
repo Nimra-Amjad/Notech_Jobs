@@ -4,7 +4,7 @@ import 'package:notech_mobile_app/components/text/custom_text.dart';
 import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'candidate_screens/jobapply_success.dart';
+import 'jobapply_success.dart';
 
 class ResultScreen extends StatefulWidget {
   int score;
@@ -34,7 +34,7 @@ class _ResultScreenState extends State<ResultScreen> {
             ),
             CustomText(
                 text: "${widget.score}",
-                fontSize: 18.sp,
+                fontSize: 27.sp,
                 fontWeight: FontWeight.bold,
                 fontColor: AppColors.quizbluecolor),
             SizedBox(

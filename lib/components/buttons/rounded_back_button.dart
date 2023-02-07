@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../utils/app_colors.dart';
-import '../utils/app_icons.dart';
 
 class BackButtonRounded extends StatelessWidget {
   final Function()? onTap;

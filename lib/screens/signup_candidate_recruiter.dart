@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/signup.dart';
-import 'package:notech_mobile_app/screens/login.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/signup.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../components/buttons/simple_text_button.dart';
 import '../components/utils/app_assets.dart';
-import '../components/utils/app_colors.dart';
 import '../components/buttons/rounded_back_button.dart';
 import '../components/buttons/textbutton.dart';
 import '../components/utils/app_size.dart';

@@ -6,7 +6,6 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../components/utils/app_colors.dart';
 import '../../components/text/custom_text.dart';
-import '../../components/buttons/rounded_back_button.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 
 class ApplicantsPage extends StatefulWidget {
@@ -31,6 +30,8 @@ class _ApplicantsPageState extends State<ApplicantsPage> {
 
   List applicantslist = [];
 
+  //<---------------------------------Get Applicants CV--------------------------------------------->
+
   void getapplicantsnames() async {
     await FirebaseFirestore.instance
         .collection('users')
@@ -42,9 +43,6 @@ class _ApplicantsPageState extends State<ApplicantsPage> {
       setState(() {
         applicantslist = value['applicants'];
       });
-      print("0000000000000000000000");
-      print(applicantslist);
-      print("0000000000000000000000");
     });
   }
 

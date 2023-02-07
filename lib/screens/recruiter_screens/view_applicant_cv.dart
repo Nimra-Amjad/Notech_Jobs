@@ -58,7 +58,6 @@ class _ViewApplicantsResumeState extends State<ViewApplicantsResume> {
                   Container(
                     width: double.infinity,
                     height: 100.sp,
-                    // decoration: BoxDecoration(color: Colors.amber),
                     child: SfPdfViewer.network(widget.fileurl),
                   ),
                   SizedBox(
