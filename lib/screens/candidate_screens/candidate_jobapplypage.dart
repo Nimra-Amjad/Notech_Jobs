@@ -67,46 +67,46 @@ class _CandidateJobApplyState extends State<CandidateJobApply> {
                 ),
               ],
             ),
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 10.sp,
-                  ),
-                  loggedinUser.pdfurl != null
-                      ? Container(
-                          width: double.infinity,
-                          height: 100.sp,
-                          child: SfPdfViewer.network('${loggedinUser.pdfurl}'),
-                        )
-                      : Container(
-                          width: double.infinity,
-                          height: 60.sp,
-                          alignment: Alignment.center,
-                          child: CustomText(
-                              text: "Please Upload Your Resume",
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w500,
-                              fontColor: AppColors.primaryBlack),
-                        ),
-                  SizedBox(
-                    height: 15.sp,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.sp),
-                    child: CustomButton(
-                        text: "Continue",
-                        onTap: () { 
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const QuizzScreen()));
-                        }),
-                  ),
-                ],
-              ),
-            )
+            // SingleChildScrollView(
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       SizedBox(
+            //         height: 10.sp,
+            //       ),
+            //       loggedinUser.pdfurl != null
+            //           ? Container(
+            //               width: double.infinity,
+            //               height: 100.sp,
+            //               child: SfPdfViewer.network('${loggedinUser.pdfurl}'),
+            //             )
+            //           : Container(
+            //               width: double.infinity,
+            //               height: 60.sp,
+            //               alignment: Alignment.center,
+            //               child: CustomText(
+            //                   text: "Please Upload Your Resume",
+            //                   fontSize: 16.sp,
+            //                   fontWeight: FontWeight.w500,
+            //                   fontColor: AppColors.primaryBlack),
+            //             ),
+            //       SizedBox(
+            //         height: 15.sp,
+            //       ),
+            //       Padding(
+            //         padding: EdgeInsets.symmetric(horizontal: 12.sp),
+            //         child: CustomButton(
+            //             text: "Continue",
+            //             onTap: () { 
+            //               Navigator.push(
+            //                   context,
+            //                   MaterialPageRoute(
+            //                       builder: (context) => const QuizzScreen()));
+            //             }),
+            //       ),
+            //     ],
+            //   ),
+            // )
           ],
         ),
       ),

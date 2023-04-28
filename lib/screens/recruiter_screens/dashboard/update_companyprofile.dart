@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:notech_mobile_app/components/text/custom_text.dart';
+import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/company_profile_screen.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/homepage.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../../components/buttons/rounded_back_button.dart';
-import '../../components/buttons/custom_button.dart';
-import '../../components/theme/decorations.dart';
-import '../../components/utils/app_size.dart';
-import '../../components/widgets/custom_icon.dart';
-import '../../resources/auth_methods.dart';
+import '../../../components/buttons/rounded_back_button.dart';
+import '../../../components/buttons/custom_button.dart';
+import '../../../components/theme/decorations.dart';
+import '../../../components/utils/app_size.dart';
+import '../../../components/widgets/custom_icon.dart';
+import '../../../resources/auth_methods.dart';
 
 class RecruiterUpdatePage extends StatefulWidget {
   final model.Recruiter user;
@@ -54,7 +55,7 @@ class _RecruiterUpdatePageState extends State<RecruiterUpdatePage> {
             _emailcontroller.text, _locationcontroller)
         .then((value) {
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const RecruiterHomePage()));
+          MaterialPageRoute(builder: (context) => const CompanyProfileScreen()));
     });
   }
 

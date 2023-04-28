@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0-76.0.dev <4.0.0"
+  sdk: ">=2.19.0-76.0.dev <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -38,9 +38,13 @@ dependencies:
     sdk: flutter
   flutter_svg: ^1.1.6
   http: ^0.13.5
+  jiffy: ^5.0.0
+  permission_handler: ^10.2.0
+  persistent_bottom_nav_bar: ^5.0.2
   responsive_sizer: ^3.1.1
   simple_shadow: ^0.3.1
   syncfusion_flutter_pdfviewer: ^20.4.41
+  timeago: ^3.3.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.11.0

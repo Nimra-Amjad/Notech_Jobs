@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:notech_mobile_app/components/utils/app_colors.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class CustomText extends StatelessWidget {
   final double? fontSize;
@@ -10,9 +12,9 @@ class CustomText extends StatelessWidget {
   const CustomText({
     super.key,
     required this.text,
-    required this.fontSize,
-    required this.fontWeight,
-    required this.fontColor,
+    this.fontSize,
+    this.fontWeight,
+    this.fontColor,
     this.textAlign,
   });
 
@@ -22,9 +24,9 @@ class CustomText extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        color: fontColor,
+        fontSize: fontSize ?? 17.sp,
+        fontWeight: fontWeight ?? FontWeight.bold,
+        color: fontColor ?? AppColors.primaryBlack,
       ),
     );
   }

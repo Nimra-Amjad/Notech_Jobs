@@ -11,10 +11,8 @@ import 'package:notech_mobile_app/components/utils/custom_router.dart';
 import 'package:notech_mobile_app/components/text/custom_text.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
-import 'package:notech_mobile_app/screens/candidate_screens/candidate_jobapplypage.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/candidate_matching_jobpage.dart';
-import 'package:notech_mobile_app/screens/candidate_screens/update_homepage.dart';
-import 'package:notech_mobile_app/screens/candidate_screens/view_resumepdf.dart';
+import 'package:notech_mobile_app/screens/candidate_screens/dashboard/update_candidate_profile.dart';
 import 'package:notech_mobile_app/screens/login.dart';
 import 'package:notech_mobile_app/screens/notification.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -40,6 +38,7 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
   void initState() {
     super.initState();
     getdata();
+    getalljobs();
   }
 
   ///<------------------------------Get Loggedin User Data------------------------------>
@@ -98,19 +97,42 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
 
   ///<------------------------------Candidate apply to jobs------------------------------>
 
-  apply(String uid1, String uid2) async {
-    model.Applicants appl = model.Applicants(
-        pdfurl: loggedinUser.pdfurl, pdfname: loggedinUser.pdfname);
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(uid1)
-        .collection("jobs")
-        .doc(uid2)
-        .update({
-      "applicants": FieldValue.arrayUnion([appl.toJson()])
+  // apply(String uid1, String uid2) async {
+  //   model.Applicants appl = model.Applicants(
+  //       pdfurl: loggedinUser.pdfurl, pdfname: loggedinUser.pdfname);
+  //   await FirebaseFirestore.instance
+  //       .collection("users")
+  //       .doc(uid1)
+  //       .collection("jobs")
+  //       .doc(uid2)
+  //       .update({
+  //     "applicants": FieldValue.arrayUnion([appl.toJson()])
+  //   });
+  //   Navigator.push(
+  //       context, MaterialPageRoute(builder: (context) => CandidateJobApply()));
+  // }
+
+  String _searchQuery = '';
+  List<String> alljobs = [];
+  List<String> availablejobs = [];
+  getalljobs() async {
+    QuerySnapshot feed =
+        await FirebaseFirestore.instance.collectionGroup('jobs').get();
+    // alljobs.clear();
+    for (var postDoc in feed.docs) {
+      model.JobPosted post = model.JobPosted.fromSnap(postDoc);
+
+      alljobs.add(post.jobtitle.toString());
+      print("000000000000000000000000000");
+      print(alljobs);
+      print("000000000000000000000000000");
+    }
+    setState(() {
+      availablejobs = alljobs;
     });
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CandidateJobApply()));
+    print("99999999999999999999999999999");
+    print(availablejobs);
+    print("99999999999999999999999999999");
   }
 
   @override
@@ -135,98 +157,34 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
           ),
         ),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(AppAssets.homebackground),
-                // scale: 1,
-                fit: BoxFit.fill)),
-        child: StreamBuilder(
-            stream:
-                FirebaseFirestore.instance.collectionGroup("jobs").snapshots(),
-            builder: (context, snapshot) {
-              return snapshot.hasData
-                  ? ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot jobs = snapshot.data!.docs[index];
-
-                        // getapi(jobs['jobdes']);
-
-                        return Padding(
-                          padding: EdgeInsets.all(14.sp),
-                          child: SimpleShadow(
-                            offset: const Offset(1, 1),
-                            sigma: 8,
-                            color: AppColors.primaryBlack.withOpacity(0.4),
-                            child: Card(
-                              child: Padding(
-                                padding: EdgeInsets.all(14.sp),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomText(
-                                        text: jobs['jobtitle'],
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.bold,
-                                        fontColor: AppColors.blueColor),
-                                    SizedBox(
-                                      height: 2.h,
-                                    ),
-                                    CustomText(
-                                        text: jobs['jobdes'],
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.normal,
-                                        fontColor: AppColors.quizbluecolor),
-                                    SizedBox(
-                                      height: 2.h,
-                                    ),
-                                    const Text(
-                                      "Posted 1 min ago",
-                                      style: TextStyle(fontSize: 11),
-                                    ),
-                                    const Divider(
-                                      thickness: 0.5,
-                                      height: 20.0,
-                                      color: Colors.grey,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        apply(jobs['uid'], jobs['id']);
-                                      },
-                                      child: Container(
-                                        width: 150,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                            color: AppColors.blueColor,
-                                            borderRadius:
-                                                BorderRadius.circular(12)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: const [
-                                            Text(
-                                              "Apply Now",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            Icon(
-                                              Icons.arrow_upward_outlined,
-                                              color: Colors.white,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      })
-                  : const CircularProgressIndicator();
-            }),
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(8),
+            child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Search',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              children: availablejobs
+                  .where((item) =>
+                      item.toLowerCase().contains(_searchQuery.toLowerCase()))
+                  .map((item) => ListTile(
+                        title: Text(item),
+                      ))
+                  .toList(),
+            ),
+          ),
+        ],
       ),
       drawer: SafeArea(
         child: Drawer(
@@ -368,46 +326,46 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                 SizedBox(
                   height: 1.h,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      loggedinUser.pdfname != null
-                          ? GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            CandidateViewResume(
-                                                filename: loggedinUser.pdfname!,
-                                                fileurl:
-                                                    loggedinUser.pdfurl!)));
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                width: 60.w,
-                                height: 5.h,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(22.0),
-                                    color: AppColors.lightGrey),
-                                child: CustomText(
-                                    text: '${loggedinUser.pdfname}',
-                                    fontSize: 17.sp,
-                                    fontWeight: FontWeight.normal,
-                                    fontColor: AppColors.quizbluecolor),
-                              ))
-                          : CustomText(
-                              text: "Add Resume",
-                              fontSize: 17.sp,
-                              fontWeight: FontWeight.normal,
-                              fontColor: AppColors.quizbluecolor),
-                      GestureDetector(
-                          onTap: pickpdf, child: const Icon(Icons.attachment))
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       loggedinUser.pdfname != null
+                //           ? GestureDetector(
+                //               onTap: () {
+                //                 Navigator.push(
+                //                     context,
+                //                     MaterialPageRoute(
+                //                         builder: (context) =>
+                //                             CandidateViewResume(
+                //                                 filename: loggedinUser.pdfname!,
+                //                                 fileurl:
+                //                                     loggedinUser.pdfurl!)));
+                //               },
+                //               child: Container(
+                //                 alignment: Alignment.center,
+                //                 width: 60.w,
+                //                 height: 5.h,
+                //                 decoration: BoxDecoration(
+                //                     borderRadius: BorderRadius.circular(22.0),
+                //                     color: AppColors.lightGrey),
+                //                 child: CustomText(
+                //                     text: '${loggedinUser.pdfname}',
+                //                     fontSize: 17.sp,
+                //                     fontWeight: FontWeight.normal,
+                //                     fontColor: AppColors.quizbluecolor),
+                //               ))
+                //           : CustomText(
+                //               text: "Add Resume",
+                //               fontSize: 17.sp,
+                //               fontWeight: FontWeight.normal,
+                //               fontColor: AppColors.quizbluecolor),
+                //       GestureDetector(
+                //           onTap: pickpdf, child: const Icon(Icons.attachment))
+                //     ],
+                //   ),
+                // ),
                 const Divider(
                   thickness: 1,
                   height: 20.0,
@@ -453,7 +411,9 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // getalljobs();
+                    getalljobs();
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => VideoCalling()));
                   },
                   child: ListTile(
                     title: CustomText(

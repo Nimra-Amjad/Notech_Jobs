@@ -15,6 +15,7 @@ import '../../components/widgets/snackbar.dart';
 import '../../resources/auth_methods.dart';
 import '../login.dart';
 import '../signup_candidate_recruiter.dart';
+import 'dashboard/dashboard.dart';
 
 class RecruiterSignUpPage extends StatefulWidget {
   const RecruiterSignUpPage({super.key});
@@ -56,7 +57,7 @@ class _RecruiterSignUpPageState extends State<RecruiterSignUpPage> {
       showSnackBar(context, res, Colors.red);
     } else {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const RecruiterHomePage()));
+          MaterialPageRoute(builder: (context) => const RecruiterDashBoard()));
       showSnackBar(context, res, Colors.black);
     }
   }

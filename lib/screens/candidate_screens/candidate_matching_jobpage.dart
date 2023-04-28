@@ -8,6 +8,7 @@ import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import 'package:http/http.dart' as http;
 import 'package:notech_mobile_app/screens/candidate_screens/candidate_jobapplypage.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:timeago/timeago.dart';
 
 import '../../components/text/custom_text.dart';
 import '../../components/utils/app_colors.dart';
@@ -25,6 +26,8 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
   model.Candidate loggedinUser = model.Candidate();
   model.Recruiter companyapply = model.Recruiter();
   model.JobPosted currentjobs = model.JobPosted();
+  final time = Timestamp.fromDate(DateTime.now()).toDate();
+  final timeAgo = DateTime.now();
 
   @override
   void initState() {
@@ -48,39 +51,51 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
   getalljobs() async {
     QuerySnapshot feed =
         await FirebaseFirestore.instance.collectionGroup('jobs').get();
+
     alljobs.clear();
+    jobs_match.clear();
     for (var postDoc in feed.docs) {
       model.JobPosted post = model.JobPosted.fromSnap(postDoc);
       alljobs.add(post.jobdes.toString());
     }
 
-    jobs_match.clear();
+    // alljobs.clear();
     for (String a in alljobs) {
       http.Response response = await http.get(Uri.parse(
           'https://nimraamjad.pythonanywhere.com/api?querycv=$loggedinUser.pdftext&queryjob=$a'));
+
       match = jsonDecode(response.body);
-      jobs_match.clear();
+      print('00000000000000000000000000000');
+      print('00000000000000000000000000000');
+      print('job description : $a');
+      print(match);
+      print('00000000000000000000000000000');
+      print('00000000000000000000000000000');
+      // jobs_match.clear();
       if (double.parse(match['matching percent']) > 2.0) {
         jobs_match.add(a);
       }
+      print("matching jobssss");
+      print("$jobs_match");
+      print("matching jobssss");
     }
   }
 
-  apply(String uid1, String uid2) async {
-    model.Applicants appl = model.Applicants(
-        pdfurl: loggedinUser.pdfurl, pdfname: loggedinUser.pdfname);
+  // apply(String uid1, String uid2) async {
+  //   model.Applicants appl = model.Applicants(
+  //       pdfurl: loggedinUser.pdfurl, pdfname: loggedinUser.pdfname);
 
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(uid1)
-        .collection("jobs")
-        .doc(uid2)
-        .update({
-      "applicants": FieldValue.arrayUnion([appl.toJson()])
-    });
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CandidateJobApply()));
-  }
+  //   await FirebaseFirestore.instance
+  //       .collection("users")
+  //       .doc(uid1)
+  //       .collection("jobs")
+  //       .doc(uid2)
+  //       .update({
+  //     "applicants": FieldValue.arrayUnion([appl.toJson()])
+  //   });
+  //   Navigator.push(
+  //       context, MaterialPageRoute(builder: (context) => CandidateJobApply()));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +163,7 @@ class _CandidateJobPageState extends State<CandidateJobPage> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            apply(jobs['uid'], jobs['id']);
+                                            // apply(jobs['uid'], jobs['id']);
                                           },
                                           child: Container(
                                             width: 150,

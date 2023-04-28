@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/components/buttons/custom_button.dart';
 import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/homepage.dart';
+import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/dashboard.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/homepage.dart';
 import 'package:notech_mobile_app/screens/signup_candidate_recruiter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -15,6 +16,7 @@ import '../components/utils/app_size.dart';
 import '../components/widgets/custom_icon.dart';
 import '../components/widgets/snackbar.dart';
 import '../resources/auth_methods.dart';
+import 'candidate_screens/dashboard/dashboard.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -50,10 +52,10 @@ class _LoginPageState extends State<LoginPage> {
         final role = snapshot['role'];
         if (role == '0') {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => const RecruiterHomePage()));
+              builder: (context) => const RecruiterDashBoard()));
         } else if (role == '1') {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => const CandidateHomePage()));
+              builder: (context) => const CandidateDashboardScreen()));
         }
       });
     } else {
@@ -110,6 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         height: 3.h,
                       ),
+                      
                       TextFormField(
                         cursorHeight: AppSize.textSize * 1.2,
                         style: TextStyle(

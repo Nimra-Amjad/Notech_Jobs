@@ -11,6 +11,7 @@ class AppColors {
   static const Color gradientcolor1 = Color.fromRGBO(226, 248, 252, 1);
   static const Color textboxfillcolor = Color.fromARGB(255, 240, 240, 240);
   static const blueColor = Color.fromARGB(255, 36, 22, 222);
+  static const lightblue = Color.fromARGB(255, 221, 218, 255);
   static const blueLight = Color.fromARGB(255, 77, 66, 236);
   static const quizbluecolor = Color(0xFF252c4a);
 

@@ -6,9 +6,8 @@ import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import 'package:notech_mobile_app/screens/login.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/add_a_job_page.dart';
-import 'package:notech_mobile_app/screens/recruiter_screens/applicants_page.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/recruiter_jobposted.dart';
-import 'package:notech_mobile_app/screens/recruiter_screens/update_homepage.dart';
+import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/update_companyprofile.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../components/utils/custom_router.dart';
@@ -314,14 +313,20 @@ class _RecruiterHomePageState extends State<RecruiterHomePage> {
                 height: 20.0,
                 color: Colors.grey,
               ),
-              ListTile(
-                title: CustomText(
-                    text: "Settings",
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.normal,
-                    fontColor: AppColors.blueColor),
-                leading: Icon(
-                  Icons.settings,
+              GestureDetector(
+                onTap: () {
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => VideoCalling()));
+                },
+                child: ListTile(
+                  title: CustomText(
+                      text: "Settings",
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.normal,
+                      fontColor: AppColors.blueColor),
+                  leading: Icon(
+                    Icons.settings,
+                  ),
                 ),
               ),
               const Divider(

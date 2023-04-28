@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:notech_mobile_app/components/text/custom_text.dart';
-import 'package:notech_mobile_app/screens/candidate_screens/homepage.dart';
+import 'package:notech_mobile_app/screens/candidate_screens/dashboard/dashboard.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
@@ -59,7 +59,7 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
       showSnackBar(context, res, Colors.red);
     } else {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const CandidateHomePage()));
+          MaterialPageRoute(builder: (context) => const CandidateDashboardScreen()));
       showSnackBar(context, res, Colors.black);
     }
   }
