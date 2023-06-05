@@ -11,6 +11,7 @@ import '../../../../components/text/custom_text.dart';
 import '../../../../components/theme/decorations.dart';
 import '../../../../components/utils/app_colors.dart';
 import '../../../../components/utils/app_size.dart';
+import '../candidate_quiz/quiz.dart';
 
 class JobsScreen extends StatefulWidget {
   const JobsScreen({super.key});
@@ -95,6 +96,7 @@ class _JobsScreenState extends State<JobsScreen> {
   apply(String uid1, String uid2) async {
     model.Applicants appl = model.Applicants(
         resumeTitle: loggedinUser.resumeTitle,
+        userid: loggedinUser.uid,
         yearsOfExperience: loggedinUser.yearsOfExperience,
         candidate_name: loggedinUser.username,
         candidate_skills: loggedinUser.skills,
@@ -244,6 +246,15 @@ class _JobsScreenState extends State<JobsScreen> {
                                                       apply(jobs['uid'],
                                                           jobs['id']);
                                                       print(jobs['uid']);
+                                                      // Navigator.push(
+                                                      //     context,
+                                                      //     MaterialPageRoute(
+                                                      //         builder: (context) =>
+                                                      //             MCQScreen(
+                                                      //                 uid1: jobs[
+                                                      //                     'uid'],
+                                                      //                 uid2: jobs[
+                                                      //                     'id'])));
                                                     },
                                                     child: Container(
                                                       width: 150,

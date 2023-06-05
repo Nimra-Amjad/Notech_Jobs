@@ -75,7 +75,8 @@ class _CandidateDashboardScreenState extends State<CandidateDashboardScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => InterviewsScreen()));
+                              builder: (context) =>
+                                  CandidateInterviewsScreen()));
                     }),
                     _dashBoard(AppAssets.jobsapplieddb, 'Jobs Applied', () {
                       Navigator.push(

@@ -10,6 +10,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import '../../../../components/utils/app_colors.dart';
 import '../posted_jobs/posted_jobs_screen.dart';
+import 'add_quiz.dart';
 
 class JobSkillsScreen extends StatefulWidget {
   final String job_id;
@@ -128,7 +129,9 @@ class _JobSkillsScreenState extends State<JobSkillsScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PostedJobsScreen()));
+                          builder: (context) => AddQuiz(
+                                job_id: widget.job_id,
+                              )));
                 }),
           ],
         ),

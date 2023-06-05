@@ -50,7 +50,7 @@ class _AddExperienceState extends State<AddExperience> {
       appBar: AppBar(
         backgroundColor: AppColors.blueColor,
         title: CustomText(
-          text: 'Your Education',
+          text: 'Your Experience',
           fontColor: AppColors.primaryWhite,
         ),
       ),

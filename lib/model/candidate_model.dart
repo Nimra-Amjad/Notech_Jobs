@@ -12,6 +12,7 @@ class Candidate {
   List<dynamic>? skills;
   List<dynamic>? educations;
   List<dynamic>? experience;
+  List<dynamic>? interviews;
 
   Candidate(
       {this.role,
@@ -23,7 +24,8 @@ class Candidate {
       this.resumeTitle,
       this.skills,
       this.educations,
-      this.experience});
+      this.experience,
+      this.interviews});
 
   static Candidate fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
@@ -38,6 +40,7 @@ class Candidate {
       skills: snapshot["skills"],
       educations: snapshot["educations"],
       experience: snapshot["experience"],
+      interviews: snapshot["interviews"],
     );
   }
 
@@ -52,6 +55,7 @@ class Candidate {
         "skills": skills,
         "educations": educations,
         "experience": experience,
+        "interviews": interviews,
       };
 }
 
@@ -99,7 +103,7 @@ class Education {
       };
 }
 
-///<-------------------------------Education Model--------------------------------->
+///<-------------------------------Experience Model--------------------------------->
 
 class Experience {
   final String? companyName;
@@ -123,5 +127,37 @@ class Experience {
         "designation": designation,
         "joinDate": joinDate,
         "endDate": endDate,
+      };
+}
+
+///<-------------------------------Interviews Model--------------------------------->
+
+class Interviews {
+  final String? jobtitle;
+  final String? date;
+  final String? time;
+  final String? id;
+  Interviews({
+    this.jobtitle,
+    this.date,
+    this.time,
+    this.id,
+  });
+
+  static Interviews fromSnap(DocumentSnapshot snap) {
+    var snapshot = snap.data() as Map<String, dynamic>;
+    return Interviews(
+      jobtitle: snapshot['jobtitle'],
+      date: snapshot['date'],
+      time: snapshot['time'],
+      id: snapshot['id'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "jobtitle": jobtitle,
+        "date": date,
+        "time": time,
+        "id": id,
       };
 }

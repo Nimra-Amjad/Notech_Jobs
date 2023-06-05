@@ -11,6 +11,7 @@ import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/posted_job
 import '../../../components/buttons/quick_select_button.dart';
 import '../../../components/utils/app_assets.dart';
 import '../../login.dart';
+import 'add_quiz/add_question.dart';
 import 'company_profile_screen.dart';
 import 'create_job/add_job_description.dart';
 
@@ -18,8 +19,7 @@ class RecruiterDashBoard extends StatefulWidget {
   const RecruiterDashBoard({super.key});
 
   @override
-  State<RecruiterDashBoard> createState() =>
-      _RecruiterDashBoardState();
+  State<RecruiterDashBoard> createState() => _RecruiterDashBoardState();
 }
 
 class _RecruiterDashBoardState extends State<RecruiterDashBoard> {
@@ -44,7 +44,8 @@ class _RecruiterDashBoardState extends State<RecruiterDashBoard> {
                           MaterialPageRoute(
                               builder: (context) => PostedJobsScreen()));
                     }),
-                    _dashBoard(AppAssets.companyprofiledb, 'Company Profile', () {
+                    _dashBoard(AppAssets.companyprofiledb, 'Company Profile',
+                        () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -76,13 +77,14 @@ class _RecruiterDashBoardState extends State<RecruiterDashBoard> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RecruiterInterviewsScreen()));
+                              builder: (context) =>
+                                  RecruiterInterviewsScreen()));
                     }),
-                    _dashBoard(AppAssets.jobsapplieddb, 'Jobs Applied', () {
-                       Navigator.push(
+                    _dashBoard(AppAssets.jobsapplieddb, 'Add Quiz', () {
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => JobsAppliedScreen()));
+                              builder: (context) => AddQuestion()));
                     })
                   ],
                 ),

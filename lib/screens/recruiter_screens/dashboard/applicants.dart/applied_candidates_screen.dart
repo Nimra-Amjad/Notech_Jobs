@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/components/utils/app_size.dart';
+import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/applicants.dart/schedule_interview/schedule_interview.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
@@ -12,7 +13,8 @@ import '../../../../components/utils/app_colors.dart';
 
 class AppliedCandidatesScreen extends StatefulWidget {
   final String? job_id;
-  const AppliedCandidatesScreen({super.key, this.job_id});
+  final String? job_name;
+  const AppliedCandidatesScreen({super.key, this.job_id, this.job_name});
 
   @override
   State<AppliedCandidatesScreen> createState() =>
@@ -30,6 +32,16 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
     // getdata();
   }
 
+  List<String> topUniversities = [
+    "kIET",
+    "NUST",
+    "FAST",
+    "NED",
+    "DAWOOD",
+    "ILMA",
+    "KITE"
+  ];
+
   model.Candidate loggedinUser = model.Candidate();
   List<dynamic> matching_skills = [];
   List<dynamic> job_match = [];
@@ -38,6 +50,7 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
   List<dynamic> selectedApplicants = [];
   List<dynamic> allApplicants = [];
   List<dynamic> allRequiredSkills = [];
+  String? userID;
   int yearsRequired = 0;
   Future<void> getAllJobs() async {
     await FirebaseFirestore.instance
@@ -51,6 +64,7 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
         allApplicants = value['applicants'];
         yearsRequired = value['yearsrequired'];
         allRequiredSkills = value['skills'];
+        // userID = value['userid'];
 
         for (var applicant in allApplicants) {
           List<dynamic> applicantSkills = applicant['candidate_skills'];
@@ -61,10 +75,16 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
             if (applicantSkills.contains(requiredSkill) &&
                 canyears >= yearsRequired) {
               selectedApplicants.add(applicant['candidate_name']);
-              hasMatchedSkills = true;
-              print(selectedApplicants.toList());
-              break;
+            } else if (topUniversities.contains(applicant['university'])) {
+              // Check if the candidate meets the years of experience requirement
+              if (canyears >= yearsRequired ||
+                  (canyears >= yearsRequired - 1 && canyears < yearsRequired)) {
+                selectedApplicants.add(applicant['candidate_name']);
+              }
             }
+            hasMatchedSkills = true;
+            print(selectedApplicants.toList());
+            break;
           }
           if (hasMatchedSkills) {
             // Applicant has all required skills
@@ -110,7 +130,7 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
               autovalidateMode: AutovalidateMode.disabled,
               keyboardType: TextInputType.emailAddress,
               decoration: AppDecorations.customTextFieldDecoration(
-                  hintText: "Search Jobs"),
+                  hintText: "Search Candidate"),
             ),
             SizedBox(
               height: AppSize.paddingAll,
@@ -119,19 +139,105 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
                 child: ListView.builder(
                     itemCount: selectedApplicants.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          width: double.infinity,
-                          height: 4.h,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: AppColors.lightGrey),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CustomText(text: selectedApplicants[index]),
-                          ),
+                      return Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                    text: selectedApplicants[index],
+                                    fontSize: 17.sp,
+                                    fontWeight: FontWeight.bold,
+                                    fontColor: AppColors.blueColor),
+                                const Divider(
+                                  thickness: 0.5,
+                                  height: 20.0,
+                                  color: Colors.grey,
+                                ),
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) => RecruiterJobUpdate(
+                                        //             user: model.JobPosted(
+                                        //                 id: jobs['id'],
+                                        //                 jobtitle: jobs[
+                                        //                     'jobtitle'],
+                                        //                 jobdes: jobs[
+                                        //                     'jobdes'],
+                                        //                 jobtype: jobs[
+                                        //                     'jobtype']))));
+                                      },
+                                      child: Container(
+                                          width: 80,
+                                          height: 50,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                              color: AppColors.blueLight,
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                          child: CustomText(
+                                              text: "Remove",
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.normal,
+                                              fontColor:
+                                                  AppColors.primaryWhite)),
+                                    ),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) => RecruiterJobUpdate(
+                                        //             user: model.JobPosted(
+                                        //                 id: jobs['id'],
+                                        //                 jobtitle: jobs[
+                                        //                     'jobtitle'],
+                                        //                 jobdes: jobs[
+                                        //                     'jobdes'],
+                                        //                 jobtype: jobs[
+                                        //                     'jobtype']))));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ScheduleInterview(
+                                                      job_id: widget.job_id,
+                                                      appl_id:
+                                                          allApplicants[index]
+                                                              ['userid'],
+                                                      appl_name: allApplicants[
+                                                              index]
+                                                          ['candidate_name'],
+                                                      job_title:
+                                                          widget.job_name,
+                                                    )));
+                                      },
+                                      child: Container(
+                                          width: 140,
+                                          height: 50,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                              color: AppColors.blueLight,
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                          child: CustomText(
+                                              text: "Schedule Interview",
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.normal,
+                                              fontColor:
+                                                  AppColors.primaryWhite)),
+                                    ),
+                                  ],
+                                )
+                              ]),
                         ),
                       );
                     }))

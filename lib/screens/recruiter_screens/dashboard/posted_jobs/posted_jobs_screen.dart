@@ -177,8 +177,11 @@ class _PostedJobsScreenState extends State<PostedJobsScreen> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          AppliedCandidatesScreen(job_id: jobs['id'],)));
-                                                          
+                                                          AppliedCandidatesScreen(
+                                                            job_id: jobs['id'],
+                                                            job_name: jobs[
+                                                                'jobtitle'],
+                                                          )));
                                             },
                                             child: Container(
                                                 width: 80,

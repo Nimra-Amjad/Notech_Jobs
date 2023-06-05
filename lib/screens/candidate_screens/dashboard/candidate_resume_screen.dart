@@ -99,9 +99,42 @@ class _CandidateResumeScreenState extends State<CandidateResumeScreen> {
               decoration: BoxDecoration(
                 color: AppColors.blueColor,
               ),
-              child: CustomText(
-                text: '${loggedinUser.username}',
-                fontColor: AppColors.primaryWhite,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomText(
+                    text: '${loggedinUser.username}',
+                    fontColor: AppColors.primaryWhite,
+                  ),
+                  CustomText(
+                    text: '${loggedinUser.resumeTitle}',
+                    fontColor: AppColors.primaryWhite,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 1.h,
+            ),
+            CustomText(
+              text: "Contact Information",
+              fontWeight: FontWeight.bold,
+              fontColor: AppColors.primaryBlueSea,
+              fontSize: 20.sp,
+            ),
+            Divider(
+              color: AppColors.primaryBlueSea,
+            ),
+            Container(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.sp),
+                child: Column(
+                  children: [
+                    CustomText(text: '${loggedinUser.email}'),
+                    CustomText(text: '${loggedinUser.mobileno}'),
+                  ],
+                ),
               ),
             ),
             SizedBox(
@@ -109,25 +142,111 @@ class _CandidateResumeScreenState extends State<CandidateResumeScreen> {
             ),
             CustomText(
               text: "Skills",
-              fontWeight: FontWeight.normal,
+              fontWeight: FontWeight.bold,
               fontColor: AppColors.primaryBlueSea,
               fontSize: 20.sp,
             ),
             Divider(
               color: AppColors.primaryBlueSea,
             ),
-            ListView.builder(
-                itemCount: candidateSkills.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    child: Row(
+            Container(
+              height: 10.h,
+              child: ListView.builder(
+                  itemCount: candidateSkills.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.sp),
+                      child: Row(
+                        children: [
+                          Icon(Icons.check),
+                          CustomText(text: candidateSkills[index])
+                        ],
+                      ),
+                    );
+                  }),
+            ),
+            SizedBox(
+              height: 1.h,
+            ),
+            CustomText(
+              text: "Education",
+              fontWeight: FontWeight.bold,
+              fontColor: AppColors.primaryBlueSea,
+              fontSize: 20.sp,
+            ),
+            Divider(
+              color: AppColors.primaryBlueSea,
+            ),
+            Container(
+              height: 10.h,
+              child: ListView.builder(
+                  itemCount: educationlist.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.sp),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(Icons.check),
+                          Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                    text: educationlist[index]['collegeName']),
+                                CustomText(
+                                    text: educationlist[index]['passingYear']),
+                                CustomText(
+                                    text: educationlist[index]
+                                        ['qualification']),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+            ),
+            SizedBox(
+              height: 1.h,
+            ),
+            CustomText(
+              text: "Experience",
+              fontWeight: FontWeight.bold,
+              fontColor: AppColors.primaryBlueSea,
+              fontSize: 20.sp,
+            ),
+            Divider(
+              color: AppColors.primaryBlueSea,
+            ),
+            Container(
+              height: 10.h,
+              child: ListView.builder(
+                  itemCount: experiencelist.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(Icons.check),
-                        CustomText(text: candidateSkills[index])
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                  text: experiencelist[index]['companyName']),
+                              CustomText(
+                                  text: experiencelist[index]['designation']),
+                              CustomText(
+                                  text: experiencelist[index]['joinDate']),
+                              CustomText(
+                                  text: experiencelist[index]['endDate']),
+                            ],
+                          ),
+                        ),
                       ],
-                    ),
-                  );
-                })
+                    );
+                  }),
+            ),
           ],
         ),
       )),
