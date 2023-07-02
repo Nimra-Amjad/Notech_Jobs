@@ -3,11 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/components/utils/app_size.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 
+import '../../../../components/buttons/quick_select_button.dart';
 import '../../../../components/text/custom_text.dart';
 import '../../../../components/theme/decorations.dart';
 import '../../../../components/utils/app_colors.dart';
 import '../applicants.dart/applied_candidates_screen.dart';
+import '../create_job/edit_job_description.dart';
 
 class PostedJobsScreen extends StatefulWidget {
   const PostedJobsScreen({super.key});
@@ -24,6 +27,15 @@ class _PostedJobsScreenState extends State<PostedJobsScreen> {
     // TODO: implement dispose
     super.dispose();
     _searchcontroller.dispose();
+  }
+
+  void deleteNestedSubcollections(String id) {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .collection("jobs")
+        .doc(id)
+        .delete();
   }
 
   @override
@@ -51,7 +63,7 @@ class _PostedJobsScreenState extends State<PostedJobsScreen> {
                 color: AppColors.primaryBlack,
                 fontSize: AppSize.textSize * 1.2,
               ),
-              cursorColor: AppColors.blueColor,
+              cursorColor: Color.fromARGB(255, 22, 42, 222),
               controller: _searchcontroller,
               autovalidateMode: AutovalidateMode.disabled,
               keyboardType: TextInputType.emailAddress,
@@ -113,18 +125,25 @@ class _PostedJobsScreenState extends State<PostedJobsScreen> {
                                         children: [
                                           GestureDetector(
                                             onTap: () {
-                                              // Navigator.push(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //         builder: (context) => RecruiterJobUpdate(
-                                              //             user: model.JobPosted(
-                                              //                 id: jobs['id'],
-                                              //                 jobtitle: jobs[
-                                              //                     'jobtitle'],
-                                              //                 jobdes: jobs[
-                                              //                     'jobdes'],
-                                              //                 jobtype: jobs[
-                                              //                     'jobtype']))));
+                                              print(jobs['mcqs']);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => EditJobDescription(
+                                                          user: model.JobPosted(
+                                                              id: jobs['id'],
+                                                              jobtitle: jobs[
+                                                                  'jobtitle'],
+                                                              jobdes: jobs[
+                                                                  'jobdes'],
+                                                              jobtype: jobs[
+                                                                  'jobtype'],
+                                                              yearsrequired: jobs[
+                                                                  'yearsrequired'],
+                                                              skills: jobs[
+                                                                  'skills'],
+                                                              mcqs: jobs[
+                                                                  'mcqs']))));
                                             },
                                             child: Container(
                                                 width: 80,
@@ -148,8 +167,7 @@ class _PostedJobsScreenState extends State<PostedJobsScreen> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              // deleteNestedSubcollections(
-                                              //     jobs['id']);
+                                              _alert(jobs['id']);
                                             },
                                             child: Container(
                                                 width: 80,
@@ -214,5 +232,53 @@ class _PostedJobsScreenState extends State<PostedJobsScreen> {
         ),
       )),
     );
+  }
+
+  _alert(String id) {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              // insetPadding: EdgeInsets.all(20),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 30),
+                  Text(
+                    'Are you sure you want to remove?',
+                    // maxLines: 2,
+                    style: TextStyle(
+                      color: AppColors.primaryBlack,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      QuickSelectButton(
+                        text: 'No',
+                        ontap: () {
+                          Navigator.pop(context);
+                        },
+                        btncolor: AppColors.primaryWhite,
+                        textColor: AppColors.blueColor,
+                      ),
+                      QuickSelectButton(
+                          text: 'Yes',
+                          ontap: () {
+                            deleteNestedSubcollections(id);
+                            Navigator.pop(context);
+                          })
+                    ],
+                  )
+                ],
+              ));
+        });
   }
 }

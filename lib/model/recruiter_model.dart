@@ -125,7 +125,7 @@ class Interviews {
       };
 }
 
-///<-------------------------------Interviews Model--------------------------------->
+///<-------------------------------Skills Required Model--------------------------------->
 
 class Skills {
   final String? skill;

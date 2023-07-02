@@ -11,9 +11,9 @@ import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/posted_job
 import '../../../components/buttons/quick_select_button.dart';
 import '../../../components/utils/app_assets.dart';
 import '../../login.dart';
-import 'add_quiz/add_question.dart';
 import 'company_profile_screen.dart';
 import 'create_job/add_job_description.dart';
+import 'create_job/add_quiz.dart';
 
 class RecruiterDashBoard extends StatefulWidget {
   const RecruiterDashBoard({super.key});
@@ -81,10 +81,8 @@ class _RecruiterDashBoardState extends State<RecruiterDashBoard> {
                                   RecruiterInterviewsScreen()));
                     }),
                     _dashBoard(AppAssets.jobsapplieddb, 'Add Quiz', () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddQuestion()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => AddQuiz()));
                     })
                   ],
                 ),

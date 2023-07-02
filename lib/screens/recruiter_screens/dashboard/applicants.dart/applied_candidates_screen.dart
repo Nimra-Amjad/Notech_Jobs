@@ -47,11 +47,66 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
   List<dynamic> job_match = [];
 
   //<---------------------------------Get All Jobs--------------------------------------------->
+  // List<dynamic> selectedApplicants = [];
+  // List<dynamic> allApplicants = [];
+  // List<dynamic> allRequiredSkills = [];
+  // String? userID;
+  // int yearsRequired = 0;
+  // Future<void> getAllJobs() async {
+  //   await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(user!.uid)
+  //       .collection("jobs")
+  //       .doc(widget.job_id)
+  //       .get()
+  //       .then((value) {
+  //     setState(() {
+  //       allApplicants = value['applicants'];
+  //       yearsRequired = value['yearsrequired'];
+  //       allRequiredSkills = value['skills'];
+  //       // userID = value['userid'];
+
+  //       for (var applicant in allApplicants) {
+  //         List<dynamic> applicantSkills = applicant['candidate_skills'];
+  //         int canyears = applicant['yearsOfExperience'];
+  //         bool hasMatchedSkills = false;
+
+  //         for (var requiredSkill in allRequiredSkills) {
+  //           if (applicantSkills.contains(requiredSkill) &&
+  //               canyears >= yearsRequired)
+  //               {
+  //             selectedApplicants.add(applicant['candidate_name']);
+  //           } else if (topUniversities.contains(applicant['university'])) {
+  //             // Check if the candidate meets the years of experience requirement
+  //             // if (canyears >= yearsRequired ||
+  //             //     (canyears >= yearsRequired - 1 && canyears < yearsRequired)) {
+  //             //   selectedApplicants.add(applicant['candidate_name']);
+  //             // }
+  //           }
+  //           hasMatchedSkills = true;
+  //           print(selectedApplicants.toList());
+  //           break;
+  //         }
+  //         if (hasMatchedSkills) {
+  //           // Applicant has all required skills
+  //           print(
+  //               'Applicant ${applicant['candidate_name']} has matched at least one of the required skills');
+  //         } else {
+  //           // Applicant does not have all required skills
+  //           print(
+  //               'Applicant ${applicant['candidate_name']} does not have any of the required skills');
+  //         }
+  //       }
+  //     });
+  //   });
+  // }
+
   List<dynamic> selectedApplicants = [];
   List<dynamic> allApplicants = [];
   List<dynamic> allRequiredSkills = [];
   String? userID;
   int yearsRequired = 0;
+
   Future<void> getAllJobs() async {
     await FirebaseFirestore.instance
         .collection('users')
@@ -68,30 +123,22 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
 
         for (var applicant in allApplicants) {
           List<dynamic> applicantSkills = applicant['candidate_skills'];
-          int canyears = applicant['yearsOfExperience'];
+          int canYears = applicant['yearsOfExperience'];
           bool hasMatchedSkills = false;
 
           for (var requiredSkill in allRequiredSkills) {
             if (applicantSkills.contains(requiredSkill) &&
-                canyears >= yearsRequired) {
+                canYears >= yearsRequired) {
               selectedApplicants.add(applicant['candidate_name']);
-            } else if (topUniversities.contains(applicant['university'])) {
-              // Check if the candidate meets the years of experience requirement
-              if (canyears >= yearsRequired ||
-                  (canyears >= yearsRequired - 1 && canyears < yearsRequired)) {
-                selectedApplicants.add(applicant['candidate_name']);
-              }
+              hasMatchedSkills = true;
+              break;
             }
-            hasMatchedSkills = true;
-            print(selectedApplicants.toList());
-            break;
           }
+
           if (hasMatchedSkills) {
-            // Applicant has all required skills
             print(
                 'Applicant ${applicant['candidate_name']} has matched at least one of the required skills');
           } else {
-            // Applicant does not have all required skills
             print(
                 'Applicant ${applicant['candidate_name']} does not have any of the required skills');
           }
@@ -155,87 +202,35 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
                                   height: 20.0,
                                   color: Colors.grey,
                                 ),
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) => RecruiterJobUpdate(
-                                        //             user: model.JobPosted(
-                                        //                 id: jobs['id'],
-                                        //                 jobtitle: jobs[
-                                        //                     'jobtitle'],
-                                        //                 jobdes: jobs[
-                                        //                     'jobdes'],
-                                        //                 jobtype: jobs[
-                                        //                     'jobtype']))));
-                                      },
-                                      child: Container(
-                                          width: 80,
-                                          height: 50,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                              color: AppColors.blueLight,
-                                              borderRadius:
-                                                  BorderRadius.circular(12)),
-                                          child: CustomText(
-                                              text: "Remove",
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.normal,
-                                              fontColor:
-                                                  AppColors.primaryWhite)),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) => RecruiterJobUpdate(
-                                        //             user: model.JobPosted(
-                                        //                 id: jobs['id'],
-                                        //                 jobtitle: jobs[
-                                        //                     'jobtitle'],
-                                        //                 jobdes: jobs[
-                                        //                     'jobdes'],
-                                        //                 jobtype: jobs[
-                                        //                     'jobtype']))));
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ScheduleInterview(
-                                                      job_id: widget.job_id,
-                                                      appl_id:
-                                                          allApplicants[index]
-                                                              ['userid'],
-                                                      appl_name: allApplicants[
-                                                              index]
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ScheduleInterview(
+                                                  job_id: widget.job_id,
+                                                  appl_id: allApplicants[index]
+                                                      ['userid'],
+                                                  appl_name:
+                                                      allApplicants[index]
                                                           ['candidate_name'],
-                                                      job_title:
-                                                          widget.job_name,
-                                                    )));
-                                      },
-                                      child: Container(
-                                          width: 140,
-                                          height: 50,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                              color: AppColors.blueLight,
-                                              borderRadius:
-                                                  BorderRadius.circular(12)),
-                                          child: CustomText(
-                                              text: "Schedule Interview",
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.normal,
-                                              fontColor:
-                                                  AppColors.primaryWhite)),
-                                    ),
-                                  ],
+                                                  job_title: widget.job_name,
+                                                )));
+                                  },
+                                  child: Container(
+                                      width: 140,
+                                      height: 50,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          color: AppColors.blueLight,
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      child: CustomText(
+                                          text: "Schedule Interview",
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.normal,
+                                          fontColor: AppColors.primaryWhite)),
                                 )
                               ]),
                         ),

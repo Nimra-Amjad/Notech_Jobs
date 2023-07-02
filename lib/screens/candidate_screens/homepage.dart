@@ -223,6 +223,7 @@ class _CandidateHomePageState extends State<CandidateHomePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => CandidateUpdatePage(
+                                text: "candidateresumeprofile",
                                   candidate: model.Candidate(
                                       username: loggedinUser.username,
                                       email: loggedinUser.email,

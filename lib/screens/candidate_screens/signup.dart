@@ -58,8 +58,8 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
       print("error occured");
       showSnackBar(context, res, Colors.red);
     } else {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const CandidateDashboardScreen()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const CandidateDashboardScreen()));
       showSnackBar(context, res, Colors.black);
     }
   }
@@ -163,7 +163,7 @@ class _CandidateSignUpPageState extends State<CandidateSignUpPage> {
                       cursorColor: AppColors.blueColor,
                       controller: _mobilenocontroller,
                       autovalidateMode: AutovalidateMode.disabled,
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.number,
                       decoration: AppDecorations.customTextFieldDecoration(
                           prefixIcon: Padding(
                             padding: EdgeInsets.only(left: AppSize.paddingAll),

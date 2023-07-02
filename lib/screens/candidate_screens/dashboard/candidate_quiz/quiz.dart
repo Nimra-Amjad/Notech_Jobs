@@ -19,7 +19,8 @@ class _MCQScreenState extends State<MCQScreen> {
   List<MCQ> mcqs = [];
   int currentIndex = 0;
   Map<int, int> selectedAnswers = {};
-  int marks = 0;
+  int obtainedMarks = 0;
+  double percentage = 0.0;
 
   @override
   void initState() {
@@ -39,12 +40,14 @@ class _MCQScreenState extends State<MCQScreen> {
       Map<String, dynamic>? data =
           documentSnapshot.data() as Map<String, dynamic>?;
       if (data != null) {
-        List<dynamic> mcqList = data['mcqs'];
-        List<MCQ> loadedMCQs =
-            mcqList.map((mcqData) => MCQ.fromMap(mcqData)).toList();
-        setState(() {
-          mcqs = loadedMCQs;
-        });
+        List<dynamic>? mcqList = data['mcqs'];
+        if (mcqList != null) {
+          List<MCQ> loadedMCQs =
+              mcqList.map((mcqData) => MCQ.fromMap(mcqData)).toList();
+          setState(() {
+            mcqs = loadedMCQs;
+          });
+        }
       }
     }
   }
@@ -57,7 +60,7 @@ class _MCQScreenState extends State<MCQScreen> {
 
   void calculateMarks() {
     int totalMarks = mcqs.length;
-    int obtainedMarks = 0;
+    obtainedMarks = 0;
     for (var i = 0; i < mcqs.length; i++) {
       if (selectedAnswers.containsKey(i) &&
           selectedAnswers[i] == mcqs[i].correctAnswerIndex) {
@@ -65,7 +68,7 @@ class _MCQScreenState extends State<MCQScreen> {
       }
     }
     setState(() {
-      marks = obtainedMarks;
+      percentage = (obtainedMarks / totalMarks) * 100;
     });
   }
 
@@ -94,7 +97,7 @@ class _MCQScreenState extends State<MCQScreen> {
       ),
       body: mcqs.isEmpty
           ? Center(
-              child: CircularProgressIndicator(),
+              child: Text("NOT AVAILABLE"),
             )
           : SingleChildScrollView(
               padding: EdgeInsets.all(16.0),
@@ -148,9 +151,15 @@ class _MCQScreenState extends State<MCQScreen> {
                     ],
                   ),
                   SizedBox(height: 16.0),
-                  if (marks != 0)
+                  if (obtainedMarks != 0)
                     Text(
-                      'Marks Obtained: $marks/$totalMarks',
+                      'Marks Obtained: $obtainedMarks/$totalMarks',
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                  if (percentage != 0.0)
+                    Text(
+                      'Percentage: ${percentage.toStringAsFixed(2)}%',
                       style: TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),

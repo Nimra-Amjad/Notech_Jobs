@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:notech_mobile_app/screens/candidate_screens/dashboard/candidate_resume_screen.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/add_experience.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
@@ -188,7 +189,7 @@ class _ResumeExperienceState extends State<ResumeExperience> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ResumeExperience()));
+                            builder: (context) => CandidateResumeScreen()));
                   },
                 ),
               ],

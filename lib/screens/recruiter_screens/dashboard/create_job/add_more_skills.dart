@@ -1,0 +1,112 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:notech_mobile_app/components/buttons/custom_button.dart';
+import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/resume_skills.dart';
+import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/create_job/edit_skills.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:notech_mobile_app/model/candidate_model.dart' as model;
+import 'package:notech_mobile_app/model/recruiter_model.dart' as re_model;
+
+import '../../../../components/buttons/rounded_back_button.dart';
+import '../../../../components/text/custom_text.dart';
+import '../../../../components/theme/decorations.dart';
+import '../../../../components/utils/app_colors.dart';
+import '../../../../components/utils/app_size.dart';
+
+class AddMoreSkills extends StatefulWidget {
+  final String jobid;
+  const AddMoreSkills({super.key, required this.jobid});
+
+  @override
+  State<AddMoreSkills> createState() => _AddMoreSkillsState();
+}
+
+class _AddMoreSkillsState extends State<AddMoreSkills> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _skillcontroller = TextEditingController();
+  User? user = FirebaseAuth.instance.currentUser;
+  model.Skills loggedinUser = model.Skills();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _skillcontroller.dispose();
+  }
+
+  ///<------------------------------Add Candidate Skills to Database------------------------------>
+  addskill() async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .collection('jobs')
+        .doc(widget.jobid)
+        .update({
+      "skills": FieldValue.arrayUnion([_skillcontroller.text])
+    });
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                EditSkills(user: re_model.JobPosted(id: widget.jobid))));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    AppSize().init(context);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.blueColor,
+        title: CustomText(
+          text: 'Add your skills',
+          fontColor: AppColors.primaryWhite,
+        ),
+      ),
+      body: SafeArea(
+          child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.sp),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: AppSize.paddingBottom * 1),
+                TextFormField(
+                  cursorHeight: AppSize.textSize * 1.2,
+                  style: TextStyle(
+                    color: AppColors.primaryBlack,
+                    fontSize: AppSize.textSize * 1.2,
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "* Required";
+                    }
+                    return null;
+                  },
+                  cursorColor: AppColors.blueColor,
+                  controller: _skillcontroller,
+                  autovalidateMode: AutovalidateMode.disabled,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: AppDecorations.customTextFieldDecoration(
+                      hintText: "Skill*"),
+                ),
+                SizedBox(height: AppSize.paddingBottom * 4),
+              ],
+            ),
+          ),
+        ),
+      )),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(left: 20.sp),
+        child: CustomButton(
+            text: 'Save',
+            onTap: () {
+              if (_formKey.currentState!.validate()) {
+                addskill();
+              }
+            }),
+      ),
+    );
+  }
+}

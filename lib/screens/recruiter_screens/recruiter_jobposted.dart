@@ -87,19 +87,19 @@ class _RecruiterJobPostState extends State<RecruiterJobPost> {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      RecruiterJobUpdate(
-                                                          user: model.JobPosted(
-                                                              id: jobs['id'],
-                                                              jobtitle: jobs[
-                                                                  'jobtitle'],
-                                                              jobdes: jobs[
-                                                                  'jobdes'],
-                                                              jobtype: jobs[
-                                                                  'jobtype']))));
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          // RecruiterJobUpdate(
+                                          //     user: model.JobPosted(
+                                          //         id: jobs['id'],
+                                          //         jobtitle: jobs[
+                                          //             'jobtitle'],
+                                          //         jobdes: jobs[
+                                          //             'jobdes'],
+                                          //         jobtype: jobs[
+                                          //             'jobtype']))));
                                         },
                                         child: Container(
                                             width: 80,

@@ -81,6 +81,6 @@ class _ViewMcqsState extends State<ViewMcqs> {
             // Return an empty widget if no MCQs are found
             return Text('No MCQs found');
           },
-        ));
+        ),);
   }
 }

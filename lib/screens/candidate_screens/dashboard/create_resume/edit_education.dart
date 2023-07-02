@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:notech_mobile_app/components/utils/app_size.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/add_education.dart';
-import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/resume_experience.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 
@@ -10,46 +10,72 @@ import '../../../../components/buttons/custom_button.dart';
 import '../../../../components/text/custom_text.dart';
 import '../../../../components/theme/decorations.dart';
 import '../../../../components/utils/app_colors.dart';
-import '../../../../components/utils/app_size.dart';
 
-class ResumeEducation extends StatefulWidget {
-  const ResumeEducation({super.key});
+class EditResumeEducation extends StatefulWidget {
+  // final model.Candidate candidate;
+  final Map<String, dynamic> candidate;
+  final int index;
+  const EditResumeEducation(
+      {super.key, required this.candidate, required this.index});
 
   @override
-  State<ResumeEducation> createState() => _ResumeEducationState();
+  State<EditResumeEducation> createState() => _EditResumeEducationState();
 }
 
-class _ResumeEducationState extends State<ResumeEducation> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _passingYearcontroller = TextEditingController();
-  final TextEditingController _collegeNamecontroller = TextEditingController();
-  final TextEditingController _qualificationcontroller =
-      TextEditingController();
-
+class _EditResumeEducationState extends State<EditResumeEducation> {
   User? user = FirebaseAuth.instance.currentUser;
+  TextEditingController _qualificationController = TextEditingController();
+  TextEditingController _passingYearController = TextEditingController();
+  TextEditingController _collegeNameController = TextEditingController();
+
+  List<model.Education> educationList = [];
+
+  @override
+  void initState() {
+    _qualificationController =
+        TextEditingController(text: widget.candidate['qualification']);
+    _passingYearController =
+        TextEditingController(text: widget.candidate['passingYear']);
+    _collegeNameController =
+        TextEditingController(text: widget.candidate['collegeName']);
+    super.initState();
+  }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _qualificationController.dispose();
+    _passingYearController.dispose();
+    _collegeNameController.dispose();
     super.dispose();
-    _qualificationcontroller.dispose();
-    _collegeNamecontroller.dispose();
-    _passingYearcontroller.dispose();
   }
 
   ///<------------------------------Add Candidate Education to Database------------------------------>
-  addeducation() async {
+  editeducation() async {
     model.Education edu = model.Education(
-        qualification: _qualificationcontroller.text,
-        passingYear: _passingYearcontroller.text,
-        collegeName: _collegeNamecontroller.text);
-    await FirebaseFirestore.instance.collection("users").doc(user!.uid).update({
-      "educations": FieldValue.arrayUnion([edu.toJson()])
-    });
+      qualification: _qualificationController.text,
+      passingYear: _passingYearController.text,
+      collegeName: _collegeNameController.text,
+    );
+
+    // Retrieve the current education list from the candidate map
+    List<dynamic> educationList = widget.candidate['educations'];
+
+    // Update the educations at the specified index
+    educationList[widget.index] = edu.toJson();
+
+    // Update the 'educations' field in the 'candidate' map
+    widget.candidate['educations'] = educationList;
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .update({"educations": widget.candidate});
+
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => AddEducation()));
   }
 
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     AppSize().init(context);
@@ -57,7 +83,7 @@ class _ResumeEducationState extends State<ResumeEducation> {
       appBar: AppBar(
         backgroundColor: AppColors.blueColor,
         title: CustomText(
-          text: 'Add your Education',
+          text: 'Edit Your Education',
           fontColor: AppColors.primaryWhite,
         ),
       ),
@@ -85,7 +111,7 @@ class _ResumeEducationState extends State<ResumeEducation> {
                     return null;
                   },
                   cursorColor: AppColors.blueColor,
-                  controller: _qualificationcontroller,
+                  controller: _qualificationController,
                   autovalidateMode: AutovalidateMode.disabled,
                   keyboardType: TextInputType.emailAddress,
                   decoration: AppDecorations.customTextFieldDecoration(
@@ -107,7 +133,7 @@ class _ResumeEducationState extends State<ResumeEducation> {
                     return null;
                   },
                   cursorColor: AppColors.blueColor,
-                  controller: _passingYearcontroller,
+                  controller: _passingYearController,
                   autovalidateMode: AutovalidateMode.disabled,
                   keyboardType: TextInputType.number,
                   decoration: AppDecorations.customTextFieldDecoration(
@@ -129,7 +155,7 @@ class _ResumeEducationState extends State<ResumeEducation> {
                     return null;
                   },
                   cursorColor: AppColors.blueColor,
-                  controller: _collegeNamecontroller,
+                  controller: _collegeNameController,
                   autovalidateMode: AutovalidateMode.disabled,
                   keyboardType: TextInputType.emailAddress,
                   decoration: AppDecorations.customTextFieldDecoration(
@@ -139,35 +165,12 @@ class _ResumeEducationState extends State<ResumeEducation> {
                   height: AppSize.paddingBottom * 5,
                 ),
                 CustomButton(
-                    text: "Add Education",
+                    text: "Update Education",
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        addeducation();
+                        editeducation();
                       }
                     }),
-                SizedBox(
-                  height: 1.h,
-                ),
-                CustomButton(
-                    text: "View Education",
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddEducation()));
-                    }),
-                SizedBox(
-                  height: 1.h,
-                ),
-                CustomButton(
-                  text: 'Next',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ResumeExperience()));
-                  },
-                ),
               ],
             ),
           ),

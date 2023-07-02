@@ -6,6 +6,7 @@ import 'package:notech_mobile_app/components/text/custom_text.dart';
 import 'package:notech_mobile_app/components/utils/app_size.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/add_skill.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/resume_education.dart';
+import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/resume_title.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 import '../../../../components/utils/app_colors.dart';
@@ -45,25 +46,44 @@ class _ResumeSkillsState extends State<ResumeSkills> {
   }
 
   //<---------------------------------Remove Candidate Skills--------------------------------------------->
-  List candidateRemoveSkills = [];
-  void removeSkills() async {
-    await FirebaseFirestore.instance.collection('users').doc(user!.uid).update({
-      "skills": FieldValue.arrayRemove(['skills'])
-    }).then((value) {
-      print(candidateSkills);
-    });
+  Future<void> removeElementFromList(String element) async {
+    try {
+      setState(() {
+        candidateSkills.remove(element);
+        print(candidateSkills);
+      });
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .update({"skills": candidateSkills});
+    } catch (error) {
+      print('Error removing element from list: $error');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     AppSize().init(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.blueColor,
-        title: CustomText(text: 'Add your skills',fontColor: AppColors.primaryWhite,),
-      ),
-      body: SafeArea(
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ResumeTitleScreen()));
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.blueColor,
+          title: CustomText(
+            text: 'Add your skills',
+            fontColor: AppColors.primaryWhite,
+          ),
+        ),
+        body: SafeArea(
+            child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.sp),
           child: ListView.builder(
+              scrollDirection: Axis.vertical,
               itemCount: candidateSkills.length,
               itemBuilder: (context, index) {
                 return Container(
@@ -85,7 +105,9 @@ class _ResumeSkillsState extends State<ResumeSkills> {
                             fontColor: AppColors.primaryBlack),
                         GestureDetector(
                           onTap: () {
-                            removeSkills();
+                            removeElementFromList(
+                              candidateSkills[index].toString(),
+                            );
                           },
                           child: Icon(
                             Icons.remove_circle,
@@ -96,30 +118,32 @@ class _ResumeSkillsState extends State<ResumeSkills> {
                     ),
                   ),
                 );
-              })),
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(left: 20.sp),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomButton(
-                text: "Add Skill",
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddSkill()));
-                }),
-            SizedBox(
-              height: 1.h,
-            ),
-            CustomButton(
-                text: "Next",
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ResumeEducation()));
-                }),
-          ],
+              }),
+        )),
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(left: 20.sp),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CustomButton(
+                  text: "Add Skill",
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AddSkill()));
+                  }),
+              SizedBox(
+                height: 1.h,
+              ),
+              CustomButton(
+                  text: "Next",
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ResumeEducation()));
+                  }),
+            ],
+          ),
         ),
       ),
     );

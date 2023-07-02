@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:notech_mobile_app/model/candidate_model.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/dashboard/jobs_screens/specific_job_detail_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
@@ -91,17 +90,55 @@ class _JobsScreenState extends State<JobsScreen> {
     });
   }
 
+  ///<------------------------------Check the user id------------------------------>
+  bool hasApplied = false;
+  Future<void> checkUid(String uid1, String uid2) async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid1)
+          .collection('jobs')
+          .doc(uid2)
+          .get();
+
+      if (snapshot.exists) {
+        // Access the list of applicants from the document
+        List<dynamic>? applicantsList =
+            (snapshot.data() as Map<String, dynamic>)['applicants'];
+        if (applicantsList != null) {
+          for (var applicant in applicantsList) {
+            if (applicant['userid'] == loggedinUser.uid) {
+              hasApplied = true;
+              break;
+            }
+          }
+          if (hasApplied) {
+            print("You have already applied.");
+          } else {
+            print("You have not applied yet.");
+          }
+        } else {
+          print("Applicants list is null.");
+        }
+      } else {
+        print("Document does not exist.");
+      }
+    } catch (error) {
+      print("Error getting applicants: $error");
+    }
+  }
+
   ///<------------------------------Candidate apply to jobs------------------------------>
 
   apply(String uid1, String uid2) async {
     model.Applicants appl = model.Applicants(
         resumeTitle: loggedinUser.resumeTitle,
-        userid: loggedinUser.uid,
         yearsOfExperience: loggedinUser.yearsOfExperience,
         candidate_name: loggedinUser.username,
         candidate_skills: loggedinUser.skills,
         candidate_educations: loggedinUser.educations,
-        candidate_experience: loggedinUser.experience);
+        candidate_experience: loggedinUser.experience,
+        userid: loggedinUser.uid);
     await FirebaseFirestore.instance
         .collection("users")
         .doc(uid1)
@@ -112,6 +149,7 @@ class _JobsScreenState extends State<JobsScreen> {
     });
     print(uid1);
     print(uid2);
+
     // Navigator.push(
     //     context, MaterialPageRoute(builder: (context) => CandidateJobApply()));
   }
@@ -241,51 +279,55 @@ class _JobsScreenState extends State<JobsScreen> {
                                                     height: 20.0,
                                                     color: Colors.grey,
                                                   ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      apply(jobs['uid'],
-                                                          jobs['id']);
-                                                      print(jobs['uid']);
-                                                      // Navigator.push(
-                                                      //     context,
-                                                      //     MaterialPageRoute(
-                                                      //         builder: (context) =>
-                                                      //             MCQScreen(
-                                                      //                 uid1: jobs[
-                                                      //                     'uid'],
-                                                      //                 uid2: jobs[
-                                                      //                     'id'])));
-                                                    },
-                                                    child: Container(
-                                                      width: 150,
-                                                      height: 50,
-                                                      decoration: BoxDecoration(
-                                                          color: AppColors
-                                                              .blueLight,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      12)),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                        children: const [
-                                                          Text(
-                                                            "Apply Now",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
+                                                  hasApplied == false
+                                                      ? GestureDetector(
+                                                          onTap: () {
+                                                            // apply(jobs['uid'],
+                                                            //     jobs['id']);
+                                                            // print(jobs['uid']);
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder: (context) => MCQScreen(
+                                                                        uid1: jobs[
+                                                                            'uid'],
+                                                                        uid2: jobs[
+                                                                            'id'])));
+                                                          },
+                                                          child: Container(
+                                                            width: 150,
+                                                            height: 50,
+                                                            decoration: BoxDecoration(
+                                                                color: AppColors
+                                                                    .blueLight,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12)),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceAround,
+                                                              children: const [
+                                                                Text(
+                                                                  "Apply Now",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white),
+                                                                ),
+                                                                Icon(
+                                                                  Icons
+                                                                      .arrow_upward_outlined,
+                                                                  color: Colors
+                                                                      .white,
+                                                                )
+                                                              ],
+                                                            ),
                                                           ),
-                                                          Icon(
-                                                            Icons
-                                                                .arrow_upward_outlined,
-                                                            color: Colors.white,
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  )
+                                                        )
+                                                      : CustomText(
+                                                          text:
+                                                              "Your Resume has been submitted")
                                                 ],
                                               ),
                                             ),

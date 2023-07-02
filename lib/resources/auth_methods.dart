@@ -25,6 +25,21 @@ class AuthMethods {
     }
   }
 
+  ///<---------------------------UPDATE CANDIDATE RESUME EXPERIENCE------------------------->
+
+  Future<void> updateCandidateResumeTitle(resumeTitle, experience) async {
+    final userCollection = _firestore.collection("users");
+    final docref = userCollection.doc(user!.uid);
+    try {
+      await docref.update({
+        'resumeTitle': resumeTitle,
+        'yearsOfExperience': experience,
+      });
+    } catch (e) {
+      print("some error occured");
+    }
+  }
+
   ///<---------------------------UPDATE RECRUITER------------------------->
 
   Future<void> updateRecruiter(username, email, mobileno, location) async {
@@ -46,7 +61,8 @@ class AuthMethods {
 
   ///<-------------------------------UPDATE JOB DATA--------------------------------->
 
-  Future<void> updatejobdata(id, jobtitle, jobdes, jobtype) async {
+  Future<void> updatejobdata(
+      id, jobtitle, jobdes, jobtype, yearsrequired, skills) async {
     final userCollection = _firestore.collection("users");
     final docref = userCollection.doc(user!.uid).collection("jobs").doc(id);
     try {
@@ -54,6 +70,8 @@ class AuthMethods {
         'jobtitle': jobtitle,
         'jobdes': jobdes,
         'jobtype': jobtype,
+        'yearsrequired': yearsrequired,
+        'skills': skills,
       });
     } catch (e) {
       print("some error occured");
@@ -131,6 +149,7 @@ class AuthMethods {
           email: email,
           mobileno: mobileno,
         );
+        print(user);
 
         await _firestore
             .collection("users")

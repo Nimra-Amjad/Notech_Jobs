@@ -1,36 +1,58 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/create_job/view_mcqs.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 
 import '../../../../components/buttons/custom_button.dart';
+import '../../../../components/buttons/quick_select_button.dart';
 import '../../../../components/text/custom_text.dart';
 import '../../../../components/theme/decorations.dart';
 import '../../../../components/utils/app_colors.dart';
-import '../../../../components/utils/app_icons.dart';
 import '../../../../components/utils/app_size.dart';
+import 'edit_job_description.dart';
 
-class AddQuiz extends StatefulWidget {
-  final String? job_id;
-  const AddQuiz({super.key, this.job_id});
+class EditMCQsScreen extends StatefulWidget {
+  final String jobid;
+  final int index;
+  final String question;
+  final String correctanswer;
+  final List option;
+  const EditMCQsScreen({
+    super.key,
+    required this.question,
+    required this.correctanswer,
+    required this.option,
+    required this.index,
+    required this.jobid,
+  });
 
   @override
-  State<AddQuiz> createState() => _AddQuizState();
+  State<EditMCQsScreen> createState() => _EditMCQsScreenState();
 }
 
-class _AddQuizState extends State<AddQuiz> {
+class _EditMCQsScreenState extends State<EditMCQsScreen> {
   User? user = FirebaseAuth.instance.currentUser;
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _questionController = TextEditingController();
-  final TextEditingController _correctAnswerController =
-      TextEditingController();
-  final TextEditingController _option1Controller = TextEditingController();
-  final TextEditingController _option2Controller = TextEditingController();
-  final TextEditingController _option3Controller = TextEditingController();
-  final TextEditingController _option4Controller = TextEditingController();
-  String categoryDropDown = 'Select Category';
+  TextEditingController _questionController = TextEditingController();
+  TextEditingController _correctAnswerController = TextEditingController();
+  TextEditingController _option1Controller = TextEditingController();
+  TextEditingController _option2Controller = TextEditingController();
+  TextEditingController _option3Controller = TextEditingController();
+  TextEditingController _option4Controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _questionController.text = widget.question;
+    _correctAnswerController.text = widget.correctanswer;
+    _option1Controller.text = widget.option[0];
+    _option2Controller.text = widget.option[1];
+    _option3Controller.text = widget.option[2];
+    _option4Controller.text = widget.option[3];
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -43,54 +65,81 @@ class _AddQuizState extends State<AddQuiz> {
     _option4Controller.dispose();
   }
 
-  Future<void> addMCQ(String question, List<String> options,
-      String correctAnswer, String category) async {
+  Future<void> updateMCQ(
+    int index,
+    String question,
+    List<String> options,
+    String correctAnswer,
+  ) async {
     var mcqData = {
       'question': question,
       'options': options,
       'correctAnswer': correctAnswer,
-      'category': category,
     };
 
     final docRef = FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
         .collection('jobs')
-        .doc(widget.job_id);
+        .doc(widget.jobid);
 
     await docRef.get().then((value) async {
       if (value.exists) {
         var jobData = value.data();
-        var mcqs = jobData!['mcqs'] ??
-            []; // Retrieve the existing MCQs or initialize an empty list
+        var mcqs = jobData!['mcqs'] ?? [];
 
-        mcqs.add(mcqData); // Add the new MCQ data to the list
+        if (index >= 0 && index < mcqs.length) {
+          mcqs[index] = mcqData; // Update the MCQ data at the specified index
+        }
 
-        await docRef.update(
-            {'mcqs': mcqs}); // Update the 'mcqs' field with the updated list
+        await docRef.update({'mcqs': mcqs});
       }
     });
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ViewMcqs(
-                  job_id: widget.job_id!,
-                )));
   }
 
-// Usage example
-  void addSampleMCQ() async {
+  void updateSampleMCQ() async {
     final question = _questionController.text;
     final options = [
       _option1Controller.text,
       _option2Controller.text,
       _option3Controller.text,
-      _option4Controller.text
+      _option4Controller.text,
     ];
     final correctAnswer = _correctAnswerController.text;
-    final category = categoryDropDown;
 
-    await addMCQ(question, options, correctAnswer, category);
+    final index =
+        await updateMCQ(widget.index, question, options, correctAnswer);
+
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => EditJobDescription()));
+  }
+
+  Future<void> deleteMCQ(int index) async {
+    final docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .collection('jobs')
+        .doc(widget.jobid);
+
+    await docRef.get().then((value) async {
+      if (value.exists) {
+        var jobData = value.data();
+        var mcqs = jobData!['mcqs'] ?? [];
+
+        if (index >= 0 && index < mcqs.length) {
+          mcqs.removeAt(index);
+        }
+
+        await docRef.update({'mcqs': mcqs});
+      }
+    });
+  }
+
+  void deleteSampleMCQ() async {
+    await deleteMCQ(widget.index);
+
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => EditJobDescription()));
   }
 
   @override
@@ -102,6 +151,11 @@ class _AddQuizState extends State<AddQuiz> {
           text: 'Add Quiz',
           fontColor: AppColors.primaryWhite,
         ),
+        leading: GestureDetector(
+            onTap: () {
+              _alert();
+            },
+            child: Icon(Icons.delete)),
       ),
       body: Form(
         key: _formKey,
@@ -240,57 +294,12 @@ class _AddQuizState extends State<AddQuiz> {
                       hintText: "Option 4*"),
                 ),
                 SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 6.h,
-                  decoration: BoxDecoration(
-                      color: AppColors.textboxfillcolor,
-                      border: Border.all(color: AppColors.textboxfillcolor),
-                      borderRadius: BorderRadius.circular(20.0)),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.sp),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        borderRadius: BorderRadius.circular(20),
-                        icon: Icon(
-                          AppIcons.dropdownIcon,
-                          color: AppColors.blueColor,
-                        ),
-                        isExpanded: true,
-                        value: categoryDropDown,
-                        items: [
-                          'Select Category',
-                          'Flutter',
-                          'React Native',
-                          'Hybrid',
-                          'Remote'
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                              value: value,
-                              child: CustomText(
-                                text: value,
-                                fontWeight: FontWeight.normal,
-                                fontColor: Colors.grey.shade600,
-                              ));
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            categoryDropDown = newValue!;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
                   height: AppSize.paddingAll,
                 ),
                 CustomButton(
                   text: "Next",
                   onTap: () {
-                    addSampleMCQ();
+                    updateSampleMCQ();
                   },
                 )
               ],
@@ -299,5 +308,52 @@ class _AddQuizState extends State<AddQuiz> {
         ),
       ),
     );
+  }
+
+  _alert() {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              // insetPadding: EdgeInsets.all(20),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 30),
+                  Text(
+                    'Are you sure you want to remove?',
+                    // maxLines: 2,
+                    style: TextStyle(
+                      color: AppColors.primaryBlack,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      QuickSelectButton(
+                        text: 'No',
+                        ontap: () {
+                          Navigator.pop(context);
+                        },
+                        btncolor: AppColors.primaryWhite,
+                        textColor: AppColors.blueColor,
+                      ),
+                      QuickSelectButton(
+                          text: 'Yes',
+                          ontap: () {
+                            deleteSampleMCQ();
+                          })
+                    ],
+                  )
+                ],
+              ));
+        });
   }
 }

@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/components/buttons/custom_button.dart';
 import 'package:notech_mobile_app/components/text/custom_text.dart';
 import 'package:notech_mobile_app/components/utils/app_size.dart';
-import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/create_job/add_skill_screen.dart';
+import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/create_job/add_more_skills.dart';
+import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/create_job/edit_job_description.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 import '../../../../components/utils/app_colors.dart';
-import 'add_quiz.dart';
 
-class JobSkillsScreen extends StatefulWidget {
-  final String job_id;
-  const JobSkillsScreen({super.key, required this.job_id});
+class EditSkills extends StatefulWidget {
+  final model.JobPosted user;
+  const EditSkills({super.key, required this.user});
 
   @override
-  State<JobSkillsScreen> createState() => _JobSkillsScreenState();
+  State<EditSkills> createState() => _EditSkillsState();
 }
 
-class _JobSkillsScreenState extends State<JobSkillsScreen> {
+class _EditSkillsState extends State<EditSkills> {
   User? user = FirebaseAuth.instance.currentUser;
 
   model.Skills loggedinUser = model.Skills();
@@ -37,7 +37,7 @@ class _JobSkillsScreenState extends State<JobSkillsScreen> {
         .collection('users')
         .doc(user!.uid)
         .collection('jobs')
-        .doc(widget.job_id)
+        .doc(widget.user.id)
         .get()
         .then((value) {
       setState(() {
@@ -59,7 +59,7 @@ class _JobSkillsScreenState extends State<JobSkillsScreen> {
           .collection('users')
           .doc(user!.uid)
           .collection('jobs')
-          .doc(widget.job_id)
+          .doc(widget.user.id)
           .update({"skills": requiredSkills});
     } catch (error) {
       print('Error removing element from list: $error');
@@ -69,16 +69,34 @@ class _JobSkillsScreenState extends State<JobSkillsScreen> {
   @override
   Widget build(BuildContext context) {
     AppSize().init(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.blueColor,
-        title: CustomText(
-          text: 'Add Required skills',
-          fontColor: AppColors.primaryWhite,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => EditJobDescription(
+                    user: model.JobPosted(
+                        id: widget.user.id,
+                        jobtitle: widget.user.jobtitle,
+                        jobdes: widget.user.jobdes,
+                        jobtype: widget.user.jobtype,
+                        yearsrequired: widget.user.yearsrequired,
+                        skills: widget.user.skills))));
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.blueColor,
+          title: CustomText(
+            text: 'Edit your skills',
+            fontColor: AppColors.primaryWhite,
+          ),
         ),
-      ),
-      body: SafeArea(
+        body: SafeArea(
+            child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.sp),
           child: ListView.builder(
+              scrollDirection: Axis.vertical,
               itemCount: requiredSkills.length,
               itemBuilder: (context, index) {
                 return Container(
@@ -113,36 +131,43 @@ class _JobSkillsScreenState extends State<JobSkillsScreen> {
                     ),
                   ),
                 );
-              })),
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(left: 20.sp),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomButton(
-                text: "Add Skill",
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddSkillScreen(
-                                job_id: widget.job_id,
-                              )));
-                }),
-            SizedBox(
-              height: 1.h,
-            ),
-            CustomButton(
-                text: "Next",
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddQuiz(
-                                job_id: widget.job_id,
-                              )));
-                }),
-          ],
+              }),
+        )),
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(left: 20.sp),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CustomButton(
+                  text: "Add Skill",
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddMoreSkills(
+                                  jobid: widget.user.id!,
+                                )));
+                  }),
+              SizedBox(
+                height: 1.h,
+              ),
+              CustomButton(
+                  text: "Back",
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditJobDescription(
+                                user: model.JobPosted(
+                                    id: widget.user.id,
+                                    jobtitle: widget.user.jobtitle,
+                                    jobdes: widget.user.jobdes,
+                                    jobtype: widget.user.jobtype,
+                                    yearsrequired: widget.user.yearsrequired,
+                                    skills: widget.user.skills))));
+                  }),
+            ],
+          ),
         ),
       ),
     );

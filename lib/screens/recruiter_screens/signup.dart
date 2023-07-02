@@ -162,7 +162,7 @@ class _RecruiterSignUpPageState extends State<RecruiterSignUpPage> {
                       cursorColor: AppColors.blueColor,
                       controller: _mobilenocontroller,
                       autovalidateMode: AutovalidateMode.disabled,
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.number,
                       decoration: AppDecorations.customTextFieldDecoration(
                           prefixIcon: Padding(
                             padding: EdgeInsets.only(left: AppSize.paddingAll),

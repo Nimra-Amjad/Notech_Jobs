@@ -6,6 +6,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../components/text/custom_text.dart';
 import '../../../components/utils/app_colors.dart';
+import '../../../videocalling/videocall_screen.dart';
 
 class RecruiterInterviewsScreen extends StatefulWidget {
   const RecruiterInterviewsScreen({super.key});
@@ -122,6 +123,11 @@ class _RecruiterInterviewsScreenState extends State<RecruiterInterviewsScreen> {
                                           onTap: () {
                                             // deleteNestedSubcollections(
                                             //     jobs['id']);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        VideoCallingScreen()));
                                           },
                                           child: Container(
                                               width: 80,

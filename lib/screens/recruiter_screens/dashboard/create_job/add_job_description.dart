@@ -199,6 +199,7 @@ class _AddJobDescriptionState extends State<AddJobDescription> {
                           return null;
                         },
                         cursorColor: AppColors.blueColor,
+                        keyboardType: TextInputType.number,
                         style:
                             TextStyle(color: AppColors.blueColor, fontSize: 20),
                         decoration: InputDecoration(

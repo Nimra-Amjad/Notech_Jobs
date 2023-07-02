@@ -12,10 +12,13 @@ import '../../../components/theme/decorations.dart';
 import '../../../components/utils/app_size.dart';
 import '../../../components/widgets/custom_icon.dart';
 import '../../../resources/auth_methods.dart';
+import 'create_resume/resume_profile.dart';
 
 class CandidateUpdatePage extends StatefulWidget {
+  final String text;
   final model.Candidate candidate;
-  const CandidateUpdatePage({super.key, required this.candidate});
+  const CandidateUpdatePage({Key? key, required this.candidate, required this.text})
+      : super(key: key);
 
   @override
   State<CandidateUpdatePage> createState() => _CandidateUpdatePageState();
@@ -23,39 +26,42 @@ class CandidateUpdatePage extends StatefulWidget {
 
 class _CandidateUpdatePageState extends State<CandidateUpdatePage> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _emailcontroller = TextEditingController();
-  TextEditingController _mobilenocontroller = TextEditingController();
-  TextEditingController _usernamecontroller = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _mobileNoController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
-    _emailcontroller = TextEditingController(text: widget.candidate.email);
-    _mobilenocontroller =
+    _emailController = TextEditingController(text: widget.candidate.email);
+    _mobileNoController =
         TextEditingController(text: widget.candidate.mobileno);
-    _usernamecontroller =
+    _usernameController =
         TextEditingController(text: widget.candidate.username);
+    print(widget.candidate.email);
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _emailController.dispose();
+    _mobileNoController.dispose();
+    _usernameController.dispose();
     super.dispose();
-    _emailcontroller.dispose();
-    _mobilenocontroller.dispose();
-    _usernamecontroller.dispose();
   }
 
-  void updateuserdata() async {
+  void updateUserData() async {
     await AuthMethods()
-        .updateCandidate(_usernamecontroller.text, _mobilenocontroller.text,
-            _emailcontroller.text)
+        .updateCandidate(_usernameController.text, _emailController.text,
+            _mobileNoController.text)
         .then((value) {
-      Navigator.push(
+         
+    widget.text== "candidateprofile"?  Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => const CandidateProfileScreen()));
+              builder: (context) => const CandidateProfileScreen())): Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const ResumeProfile()));
     });
   }
 
@@ -115,7 +121,7 @@ class _CandidateUpdatePageState extends State<CandidateUpdatePage> {
                       )
                     ],
                     cursorColor: AppColors.blueColor,
-                    controller: _usernamecontroller,
+                    controller: _usernameController,
                     autovalidateMode: AutovalidateMode.disabled,
                     keyboardType: TextInputType.emailAddress,
                     decoration: AppDecorations.customTextFieldDecoration(
@@ -139,30 +145,17 @@ class _CandidateUpdatePageState extends State<CandidateUpdatePage> {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "* Required";
-                      } else if (value.length != 11) {
-                        return "Invalid mobile number";
-                      }
-                      return null;
+                      } else if (value.contains("@gmail.com")) {
+                        return null;
+                      } else
+                        return "Invalid email address";
                     },
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r"[0-9]"),
-                      )
-                    ],
                     cursorColor: AppColors.blueColor,
-                    controller: _mobilenocontroller,
+                    controller: _emailController,
                     autovalidateMode: AutovalidateMode.disabled,
                     keyboardType: TextInputType.emailAddress,
                     decoration: AppDecorations.customTextFieldDecoration(
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.only(left: AppSize.paddingAll),
-                          child: CustomIcon(
-                            icon: Icons.phone_outlined,
-                            iconColor: AppColors.blueColor,
-                            iconSize: AppSize.iconSize,
-                          ),
-                        ),
-                        hintText: "Mobile Number"),
+                        hintText: "Email Address"),
                   ),
                   SizedBox(height: AppSize.paddingAll),
                   TextFormField(
@@ -174,24 +167,37 @@ class _CandidateUpdatePageState extends State<CandidateUpdatePage> {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "* Required";
-                      } else if (value.contains("@gmail.com")) {
-                        return null;
-                      } else
-                        return "Invalid email address";
+                      } else if (value.length != 11) {
+                        return "Invalid mobile number";
+                      }
+                      return null;
                     },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r"[0-9]"),
+                      )
+                    ],
                     cursorColor: AppColors.blueColor,
-                    controller: _emailcontroller,
+                    controller: _mobileNoController,
                     autovalidateMode: AutovalidateMode.disabled,
-                    keyboardType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.number,
                     decoration: AppDecorations.customTextFieldDecoration(
-                        hintText: "Email Address"),
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(left: AppSize.paddingAll),
+                          child: CustomIcon(
+                            icon: Icons.phone_outlined,
+                            iconColor: AppColors.blueColor,
+                            iconSize: AppSize.iconSize,
+                          ),
+                        ),
+                        hintText: "Mobile Number"),
                   ),
                   SizedBox(height: 10.h),
                   CustomButton(
                       text: 'Update',
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
-                          updateuserdata();
+                          updateUserData();
                         }
                       })
                 ],

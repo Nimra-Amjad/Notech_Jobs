@@ -6,8 +6,10 @@ import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_res
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../components/buttons/custom_button.dart';
+import '../../../../components/buttons/quick_select_button.dart';
 import '../../../../components/text/custom_text.dart';
 import '../../../../components/utils/app_colors.dart';
+import 'edit_education.dart';
 
 class AddEducation extends StatefulWidget {
   const AddEducation({super.key});
@@ -28,10 +30,8 @@ class _AddEducationState extends State<AddEducation> {
     getcandidateEducation();
   }
 
-  List educationlist = [];
-
   //<---------------------------------Get Candidate Education--------------------------------------------->
-
+  List educationlist = [];
   void getcandidateEducation() async {
     await FirebaseFirestore.instance
         .collection('users')
@@ -42,6 +42,23 @@ class _AddEducationState extends State<AddEducation> {
         educationlist = value['educations'];
       });
     });
+  }
+
+  //<---------------------------------Remove Candidate Skills--------------------------------------------->
+  Future<void> removeElementFromList(int index) async {
+    try {
+      setState(() {
+        educationlist.removeAt(index);
+        print(educationlist);
+      });
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .update({"educations": educationlist});
+    } catch (error) {
+      print('Error removing element from list: $error');
+    }
   }
 
   @override
@@ -58,6 +75,10 @@ class _AddEducationState extends State<AddEducation> {
         child: ListView.builder(
             itemCount: educationlist.length,
             itemBuilder: (context, index) {
+              Map<String, dynamic> education = educationlist[index];
+              String qualification = education['qualification'];
+              String passingYear = education['passingYear'];
+              String collegeName = education['collegeName'];
               return Padding(
                 padding:
                     EdgeInsets.symmetric(horizontal: 16.sp, vertical: 10.sp),
@@ -79,12 +100,12 @@ class _AddEducationState extends State<AddEducation> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CustomText(
-                                    text: educationlist[index]['qualification'],
+                                    text: qualification,
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.w500,
                                     fontColor: AppColors.primaryGrey),
                                 CustomText(
-                                    text: educationlist[index]['passingYear'],
+                                    text: passingYear,
                                     fontSize: 15.sp,
                                     fontWeight: FontWeight.w500,
                                     fontColor: AppColors.primaryBlack),
@@ -94,7 +115,7 @@ class _AddEducationState extends State<AddEducation> {
                               height: 1.h,
                             ),
                             CustomText(
-                                text: educationlist[index]['collegeName'],
+                                text: collegeName,
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w500,
                                 fontColor: AppColors.primaryBlack),
@@ -104,11 +125,23 @@ class _AddEducationState extends State<AddEducation> {
                     ),
                     Column(
                       children: [
-                        Icon(Icons.edit),
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditResumeEducation(
+                                          candidate: education,index: index,)));
+                            },
+                            child: Icon(Icons.edit)),
                         SizedBox(
                           height: 1.h,
                         ),
-                        Icon(Icons.delete)
+                        GestureDetector(
+                            onTap: () {
+                              _alert(index);
+                            },
+                            child: Icon(Icons.delete))
                       ],
                     )
                   ],
@@ -124,5 +157,53 @@ class _AddEducationState extends State<AddEducation> {
         },
       ),
     );
+  }
+
+  _alert(int index) {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              // insetPadding: EdgeInsets.all(20),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 30),
+                  Text(
+                    'Are you sure you want to remove?',
+                    // maxLines: 2,
+                    style: TextStyle(
+                      color: AppColors.primaryBlack,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      QuickSelectButton(
+                        text: 'No',
+                        ontap: () {
+                          Navigator.pop(context);
+                        },
+                        btncolor: AppColors.primaryWhite,
+                        textColor: AppColors.blueColor,
+                      ),
+                      QuickSelectButton(
+                          text: 'Yes',
+                          ontap: () {
+                            removeElementFromList(index);
+                            Navigator.pop(context);
+                          })
+                    ],
+                  )
+                ],
+              ));
+        });
   }
 }
