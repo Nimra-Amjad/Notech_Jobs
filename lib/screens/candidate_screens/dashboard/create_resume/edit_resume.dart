@@ -76,7 +76,8 @@ class _EditResumeTitleState extends State<EditResumeTitle> {
                         child: TextFormField(
                           controller: _resumeTitleController,
                           validator: (value) {
-                            if (value!.isEmpty) {
+                            if (value!.isEmpty||
+                            _resumeTitleController.text.trim().isEmpty) {
                               return "* Required";
                             }
                             return null;
@@ -105,7 +106,8 @@ class _EditResumeTitleState extends State<EditResumeTitle> {
                         child: TextFormField(
                           controller: _experienceController,
                           validator: (value) {
-                            if (value!.isEmpty) {
+                            if (value!.isEmpty||
+                            _experienceController.text.trim().isEmpty) {
                               return "* Required";
                             }
                             return null;

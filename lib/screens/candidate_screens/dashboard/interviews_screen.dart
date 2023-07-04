@@ -19,6 +19,11 @@ class CandidateInterviewsScreen extends StatefulWidget {
 class _CandidateInterviewsScreenState extends State<CandidateInterviewsScreen> {
   User? user = FirebaseAuth.instance.currentUser;
   List<dynamic> all_interviews = [];
+  String? roomId, userId;
+  String? firstNameSP, lastNameSP;
+  bool isAudioOnly = false;
+  bool isAudioMuted = false;
+  bool isVideoMuted = false;
 
   void getallinterviews() async {
     await FirebaseFirestore.instance
@@ -97,7 +102,7 @@ class _CandidateInterviewsScreenState extends State<CandidateInterviewsScreen> {
                               fontWeight: FontWeight.bold,
                               fontColor: AppColors.primaryBlack),
                           CustomText(
-                              text: all_interviews[index]['jobtitle'],
+                              text: all_interviews[index]['jobTitle'],
                               fontSize: 17.sp,
                               fontWeight: FontWeight.bold,
                               fontColor: AppColors.primaryBlack),
@@ -111,60 +116,34 @@ class _CandidateInterviewsScreenState extends State<CandidateInterviewsScreen> {
                         height: 20.0,
                         color: Colors.grey,
                       ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              // deleteNestedSubcollections(
-                              //     jobs['id']);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          VideoCallingScreen()));
-                            },
-                            child: Container(
-                                width: 80,
-                                height: 50,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    color: AppColors.blueLight,
-                                    borderRadius: BorderRadius.circular(12)),
-                                child: CustomText(
-                                    text: "Join",
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.normal,
-                                    fontColor: AppColors.primaryWhite)),
-                          ),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             AppliedCandidatesScreen(
-                              //               job_id: jobs['id'],
-                              //               job_name:
-                              //                   jobs['jobtitle'],
-                              //             )));
-                            },
-                            child: Container(
-                                width: 80,
-                                height: 50,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    color: AppColors.blueLight,
-                                    borderRadius: BorderRadius.circular(12)),
-                                child: CustomText(
-                                    text: "Remove",
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.normal,
-                                    fontColor: AppColors.primaryWhite)),
-                          )
-                        ],
+                      GestureDetector(
+                        onTap: () {
+                          // deleteNestedSubcollections(
+                          //     jobs['id']);
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => VideoCallingScreen(
+                          //             channelId: roomId,
+                          //             isAudioMuted: isAudioMuted,
+                          //             isAudioOnly: isAudioOnly,
+                          //             isVideoMuted: isVideoMuted,
+                          //             firstName: "Nimra",
+                          //             lastName: "Amjad",
+                          //             userType: "candidate")));
+                        },
+                        child: Container(
+                            width: 80,
+                            height: 50,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: AppColors.blueLight,
+                                borderRadius: BorderRadius.circular(12)),
+                            child: CustomText(
+                                text: "Join",
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.normal,
+                                fontColor: AppColors.primaryWhite)),
                       )
                     ],
                   ),

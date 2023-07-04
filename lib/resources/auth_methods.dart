@@ -47,7 +47,7 @@ class AuthMethods {
     final docref = userCollection.doc(user!.uid);
     try {
       await docref.update({
-        'username': username,
+        'companyname': username,
         'email': email,
         'mobileno': mobileno,
         'location': location

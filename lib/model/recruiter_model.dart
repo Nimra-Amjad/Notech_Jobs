@@ -49,6 +49,8 @@ class JobPosted {
   int? yearsrequired;
   String? uid;
   List<dynamic>? applicants;
+  List<String>? applicantsUID;
+  List<String>? failedapplicantsUID;
   List<dynamic>? skills;
   List<dynamic>? mcqs;
   List<dynamic>? interviews;
@@ -60,6 +62,8 @@ class JobPosted {
       this.yearsrequired,
       this.uid,
       this.applicants,
+      this.applicantsUID,
+      this.failedapplicantsUID,
       this.skills,
       this.mcqs,
       this.interviews});
@@ -74,6 +78,8 @@ class JobPosted {
       yearsrequired: snapshot['yearsrequired'],
       uid: snapshot['uid'],
       applicants: snapshot['applicants'],
+      applicantsUID: snapshot['applicantsUID'],
+      failedapplicantsUID: snapshot['failedapplicantsUID'],
       skills: snapshot["skills"],
       mcqs: snapshot["mcqs"],
       interviews: snapshot["interviews"],
@@ -88,6 +94,8 @@ class JobPosted {
         "yearsrequired": yearsrequired,
         "uid": uid,
         "applicants": applicants,
+        "applicantsUID": applicantsUID,
+        "failedapplicantsUID": failedapplicantsUID,
         "skills": skills,
         "mcqs": mcqs,
         "interviews": interviews
@@ -102,8 +110,19 @@ class Interviews {
   final String? date;
   final String? time;
   final String? id;
-  Interviews(
-      {this.jobTitle, this.applicantName, this.date, this.time, this.id});
+  final String? jobid;
+  final String? companyUid;
+  final String? userUid;
+  Interviews({
+    this.jobTitle,
+    this.applicantName,
+    this.date,
+    this.time,
+    this.id,
+    this.jobid,
+    this.companyUid,
+    this.userUid,
+  });
 
   static Interviews fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
@@ -113,6 +132,9 @@ class Interviews {
       date: snapshot['date'],
       time: snapshot['time'],
       id: snapshot['id'],
+      jobid: snapshot['jobid'],
+      companyUid: snapshot['companyUid'],
+      userUid: snapshot['userUid'],
     );
   }
 
@@ -122,6 +144,9 @@ class Interviews {
         "date": date,
         "time": time,
         "id": id,
+        "jobid": jobid,
+        "companyUid": companyUid,
+        "userUid": userUid
       };
 }
 
@@ -145,12 +170,33 @@ class Skills {
       };
 }
 
+///<-------------------------------Applicants UID Model--------------------------------->
+// class ApplicantsUID {
+//   String? userid;
+//   ApplicantsUID({
+//     this.userid,
+//   });
+
+//   static ApplicantsUID fromSnap(DocumentSnapshot snap) {
+//     var snapshot = snap.data() as Map<String, dynamic>;
+//     return ApplicantsUID(
+//       userid: snapshot["userid"],
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() => {
+//         "userid": userid,
+//       };
+// }
+
 ///<-------------------------------Applicants Model--------------------------------->
 class Applicants {
   int? yearsOfExperience;
   String? userid;
   String? resumeTitle;
   final String? candidate_name;
+  final String? candidate_email;
+  final String? candidate_mobilenumber;
   List<dynamic>? candidate_skills;
   List<dynamic>? candidate_educations;
   List<dynamic>? candidate_experience;
@@ -159,6 +205,8 @@ class Applicants {
       this.userid,
       this.resumeTitle,
       this.candidate_name,
+      this.candidate_email,
+      this.candidate_mobilenumber,
       this.candidate_skills,
       this.candidate_educations,
       this.candidate_experience});
@@ -170,6 +218,8 @@ class Applicants {
       userid: snapshot["userid"],
       yearsOfExperience: snapshot["yearsOfExperience"],
       candidate_name: snapshot['candidate_name'],
+      candidate_email: snapshot['candidate_email'],
+      candidate_mobilenumber: snapshot['candidate_mobilenumber'],
       candidate_skills: snapshot['candidate_skills'],
       candidate_educations: snapshot['candidate_educations'],
       candidate_experience: snapshot['candidate_experience'],
@@ -181,6 +231,8 @@ class Applicants {
         "userid": userid,
         "resumeTitle": resumeTitle,
         "candidate_name": candidate_name,
+        "candidate_email": candidate_email,
+        "candidate_mobilenumber": candidate_mobilenumber,
         "candidate_skills": candidate_skills,
         "candidate_educations": candidate_educations,
         "candidate_experience": candidate_experience
@@ -207,37 +259,42 @@ class CandidateSkills {
       };
 }
 
-// ///<-----------------------------Jobs Mcqs Model--------------------------------->
+///<-----------------------------Jobs Mcqs Model--------------------------------->
 
-// class JobsMcqs {
-//   final String? question;
-//   final String? correctAnswer;
-//   final String? category;
-//   List<dynamic>? options;
-//   JobsMcqs({
-//     this.question,
-//     this.correctAnswer,
-//     this.category,
-//     this.options,
-//   });
+class JobsMcqs {
+  final String? question;
+  final String? correctAnswer;
+  List<dynamic>? options;
+  JobsMcqs({
+    this.question,
+    this.correctAnswer,
+    this.options,
+  });
 
-//   static JobsMcqs fromSnap(DocumentSnapshot snap) {
-//     var snapshot = snap.data() as Map<String, dynamic>;
-//     return JobsMcqs(
-//       question: snapshot['question'],
-//       correctAnswer: snapshot['correctAnswer'],
-//       category: snapshot['category'],
-//       options: snapshot['options'],
-//     );
-//   }
+  static JobsMcqs fromSnap(DocumentSnapshot snap) {
+    var snapshot = snap.data() as Map<String, dynamic>;
+    return JobsMcqs(
+      question: snapshot['question'],
+      correctAnswer: snapshot['correctAnswer'],
+      options: snapshot['options'],
+    );
+  }
 
-//   Map<String, dynamic> toJson() => {
-//         "question": question,
-//         "correctAnswer": correctAnswer,
-//         "category": category,
-//         "options": options,
-//       };
-// }
+  Map<String, dynamic> toJson() => {
+        "question": question,
+        "correctAnswer": correctAnswer,
+        "options": options,
+      };
+
+  factory JobsMcqs.fromMap(Map<String, dynamic> map) {
+    return JobsMcqs(
+      // Assign values from the map to the corresponding fields in the class
+      question: map['question'],
+      options: List<String>.from(map['options']),
+      correctAnswer: map['correctAnswer'],
+    );
+  }
+}
 
 // ///<-----------------------------Mcqs Options Model--------------------------------->
 
@@ -259,25 +316,25 @@ class CandidateSkills {
 //       };
 // }
 
-class MCQ {
-  final String question;
-  final List<String> options;
-  final int correctAnswerIndex;
+// class MCQ {
+//   final String question;
+//   final List<String> options;
+//   final String correctAnswer;
 
-  MCQ({
-    required this.question,
-    required this.options,
-    required this.correctAnswerIndex,
-  });
+//   MCQ({
+//     required this.question,
+//     required this.options,
+//     required this.correctAnswer,
+//   });
 
-  factory MCQ.fromMap(Map<String, dynamic> map) {
-    return MCQ(
-      question: map['question'],
-      options: List<String>.from(map['options']),
-      correctAnswerIndex: map['correctAnswerIndex'] ?? 0,
-    );
-  }
-}
+//   factory MCQ.fromMap(Map<String, dynamic> map) {
+//     return MCQ(
+//       question: map['question'],
+//       options: List<String>.from(map['options']),
+//       correctAnswer: map['correctAnswerIndex'] ?? 0,
+//     );
+//   }
+// }
 
 ///<-------------------------------Candidate Education Model--------------------------------->
 

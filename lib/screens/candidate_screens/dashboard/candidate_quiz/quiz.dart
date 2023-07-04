@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
+import 'package:notech_mobile_app/model/candidate_model.dart' as cmodel;
 
-import '../../../../components/text/custom_text.dart';
-import '../../../../components/utils/app_colors.dart';
 import '../../../../model/recruiter_model.dart';
+import '../dashboard.dart';
 
 class MCQScreen extends StatefulWidget {
   final String uid1;
@@ -16,156 +18,231 @@ class MCQScreen extends StatefulWidget {
 }
 
 class _MCQScreenState extends State<MCQScreen> {
-  List<MCQ> mcqs = [];
-  int currentIndex = 0;
-  Map<int, int> selectedAnswers = {};
-  int obtainedMarks = 0;
-  double percentage = 0.0;
+  List<JobsMcqs>? mcqs;
+  int currentQuestionIndex = 0;
+  int totalMarks = 0;
+  String? selectedAnswer;
+  bool showNextButton = false;
+  bool quizFinished = false;
 
   @override
   void initState() {
     super.initState();
     loadMCQs();
+    getdata();
   }
 
   void loadMCQs() async {
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.uid1)
-        .collection('jobs')
-        .doc(widget.uid2)
-        .get();
+    try {
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(widget.uid1)
+              .collection('jobs')
+              .doc(widget.uid2)
+              .get();
 
-    if (documentSnapshot.exists) {
-      Map<String, dynamic>? data =
-          documentSnapshot.data() as Map<String, dynamic>?;
-      if (data != null) {
-        List<dynamic>? mcqList = data['mcqs'];
-        if (mcqList != null) {
-          List<MCQ> loadedMCQs =
-              mcqList.map((mcqData) => MCQ.fromMap(mcqData)).toList();
-          setState(() {
-            mcqs = loadedMCQs;
-          });
+      if (documentSnapshot.exists) {
+        Map<String, dynamic>? data = documentSnapshot.data();
+        if (data != null) {
+          List<dynamic>? mcqList = data['mcqs'];
+
+          if (mcqList != null) {
+            List<JobsMcqs> loadedMCQs = mcqList
+                .map<JobsMcqs>((mcqData) => JobsMcqs.fromMap(mcqData))
+                .toList();
+            setState(() {
+              mcqs = loadedMCQs;
+              currentQuestionIndex = 0;
+              totalMarks = 0;
+              quizFinished = false;
+            });
+          }
         }
       }
+    } catch (error) {
+      // Handle the error appropriately, such as displaying an error message.
+      print('Error loading MCQs: $error');
     }
   }
 
-  void selectAnswer(int questionIndex, int optionIndex) {
+  ///<------------------------------Get Loggedin User Data------------------------------>
+  cmodel.Candidate loggedinUser = cmodel.Candidate();
+  User? user = FirebaseAuth.instance.currentUser;
+  Future<void> getdata() async {
+    DocumentSnapshot snap = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get();
     setState(() {
-      selectedAnswers[questionIndex] = optionIndex;
+      loggedinUser = cmodel.Candidate.fromSnap(snap);
+      print("000000000000000000000");
+      print(loggedinUser.resumeTitle);
+      print("000000000000000000000");
     });
   }
 
-  void calculateMarks() {
-    int totalMarks = mcqs.length;
-    obtainedMarks = 0;
-    for (var i = 0; i < mcqs.length; i++) {
-      if (selectedAnswers.containsKey(i) &&
-          selectedAnswers[i] == mcqs[i].correctAnswerIndex) {
-        obtainedMarks++;
+  void selectAnswer(String answer) {
+    setState(() {
+      selectedAnswer = answer;
+      showNextButton = true;
+    });
+  }
+
+  void apply(String uid1, String uid2) async {
+    // Check if the user has passed the test
+    bool passedTest = totalMarks >= (mcqs!.length / 2);
+    // bool failedTest = totalMarks >= (mcqs!.length / 2);
+
+    if (passedTest) {
+      model.Applicants appl = model.Applicants(
+        resumeTitle: loggedinUser.resumeTitle,
+        yearsOfExperience: loggedinUser.yearsOfExperience,
+        candidate_name: loggedinUser.username,
+        candidate_email: loggedinUser.email,
+        candidate_mobilenumber: loggedinUser.mobileno,
+        candidate_skills: loggedinUser.skills,
+        candidate_educations: loggedinUser.educations,
+        candidate_experience: loggedinUser.experience,
+        userid: loggedinUser.uid,
+      );
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid1)
+          .collection("jobs")
+          .doc(uid2)
+          .update({
+        "applicants": FieldValue.arrayUnion([appl.toJson()]),
+        "applicantsUID": FieldValue.arrayUnion([loggedinUser.uid]),
+      });
+
+      print(loggedinUser.resumeTitle);
+      print(uid1);
+      print(uid2);
+    } else if (!passedTest) {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid1)
+          .collection("jobs")
+          .doc(uid2)
+          .update({
+        "failedapplicantsUID": FieldValue.arrayUnion([loggedinUser.uid])
+      });
+    }
+  }
+
+  void goToNextQuestion() {
+    setState(() {
+      currentQuestionIndex++;
+      selectedAnswer = null;
+      showNextButton = false;
+
+      if (currentQuestionIndex >= mcqs!.length) {
+        quizFinished = true;
+
+        // Call the apply method here
+        apply(widget.uid1, widget.uid2);
       }
-    }
-    setState(() {
-      percentage = (obtainedMarks / totalMarks) * 100;
-    });
-  }
-
-  void goToNextMCQ() {
-    setState(() {
-      currentIndex++;
-    });
-  }
-
-  void goToPreviousMCQ() {
-    setState(() {
-      currentIndex--;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    int totalMarks = mcqs.length;
+    if (mcqs == null || mcqs!.isEmpty) {
+      return Scaffold(
+        body: Center(
+          child: Text('No MCQs loaded.'),
+        ),
+      );
+    }
+
+    if (quizFinished) {
+      bool passed = totalMarks >= (mcqs!.length / 2);
+      return WillPopScope(
+        onWillPop: () async {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CandidateDashboardScreen()));
+          return false;
+        },
+        child: Scaffold(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                passed
+                    ? 'Your Resume has submitted'
+                    : 'You have failed the test',
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Total Marks: $totalMarks',
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    JobsMcqs currentMCQ = mcqs![currentQuestionIndex];
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.blueColor,
-        title: CustomText(
-          text: 'MCQ\'s',
-          fontColor: AppColors.primaryWhite,
+        title: Text('MCQs Quiz'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Question ${currentQuestionIndex + 1}:',
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 10),
+            Text(
+              currentMCQ.question ?? '',
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 20),
+            ...currentMCQ.options!.map((option) {
+              bool isSelected = option == selectedAnswer;
+              return ElevatedButton(
+                onPressed: () {
+                  selectAnswer(option);
+                },
+                style: ButtonStyle(
+                  backgroundColor: isSelected
+                      ? MaterialStateProperty.all(Colors.green)
+                      : null,
+                ),
+                child: Text(
+                  option,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : null,
+                  ),
+                ),
+              );
+            }).toList(),
+            SizedBox(height: 20),
+            if (showNextButton)
+              ElevatedButton(
+                onPressed: () {
+                  if (selectedAnswer == currentMCQ.correctAnswer) {
+                    setState(() {
+                      totalMarks++;
+                    });
+                  }
+                  goToNextQuestion();
+                },
+                child: Text('Next'),
+              ),
+          ],
         ),
       ),
-      body: mcqs.isEmpty
-          ? Center(
-              child: Text("NOT AVAILABLE"),
-            )
-          : SingleChildScrollView(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Question ${currentIndex + 1}/${mcqs.length}',
-                    style:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    mcqs[currentIndex].question,
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  SizedBox(height: 16.0),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: mcqs[currentIndex].options.length,
-                    itemBuilder: (context, index) {
-                      return RadioListTile(
-                        title: Text(mcqs[currentIndex].options[index]),
-                        value: index,
-                        groupValue: selectedAnswers[currentIndex],
-                        onChanged: (value) {
-                          selectAnswer(currentIndex, value as int);
-                        },
-                      );
-                    },
-                  ),
-                  SizedBox(height: 16.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      if (currentIndex > 0)
-                        ElevatedButton(
-                          onPressed: goToPreviousMCQ,
-                          child: Text('Previous'),
-                        ),
-                      if (currentIndex < mcqs.length - 1)
-                        ElevatedButton(
-                          onPressed: goToNextMCQ,
-                          child: Text('Next'),
-                        ),
-                      if (currentIndex == mcqs.length - 1)
-                        ElevatedButton(
-                          onPressed: calculateMarks,
-                          child: Text('OK'),
-                        ),
-                    ],
-                  ),
-                  SizedBox(height: 16.0),
-                  if (obtainedMarks != 0)
-                    Text(
-                      'Marks Obtained: $obtainedMarks/$totalMarks',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                  if (percentage != 0.0)
-                    Text(
-                      'Percentage: ${percentage.toStringAsFixed(2)}%',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                ],
-              ),
-            ),
     );
   }
 }

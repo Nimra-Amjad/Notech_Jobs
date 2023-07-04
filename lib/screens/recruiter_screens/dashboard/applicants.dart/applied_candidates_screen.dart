@@ -10,6 +10,8 @@ import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 import '../../../../components/text/custom_text.dart';
 import '../../../../components/theme/decorations.dart';
 import '../../../../components/utils/app_colors.dart';
+import '../posted_jobs/posted_jobs_screen.dart';
+import 'candidate_detail.dart';
 
 class AppliedCandidatesScreen extends StatefulWidget {
   final String? job_id;
@@ -33,7 +35,7 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
   }
 
   List<String> topUniversities = [
-    "kIET",
+    "KIET",
     "NUST",
     "FAST",
     "NED",
@@ -45,61 +47,6 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
   model.Candidate loggedinUser = model.Candidate();
   List<dynamic> matching_skills = [];
   List<dynamic> job_match = [];
-
-  //<---------------------------------Get All Jobs--------------------------------------------->
-  // List<dynamic> selectedApplicants = [];
-  // List<dynamic> allApplicants = [];
-  // List<dynamic> allRequiredSkills = [];
-  // String? userID;
-  // int yearsRequired = 0;
-  // Future<void> getAllJobs() async {
-  //   await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(user!.uid)
-  //       .collection("jobs")
-  //       .doc(widget.job_id)
-  //       .get()
-  //       .then((value) {
-  //     setState(() {
-  //       allApplicants = value['applicants'];
-  //       yearsRequired = value['yearsrequired'];
-  //       allRequiredSkills = value['skills'];
-  //       // userID = value['userid'];
-
-  //       for (var applicant in allApplicants) {
-  //         List<dynamic> applicantSkills = applicant['candidate_skills'];
-  //         int canyears = applicant['yearsOfExperience'];
-  //         bool hasMatchedSkills = false;
-
-  //         for (var requiredSkill in allRequiredSkills) {
-  //           if (applicantSkills.contains(requiredSkill) &&
-  //               canyears >= yearsRequired)
-  //               {
-  //             selectedApplicants.add(applicant['candidate_name']);
-  //           } else if (topUniversities.contains(applicant['university'])) {
-  //             // Check if the candidate meets the years of experience requirement
-  //             // if (canyears >= yearsRequired ||
-  //             //     (canyears >= yearsRequired - 1 && canyears < yearsRequired)) {
-  //             //   selectedApplicants.add(applicant['candidate_name']);
-  //             // }
-  //           }
-  //           hasMatchedSkills = true;
-  //           print(selectedApplicants.toList());
-  //           break;
-  //         }
-  //         if (hasMatchedSkills) {
-  //           // Applicant has all required skills
-  //           print(
-  //               'Applicant ${applicant['candidate_name']} has matched at least one of the required skills');
-  //         } else {
-  //           // Applicant does not have all required skills
-  //           print(
-  //               'Applicant ${applicant['candidate_name']} does not have any of the required skills');
-  //         }
-  //       }
-  //     });
-  //   });
-  // }
 
   List<dynamic> selectedApplicants = [];
   List<dynamic> allApplicants = [];
@@ -121,14 +68,52 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
         allRequiredSkills = value['skills'];
         // userID = value['userid'];
 
+        // for (var applicant in allApplicants) {
+        //   List<dynamic> applicantSkills = applicant['candidate_skills'];
+        //   int canYears = applicant['yearsOfExperience'];
+        //   bool hasMatchedSkills = false;
+
+        //   for (var requiredSkill in allRequiredSkills) {
+        //     if (applicantSkills.contains(requiredSkill) &&
+        //         canYears >= yearsRequired) {
+        //       selectedApplicants.add(applicant['candidate_name']);
+        //       hasMatchedSkills = true;
+        //       break;
+        //     }
+        //   }
+
+        //   if (hasMatchedSkills) {
+        //     print(
+        //         'Applicant ${applicant['candidate_name']} has matched at least one of the required skills');
+        //   } else {
+        //     print(
+        //         'Applicant ${applicant['candidate_name']} does not have any of the required skills');
+        //   }
+        // }
+
         for (var applicant in allApplicants) {
           List<dynamic> applicantSkills = applicant['candidate_skills'];
           int canYears = applicant['yearsOfExperience'];
           bool hasMatchedSkills = false;
 
+          // Check if the candidate's education belongs to a top university
+          bool hasTopUniversityEducation = false;
+          List<dynamic> educations = applicant['candidate_educations'];
+
+          for (var education in educations) {
+            String collegeName = education['collegeName'];
+            String qualification = education['qualification'];
+
+            if (topUniversities.contains(collegeName)) {
+              hasTopUniversityEducation = true;
+              break;
+            }
+          }
+
           for (var requiredSkill in allRequiredSkills) {
-            if (applicantSkills.contains(requiredSkill) &&
-                canYears >= yearsRequired) {
+            if ((applicantSkills.contains(requiredSkill) &&
+                    canYears >= yearsRequired) ||
+                hasTopUniversityEducation) {
               selectedApplicants.add(applicant['candidate_name']);
               hasMatchedSkills = true;
               break;
@@ -137,10 +122,10 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
 
           if (hasMatchedSkills) {
             print(
-                'Applicant ${applicant['candidate_name']} has matched at least one of the required skills');
+                'Applicant ${applicant['candidate_name']} has matched at least one of the required skills or has education from a top university');
           } else {
             print(
-                'Applicant ${applicant['candidate_name']} does not have any of the required skills');
+                'Applicant ${applicant['candidate_name']} does not have any of the required skills and does not have education from a top university');
           }
         }
       });
@@ -150,95 +135,117 @@ class _AppliedCandidatesScreenState extends State<AppliedCandidatesScreen> {
   @override
   Widget build(BuildContext context) {
     AppSize().init(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.blueColor,
-        title: CustomText(
-          text: 'Applied Candidates',
-          fontColor: AppColors.primaryWhite,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => PostedJobsScreen()));
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.blueColor,
+          title: CustomText(
+            text: 'Applied Candidates',
+            fontColor: AppColors.primaryWhite,
+          ),
         ),
-      ),
-      body: SafeArea(
-          child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.sp),
-        child: Column(
-          children: [
-            SizedBox(
-              height: AppSize.paddingAll,
-            ),
-            TextFormField(
-              cursorHeight: AppSize.textSize * 1.2,
-              style: TextStyle(
-                color: AppColors.primaryBlack,
-                fontSize: AppSize.textSize * 1.2,
+        body: SafeArea(
+            child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.sp),
+          child: Column(
+            children: [
+              SizedBox(
+                height: AppSize.paddingAll,
               ),
-              cursorColor: AppColors.blueColor,
-              controller: _searchcontroller,
-              autovalidateMode: AutovalidateMode.disabled,
-              keyboardType: TextInputType.emailAddress,
-              decoration: AppDecorations.customTextFieldDecoration(
-                  hintText: "Search Candidate"),
-            ),
-            SizedBox(
-              height: AppSize.paddingAll,
-            ),
-            Expanded(
-                child: ListView.builder(
-                    itemCount: selectedApplicants.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomText(
-                                    text: selectedApplicants[index],
-                                    fontSize: 17.sp,
-                                    fontWeight: FontWeight.bold,
-                                    fontColor: AppColors.blueColor),
-                                const Divider(
-                                  thickness: 0.5,
-                                  height: 20.0,
-                                  color: Colors.grey,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ScheduleInterview(
-                                                  job_id: widget.job_id,
-                                                  appl_id: allApplicants[index]
-                                                      ['userid'],
-                                                  appl_name:
+              Expanded(
+                  child: ListView.builder(
+                      itemCount: selectedApplicants.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => CandidateDetailScreen(
+                                                  job_id: widget.job_id!,
+                                                  candidate_name:
                                                       allApplicants[index]
                                                           ['candidate_name'],
-                                                  job_title: widget.job_name,
-                                                )));
-                                  },
-                                  child: Container(
-                                      width: 140,
-                                      height: 50,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          color: AppColors.blueLight,
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      child: CustomText(
-                                          text: "Schedule Interview",
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.normal,
-                                          fontColor: AppColors.primaryWhite)),
-                                )
-                              ]),
-                        ),
-                      );
-                    }))
-          ],
-        ),
-      )),
+                                                  candidate_email:
+                                                      allApplicants[index]
+                                                          ['candidate_email'],
+                                                  candidate_mobilenumber:
+                                                      allApplicants[index][
+                                                          'candidate_mobilenumber'],
+                                                  yearsofexp: allApplicants[index]
+                                                      ['yearsOfExperience'],
+                                                  resumetitle: allApplicants[index]
+                                                      ['resumeTitle'],
+                                                  resumeducation:
+                                                      allApplicants[index]['candidate_educations'] ??
+                                                          [],
+                                                  resumexperience:
+                                                      allApplicants[index]
+                                                              ['candidate_experience'] ??
+                                                          [],
+                                                  resumskills: allApplicants[index]['candidate_skills'] ?? [])));
+                                    },
+                                    child: CustomText(
+                                        text: selectedApplicants[index],
+                                        fontSize: 17.sp,
+                                        fontWeight: FontWeight.bold,
+                                        fontColor: AppColors.blueColor),
+                                  ),
+                                  const Divider(
+                                    thickness: 0.5,
+                                    height: 20.0,
+                                    color: Colors.grey,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ScheduleInterview(
+                                                    job_id: widget.job_id,
+                                                    appl_id:
+                                                        allApplicants[index]
+                                                            ['userid'],
+                                                    appl_name:
+                                                        allApplicants[index]
+                                                            ['candidate_name'],
+                                                    job_title: widget.job_name,
+                                                  )));
+                                    },
+                                    child: Container(
+                                        width: 140,
+                                        height: 50,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.blueLight,
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        child: CustomText(
+                                            text: "Schedule Interview",
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.normal,
+                                            fontColor: AppColors.primaryWhite)),
+                                  )
+                                ]),
+                          ),
+                        );
+                      }))
+            ],
+          ),
+        )),
+      ),
     );
   }
 }

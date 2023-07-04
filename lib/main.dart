@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       ScreenType screenType,
     ) {
       return const MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         home: LoginPage(),
       );

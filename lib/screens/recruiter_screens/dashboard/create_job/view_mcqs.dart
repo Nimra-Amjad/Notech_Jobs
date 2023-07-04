@@ -2,13 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/components/utils/app_size.dart';
+import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 
 import '../../../../components/text/custom_text.dart';
 import '../../../../components/utils/app_colors.dart';
+import 'add_quiz.dart';
+import 'edit_job_description.dart';
 
 class ViewMcqs extends StatefulWidget {
-  final String job_id;
-  const ViewMcqs({super.key, required this.job_id});
+  final model.JobPosted? user;
+  final String text;
+  final String? job_id;
+  const ViewMcqs({super.key, this.job_id, required this.text, this.user});
 
   @override
   State<ViewMcqs> createState() => _ViewMcqsState();
@@ -19,7 +24,18 @@ class _ViewMcqsState extends State<ViewMcqs> {
   @override
   Widget build(BuildContext context) {
     AppSize().init(context);
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AddQuiz(
+                      job_id: widget.job_id,
+                      text: "",
+                    )));
+        return false;
+      },
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: AppColors.blueColor,
           title: CustomText(
@@ -69,6 +85,7 @@ class _ViewMcqsState extends State<ViewMcqs> {
                           children: [
                             Text('Options:'),
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: options.map((option) {
                                 return Text(option);
                               }).toList(),
@@ -81,6 +98,8 @@ class _ViewMcqsState extends State<ViewMcqs> {
             // Return an empty widget if no MCQs are found
             return Text('No MCQs found');
           },
-        ),);
+        ),
+      ),
+    );
   }
 }

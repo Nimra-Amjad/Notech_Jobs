@@ -9,14 +9,17 @@ import '../../../../components/text/custom_text.dart';
 class JobDetailScreen extends StatefulWidget {
   final String jobTitle;
   final String jobDescription;
+  final int yearsrequired;
   final String jobType;
   final List<dynamic> requiredskills;
-  const JobDetailScreen(
-      {super.key,
-      required this.jobTitle,
-      required this.jobDescription,
-      required this.jobType,
-      required this.requiredskills});
+  const JobDetailScreen({
+    super.key,
+    required this.jobTitle,
+    required this.jobDescription,
+    required this.jobType,
+    required this.requiredskills,
+    required this.yearsrequired,
+  });
 
   @override
   State<JobDetailScreen> createState() => _JobDetailScreenState();
@@ -27,15 +30,21 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   Widget build(BuildContext context) {
     AppSize().init(context);
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.blueColor,
+        title: CustomText(
+          text: 'Job Detail',
+          fontColor: AppColors.primaryWhite,
+        ),
+      ),
       body: SafeArea(
           child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.sp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BackButtonRounded(),
             SizedBox(
-              height: AppSize.paddingBottom * 2,
+              height: AppSize.paddingBottom,
             ),
             Expanded(
                 child: Container(
@@ -84,6 +93,20 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                             ),
                             CustomText(
                               text: widget.jobType,
+                              // fontSize: 20.sp,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            SizedBox(
+                              height: AppSize.paddingAll,
+                            ),
+                            CustomText(
+                              text: 'Years Required:',
+                              fontSize: 18.sp,
+                              fontColor: AppColors.blueColor,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            CustomText(
+                              text: widget.yearsrequired.toString(),
                               // fontSize: 20.sp,
                               fontWeight: FontWeight.normal,
                             ),

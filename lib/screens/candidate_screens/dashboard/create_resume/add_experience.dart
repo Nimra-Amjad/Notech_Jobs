@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/edit_experience.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/resume_experience.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
@@ -62,103 +63,117 @@ class _AddExperienceState extends State<AddExperience> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.blueColor,
-        title: CustomText(
-          text: 'Your Experience',
-          fontColor: AppColors.primaryWhite,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ResumeExperience()));
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.blueColor,
+          title: CustomText(
+            text: 'Your Experience',
+            fontColor: AppColors.primaryWhite,
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: ListView.builder(
-            itemCount: experiencelist.length,
-            itemBuilder: (context, index) {
-              Map<String, dynamic> experience = experiencelist[index];
-              String companyName = experience['companyName'];
-              String designation = experience['designation'];
-              String joinDate = experience['joinDate'];
-              String endDate = experience['endDate'];
-              return Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: 16.sp, vertical: 10.sp),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 80.w,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          border: Border.all(color: AppColors.lightGrey)),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 15.sp, vertical: 14.sp),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomText(
-                                text: designation,
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                                fontColor: AppColors.primaryGrey),
-                            SizedBox(
-                              height: 1.h,
-                            ),
-                            CustomText(
-                                text: companyName,
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                                fontColor: AppColors.primaryBlack),
-                            SizedBox(
-                              height: 1.h,
-                            ),
-                            Row(
-                              children: [
-                                CustomText(
-                                    text: joinDate,
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontColor: AppColors.primaryBlack),
-                                CustomText(
-                                    text: '-',
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontColor: AppColors.primaryBlack),
-                                CustomText(
-                                    text: endDate,
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontColor: AppColors.primaryBlack),
-                              ],
-                            ),
-                          ],
+        body: SafeArea(
+          child: ListView.builder(
+              itemCount: experiencelist.length,
+              itemBuilder: (context, index) {
+                Map<String, dynamic> experience = experiencelist[index];
+                String companyName = experience['companyName'];
+                String designation = experience['designation'];
+                String joinDate = experience['joinDate'];
+                String endDate = experience['endDate'];
+                return Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.sp, vertical: 10.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 80.w,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            border: Border.all(color: AppColors.lightGrey)),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15.sp, vertical: 14.sp),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                  text: designation,
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500,
+                                  fontColor: AppColors.primaryGrey),
+                              SizedBox(
+                                height: 1.h,
+                              ),
+                              CustomText(
+                                  text: companyName,
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500,
+                                  fontColor: AppColors.primaryBlack),
+                              SizedBox(
+                                height: 1.h,
+                              ),
+                              Row(
+                                children: [
+                                  CustomText(
+                                      text: joinDate,
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      fontColor: AppColors.primaryBlack),
+                                  CustomText(
+                                      text: '-',
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      fontColor: AppColors.primaryBlack),
+                                  CustomText(
+                                      text: endDate,
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      fontColor: AppColors.primaryBlack),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Column(
-                      children: [
-                        GestureDetector(onTap: () {}, child: Icon(Icons.edit)),
-                        SizedBox(
-                          height: 1.h,
-                        ),
-                        GestureDetector(
-                            onTap: () {
-                              _alert(index);
-                            },
-                            child: Icon(Icons.delete))
-                      ],
-                    )
-                  ],
-                ),
-              );
-            }),
-      ),
-      bottomNavigationBar: CustomButton(
-        text: 'Back',
-        onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ResumeExperience()));
-        },
+                      Column(
+                        children: [
+                          GestureDetector(onTap: () {Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditResumeExperience(
+                                                    candidate: experience,
+                                                    index: index,
+                                                  )));}, child: Icon(Icons.edit)),
+                          SizedBox(
+                            height: 1.h,
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                _alert(index);
+                              },
+                              child: Icon(Icons.delete))
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              }),
+        ),
+        bottomNavigationBar: CustomButton(
+          text: 'Back',
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ResumeExperience()));
+          },
+        ),
       ),
     );
   }

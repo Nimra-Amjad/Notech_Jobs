@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:notech_mobile_app/components/utils/app_size.dart';
-import 'package:notech_mobile_app/screens/candidate_screens/dashboard/jobs_applied_screen.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/applicants.dart/applied_candidates_screen.dart';
-import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/create_job/add_skill_screen.dart';
-import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/create_job/job_skills.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/interview_screen.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/posted_jobs/posted_jobs_screen.dart';
 
 import '../../../components/buttons/quick_select_button.dart';
+import '../../../components/text/custom_text.dart';
 import '../../../components/utils/app_assets.dart';
 import '../../login.dart';
 import 'company_profile_screen.dart';
@@ -27,13 +25,22 @@ class _RecruiterDashBoardState extends State<RecruiterDashBoard> {
   Widget build(BuildContext context) {
     AppSize().init(context);
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: CustomText(
+          text: "Recruiter Dashboard",
+          fontColor: AppColors.primaryWhite,
+        ),
+        backgroundColor: AppColors.blueColor,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
             child: Column(
               children: [
                 SizedBox(
-                  height: AppSize.paddingBottom * 3,
+                  height: AppSize.paddingBottom * 1,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -81,8 +88,8 @@ class _RecruiterDashBoardState extends State<RecruiterDashBoard> {
                                   RecruiterInterviewsScreen()));
                     }),
                     _dashBoard(AppAssets.jobsapplieddb, 'Add Quiz', () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => AddQuiz()));
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) => AddQuiz()));
                     })
                   ],
                 ),

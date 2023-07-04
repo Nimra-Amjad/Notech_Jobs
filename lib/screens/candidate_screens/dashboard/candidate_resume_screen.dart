@@ -6,6 +6,7 @@ import 'package:notech_mobile_app/components/utils/app_assets.dart';
 import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:notech_mobile_app/components/utils/app_size.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
+import 'package:notech_mobile_app/screens/candidate_screens/dashboard/dashboard.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class CandidateResumeScreen extends StatefulWidget {
@@ -86,105 +87,155 @@ class _CandidateResumeScreenState extends State<CandidateResumeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-          child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              height: 7.h,
-              decoration: BoxDecoration(
-                color: AppColors.blueColor,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomText(
-                    text: '${loggedinUser.username}',
-                    fontColor: AppColors.primaryWhite,
-                  ),
-                  CustomText(
-                    text: '${loggedinUser.resumeTitle}',
-                    fontColor: AppColors.primaryWhite,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 1.h,
-            ),
-            CustomText(
-              text: "Contact Information",
-              fontWeight: FontWeight.bold,
-              fontColor: AppColors.primaryBlueSea,
-              fontSize: 20.sp,
-            ),
-            Divider(
-              color: AppColors.primaryBlueSea,
-            ),
-            Container(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.sp),
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CandidateDashboardScreen()));
+        return false;
+      },
+      child: Scaffold(
+        body: SafeArea(
+            child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                width: double.infinity,
+                height: 7.h,
+                decoration: BoxDecoration(
+                  color: AppColors.blueColor,
+                ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomText(text: '${loggedinUser.email}'),
-                    CustomText(text: '${loggedinUser.mobileno}'),
+                    CustomText(
+                      text: '${loggedinUser.username}',
+                      fontColor: AppColors.primaryWhite,
+                    ),
+                    CustomText(
+                      text: '${loggedinUser.resumeTitle}',
+                      fontColor: AppColors.primaryWhite,
+                    ),
                   ],
                 ),
               ),
-            ),
-            SizedBox(
-              height: 1.h,
-            ),
-            CustomText(
-              text: "Skills",
-              fontWeight: FontWeight.bold,
-              fontColor: AppColors.primaryBlueSea,
-              fontSize: 20.sp,
-            ),
-            Divider(
-              color: AppColors.primaryBlueSea,
-            ),
-            Container(
-              height: 10.h,
-              child: ListView.builder(
-                  itemCount: candidateSkills.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.sp),
-                      child: Row(
-                        children: [
-                          Icon(Icons.check),
-                          CustomText(text: candidateSkills[index])
-                        ],
-                      ),
-                    );
-                  }),
-            ),
-            SizedBox(
-              height: 1.h,
-            ),
-            CustomText(
-              text: "Education",
-              fontWeight: FontWeight.bold,
-              fontColor: AppColors.primaryBlueSea,
-              fontSize: 20.sp,
-            ),
-            Divider(
-              color: AppColors.primaryBlueSea,
-            ),
-            Container(
-              height: 10.h,
-              child: ListView.builder(
-                  itemCount: educationlist.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.sp),
-                      child: Row(
+              SizedBox(
+                height: 1.h,
+              ),
+              CustomText(
+                text: "Contact Information",
+                fontWeight: FontWeight.bold,
+                fontColor: AppColors.primaryBlueSea,
+                fontSize: 20.sp,
+              ),
+              Divider(
+                color: AppColors.primaryBlueSea,
+              ),
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.sp),
+                  child: Column(
+                    children: [
+                      CustomText(text: '${loggedinUser.email}'),
+                      CustomText(text: '${loggedinUser.mobileno}'),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 1.h,
+              ),
+              CustomText(
+                text: "Skills",
+                fontWeight: FontWeight.bold,
+                fontColor: AppColors.primaryBlueSea,
+                fontSize: 20.sp,
+              ),
+              Divider(
+                color: AppColors.primaryBlueSea,
+              ),
+              Container(
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: candidateSkills.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.sp),
+                        child: Row(
+                          children: [
+                            Icon(Icons.check),
+                            CustomText(text: candidateSkills[index])
+                          ],
+                        ),
+                      );
+                    }),
+              ),
+              SizedBox(
+                height: 1.h,
+              ),
+              CustomText(
+                text: "Education",
+                fontWeight: FontWeight.bold,
+                fontColor: AppColors.primaryBlueSea,
+                fontSize: 20.sp,
+              ),
+              Divider(
+                color: AppColors.primaryBlueSea,
+              ),
+              Container(
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: educationlist.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.sp),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(Icons.check),
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomText(
+                                      text: educationlist[index]
+                                          ['collegeName']),
+                                  CustomText(
+                                      text: educationlist[index]
+                                          ['passingYear']),
+                                  CustomText(
+                                      text: educationlist[index]
+                                          ['qualification']),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+              ),
+              SizedBox(
+                height: 1.h,
+              ),
+              CustomText(
+                text: "Experience",
+                fontWeight: FontWeight.bold,
+                fontColor: AppColors.primaryBlueSea,
+                fontSize: 20.sp,
+              ),
+              Divider(
+                color: AppColors.primaryBlueSea,
+              ),
+              Container(
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: experiencelist.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Icon(Icons.check),
@@ -193,63 +244,24 @@ class _CandidateResumeScreenState extends State<CandidateResumeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CustomText(
-                                    text: educationlist[index]['collegeName']),
+                                    text: experiencelist[index]['companyName']),
                                 CustomText(
-                                    text: educationlist[index]['passingYear']),
+                                    text: experiencelist[index]['designation']),
                                 CustomText(
-                                    text: educationlist[index]
-                                        ['qualification']),
+                                    text: experiencelist[index]['joinDate']),
+                                CustomText(
+                                    text: experiencelist[index]['endDate']),
                               ],
                             ),
                           ),
                         ],
-                      ),
-                    );
-                  }),
-            ),
-            SizedBox(
-              height: 1.h,
-            ),
-            CustomText(
-              text: "Experience",
-              fontWeight: FontWeight.bold,
-              fontColor: AppColors.primaryBlueSea,
-              fontSize: 20.sp,
-            ),
-            Divider(
-              color: AppColors.primaryBlueSea,
-            ),
-            Container(
-              height: 10.h,
-              child: ListView.builder(
-                  itemCount: experiencelist.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.check),
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomText(
-                                  text: experiencelist[index]['companyName']),
-                              CustomText(
-                                  text: experiencelist[index]['designation']),
-                              CustomText(
-                                  text: experiencelist[index]['joinDate']),
-                              CustomText(
-                                  text: experiencelist[index]['endDate']),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
-            ),
-          ],
-        ),
-      )),
+                      );
+                    }),
+              ),
+            ],
+          ),
+        )),
+      ),
     );
   }
 }

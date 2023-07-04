@@ -139,6 +139,7 @@ class _JobSkillsScreenState extends State<JobSkillsScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => AddQuiz(
+                            text: "",
                                 job_id: widget.job_id,
                               )));
                 }),

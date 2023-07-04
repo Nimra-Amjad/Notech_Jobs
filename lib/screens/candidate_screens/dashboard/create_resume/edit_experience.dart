@@ -35,13 +35,13 @@ class _EditResumeExperienceState extends State<EditResumeExperience> {
   @override
   void initState() {
     _companyNameController =
-        TextEditingController(text: widget.candidate['qualification']);
+        TextEditingController(text: widget.candidate['companyName']);
     _designationController =
-        TextEditingController(text: widget.candidate['passingYear']);
+        TextEditingController(text: widget.candidate['designation']);
     _joinDateController =
-        TextEditingController(text: widget.candidate['collegeName']);
+        TextEditingController(text: widget.candidate['joinDate']);
     _endDateController =
-        TextEditingController(text: widget.candidate['collegeName']);
+        TextEditingController(text: widget.candidate['endDate']);
     super.initState();
   }
 
@@ -54,28 +54,46 @@ class _EditResumeExperienceState extends State<EditResumeExperience> {
     super.dispose();
   }
 
-  ///<------------------------------Add Candidate Education to Database------------------------------>
-  editexperience() async {
-    model.Experience exp = model.Experience(
-      companyName: _companyNameController.text,
-      designation: _designationController.text,
-      joinDate: _joinDateController.text,
-      endDate: _endDateController.text,
-    );
+  ///<------------------------------Edit Candidate Experience to Database------------------------------>
+  Future<void> updateMCQ(
+    int index,
+    String companyName,
+    String designation,
+    String enddate,
+    String joindate,
+  ) async {
+    var mcqData = {
+      'companyName': companyName,
+      'designation': designation,
+      'endDate': enddate,
+      'joinDate': joindate,
+    };
 
-  // Retrieve the current experience list from the candidate map
-  List<dynamic> experienceList = widget.candidate['experience'];
+    final docRef =
+        FirebaseFirestore.instance.collection('users').doc(user!.uid);
 
-  // Update the experience at the specified index
-  experienceList[widget.index] = exp.toJson();
+    await docRef.get().then((value) async {
+      if (value.exists) {
+        var jobData = value.data();
+        var mcqs = jobData!['experience'] ?? [];
 
-  // Update the 'experience' field in the 'candidate' map
-  widget.candidate['experience'] = experienceList;
+        if (index >= 0 && index < mcqs.length) {
+          mcqs[index] = mcqData; // Update the MCQ data at the specified index
+        }
 
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .update({"experience": widget.candidate});
+        await docRef.update({'experience': mcqs});
+      }
+    });
+  }
+
+  void updateSampleMCQ() async {
+    final companyname = _companyNameController.text;
+    final designation = _designationController.text;
+    final enddate = _endDateController.text;
+    final startdate = _joinDateController.text;
+
+    final index = await updateMCQ(
+        widget.index, companyname, designation, enddate, startdate);
 
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => AddExperience()));
@@ -111,7 +129,8 @@ class _EditResumeExperienceState extends State<EditResumeExperience> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _companyNameController.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -133,7 +152,8 @@ class _EditResumeExperienceState extends State<EditResumeExperience> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _designationController.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -155,7 +175,8 @@ class _EditResumeExperienceState extends State<EditResumeExperience> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _joinDateController.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -177,7 +198,8 @@ class _EditResumeExperienceState extends State<EditResumeExperience> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _endDateController.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -193,10 +215,10 @@ class _EditResumeExperienceState extends State<EditResumeExperience> {
                   height: AppSize.paddingBottom * 5,
                 ),
                 CustomButton(
-                    text: "Add Experience",
+                    text: "Update Experience",
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        editexperience();
+                        updateSampleMCQ();
                       }
                     }),
               ],

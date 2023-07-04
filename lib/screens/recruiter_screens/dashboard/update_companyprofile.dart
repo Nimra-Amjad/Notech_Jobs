@@ -51,187 +51,196 @@ class _RecruiterUpdatePageState extends State<RecruiterUpdatePage> {
 
   void updaterecruiterdata() async {
     await AuthMethods()
-        .updateRecruiter(_companynamecontroller.text, _mobilenocontroller.text,
-            _emailcontroller.text, _locationcontroller)
+        .updateRecruiter(_companynamecontroller.text, _emailcontroller.text,
+            _mobilenocontroller.text, _locationcontroller)
         .then((value) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const CompanyProfileScreen()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const CompanyProfileScreen()));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     AppSize().init(context);
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: AppSize.paddingAll),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: BackButtonRounded(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-              SizedBox(height: AppSize.paddingAll),
-              Form(
-                key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.sp),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 2.h,
-                      ),
-                      CustomText(
-                          textAlign: TextAlign.center,
-                          text: "Update Recruiter Detail",
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w600,
-                          fontColor: AppColors.blueColor),
-                      SizedBox(
-                        height: 6.h,
-                      ),
-                      TextFormField(
-                        cursorHeight: AppSize.textSize * 1.2,
-                        style: TextStyle(
-                          color: AppColors.primaryBlack,
-                          fontSize: AppSize.textSize * 1.2,
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "* Required";
-                          } else if (value.length < 3) {
-                            return "Too short";
-                          }
-                          return null;
-                        },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r"[a-zA-Z]+|\s"),
-                          )
-                        ],
-                        cursorColor: AppColors.blueColor,
-                        controller: _companynamecontroller,
-                        autovalidateMode: AutovalidateMode.disabled,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: AppDecorations.customTextFieldDecoration(
-                            prefixIcon: Padding(
-                              padding:
-                                  EdgeInsets.only(left: AppSize.paddingAll),
-                              child: CustomIcon(
-                                icon: Icons.person_2_outlined,
-                                iconColor: AppColors.blueColor,
-                                iconSize: AppSize.iconSize,
-                              ),
-                            ),
-                            hintText: "Company Name"),
-                      ),
-                      SizedBox(height: AppSize.paddingAll),
-                      TextFormField(
-                        cursorHeight: AppSize.textSize * 1.2,
-                        style: TextStyle(
-                          color: AppColors.primaryBlack,
-                          fontSize: AppSize.textSize * 1.2,
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "* Required";
-                          } else if (value.length != 11) {
-                            return "Invalid mobile number";
-                          }
-                          return null;
-                        },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r"[0-9]"),
-                          )
-                        ],
-                        cursorColor: AppColors.blueColor,
-                        controller: _mobilenocontroller,
-                        autovalidateMode: AutovalidateMode.disabled,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: AppDecorations.customTextFieldDecoration(
-                            prefixIcon: Padding(
-                              padding:
-                                  EdgeInsets.only(left: AppSize.paddingAll),
-                              child: CustomIcon(
-                                icon: Icons.phone_outlined,
-                                iconColor: AppColors.blueColor,
-                                iconSize: AppSize.iconSize,
-                              ),
-                            ),
-                            hintText: "Mobile Number"),
-                      ),
-                      SizedBox(height: AppSize.paddingAll),
-                      TextFormField(
-                        cursorHeight: AppSize.textSize * 1.2,
-                        style: TextStyle(
-                          color: AppColors.primaryBlack,
-                          fontSize: AppSize.textSize * 1.2,
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "* Required";
-                          } else if (value.contains("@gmail.com")) {
-                            return null;
-                          } else
-                            return "Invalid email address";
-                        },
-                        cursorColor: AppColors.blueColor,
-                        controller: _emailcontroller,
-                        autovalidateMode: AutovalidateMode.disabled,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: AppDecorations.customTextFieldDecoration(
-                            hintText: "Email Address"),
-                      ),
-                      SizedBox(height: AppSize.paddingAll),
-                      TextFormField(
-                        cursorHeight: AppSize.textSize * 1.2,
-                        style: TextStyle(
-                          color: AppColors.primaryBlack,
-                          fontSize: AppSize.textSize * 1.2,
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "* Required";
-                          } else if (value.length < 3) {
-                            return "Too short";
-                          }
-                          return null;
-                        },
-                        cursorColor: AppColors.blueColor,
-                        controller: _locationcontroller,
-                        autovalidateMode: AutovalidateMode.disabled,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: AppDecorations.customTextFieldDecoration(
-                            prefixIcon: Padding(
-                              padding:
-                                  EdgeInsets.only(left: AppSize.paddingAll),
-                              child: CustomIcon(
-                                icon: Icons.maps_home_work_outlined,
-                                iconColor: AppColors.blueColor,
-                                iconSize: AppSize.iconSize,
-                              ),
-                            ),
-                            hintText: "Location"),
-                      ),
-                      SizedBox(height: 10.h),
-                      CustomButton(
-                          text: "Update",
-                          onTap: () {
-                            if (_formKey.currentState!.validate()) {
-                              updaterecruiterdata();
-                            }
-                          }),
-                    ],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => CompanyProfileScreen()));
+        return false;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: AppSize.paddingAll),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: BackButtonRounded(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                   ),
                 ),
-              ),
-            ],
+                SizedBox(height: AppSize.paddingAll),
+                Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        CustomText(
+                            textAlign: TextAlign.center,
+                            text: "Update Recruiter Detail",
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                            fontColor: AppColors.blueColor),
+                        SizedBox(
+                          height: 6.h,
+                        ),
+                        TextFormField(
+                          cursorHeight: AppSize.textSize * 1.2,
+                          style: TextStyle(
+                            color: AppColors.primaryBlack,
+                            fontSize: AppSize.textSize * 1.2,
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "* Required";
+                            } else if (value.length < 3) {
+                              return "Too short";
+                            }
+                            return null;
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r"[a-zA-Z]+|\s"),
+                            )
+                          ],
+                          cursorColor: AppColors.blueColor,
+                          controller: _companynamecontroller,
+                          autovalidateMode: AutovalidateMode.disabled,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: AppDecorations.customTextFieldDecoration(
+                              prefixIcon: Padding(
+                                padding:
+                                    EdgeInsets.only(left: AppSize.paddingAll),
+                                child: CustomIcon(
+                                  icon: Icons.person_2_outlined,
+                                  iconColor: AppColors.blueColor,
+                                  iconSize: AppSize.iconSize,
+                                ),
+                              ),
+                              hintText: "Company Name"),
+                        ),
+                        SizedBox(height: AppSize.paddingAll),
+                        TextFormField(
+                          cursorHeight: AppSize.textSize * 1.2,
+                          style: TextStyle(
+                            color: AppColors.primaryBlack,
+                            fontSize: AppSize.textSize * 1.2,
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "* Required";
+                            } else if (value.length != 11) {
+                              return "Invalid mobile number";
+                            }
+                            return null;
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r"[0-9]"),
+                            )
+                          ],
+                          cursorColor: AppColors.blueColor,
+                          controller: _mobilenocontroller,
+                          autovalidateMode: AutovalidateMode.disabled,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: AppDecorations.customTextFieldDecoration(
+                              prefixIcon: Padding(
+                                padding:
+                                    EdgeInsets.only(left: AppSize.paddingAll),
+                                child: CustomIcon(
+                                  icon: Icons.phone_outlined,
+                                  iconColor: AppColors.blueColor,
+                                  iconSize: AppSize.iconSize,
+                                ),
+                              ),
+                              hintText: "Mobile Number"),
+                        ),
+                        SizedBox(height: AppSize.paddingAll),
+                        TextFormField(
+                          cursorHeight: AppSize.textSize * 1.2,
+                          style: TextStyle(
+                            color: AppColors.primaryBlack,
+                            fontSize: AppSize.textSize * 1.2,
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "* Required";
+                            } else if (value.contains("@gmail.com")) {
+                              return null;
+                            } else
+                              return "Invalid email address";
+                          },
+                          cursorColor: AppColors.blueColor,
+                          controller: _emailcontroller,
+                          autovalidateMode: AutovalidateMode.disabled,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: AppDecorations.customTextFieldDecoration(
+                              hintText: "Email Address"),
+                        ),
+                        SizedBox(height: AppSize.paddingAll),
+                        TextFormField(
+                          cursorHeight: AppSize.textSize * 1.2,
+                          style: TextStyle(
+                            color: AppColors.primaryBlack,
+                            fontSize: AppSize.textSize * 1.2,
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "* Required";
+                            } else if (value.length < 3) {
+                              return "Too short";
+                            }
+                            return null;
+                          },
+                          cursorColor: AppColors.blueColor,
+                          controller: _locationcontroller,
+                          autovalidateMode: AutovalidateMode.disabled,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: AppDecorations.customTextFieldDecoration(
+                              prefixIcon: Padding(
+                                padding:
+                                    EdgeInsets.only(left: AppSize.paddingAll),
+                                child: CustomIcon(
+                                  icon: Icons.maps_home_work_outlined,
+                                  iconColor: AppColors.blueColor,
+                                  iconSize: AppSize.iconSize,
+                                ),
+                              ),
+                              hintText: "Location"),
+                        ),
+                        SizedBox(height: 10.h),
+                        CustomButton(
+                            text: "Update",
+                            onTap: () {
+                              if (_formKey.currentState!.validate()) {
+                                updaterecruiterdata();
+                              }
+                            }),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

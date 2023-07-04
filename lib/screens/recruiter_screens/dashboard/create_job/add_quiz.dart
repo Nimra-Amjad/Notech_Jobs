@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/screens/recruiter_screens/dashboard/create_job/view_mcqs.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:notech_mobile_app/model/recruiter_model.dart' as model;
 
 import '../../../../components/buttons/custom_button.dart';
 import '../../../../components/text/custom_text.dart';
@@ -10,10 +11,13 @@ import '../../../../components/theme/decorations.dart';
 import '../../../../components/utils/app_colors.dart';
 import '../../../../components/utils/app_icons.dart';
 import '../../../../components/utils/app_size.dart';
+import '../posted_jobs/posted_jobs_screen.dart';
 
 class AddQuiz extends StatefulWidget {
+  final model.JobPosted? user;
+  final String text;
   final String? job_id;
-  const AddQuiz({super.key, this.job_id});
+  const AddQuiz({super.key, this.job_id, required this.text, this.user});
 
   @override
   State<AddQuiz> createState() => _AddQuizState();
@@ -30,7 +34,6 @@ class _AddQuizState extends State<AddQuiz> {
   final TextEditingController _option2Controller = TextEditingController();
   final TextEditingController _option3Controller = TextEditingController();
   final TextEditingController _option4Controller = TextEditingController();
-  String categoryDropDown = 'Select Category';
   @override
   void dispose() {
     // TODO: implement dispose
@@ -43,15 +46,7 @@ class _AddQuizState extends State<AddQuiz> {
     _option4Controller.dispose();
   }
 
-  Future<void> addMCQ(String question, List<String> options,
-      String correctAnswer, String category) async {
-    var mcqData = {
-      'question': question,
-      'options': options,
-      'correctAnswer': correctAnswer,
-      'category': category,
-    };
-
+  Future<void> addMCQ(model.JobsMcqs mcq) async {
     final docRef = FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
@@ -61,36 +56,41 @@ class _AddQuizState extends State<AddQuiz> {
     await docRef.get().then((value) async {
       if (value.exists) {
         var jobData = value.data();
-        var mcqs = jobData!['mcqs'] ??
-            []; // Retrieve the existing MCQs or initialize an empty list
+        var mcqs = jobData!['mcqs'] ?? [];
 
-        mcqs.add(mcqData); // Add the new MCQ data to the list
+        mcqs.add(mcq.toJson());
 
-        await docRef.update(
-            {'mcqs': mcqs}); // Update the 'mcqs' field with the updated list
+        await docRef.update({'mcqs': mcqs});
       }
     });
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ViewMcqs(
-                  job_id: widget.job_id!,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => ViewMcqs(
+          text: widget.text,
+          job_id: widget.job_id!,
+        ),
+      ),
+    );
   }
 
-// Usage example
   void addSampleMCQ() async {
     final question = _questionController.text;
     final options = [
       _option1Controller.text,
       _option2Controller.text,
       _option3Controller.text,
-      _option4Controller.text
+      _option4Controller.text,
     ];
     final correctAnswer = _correctAnswerController.text;
-    final category = categoryDropDown;
 
-    await addMCQ(question, options, correctAnswer, category);
+    final mcq = model.JobsMcqs(
+      question: question,
+      options: options,
+      correctAnswer: correctAnswer,
+    );
+
+    await addMCQ(mcq);
   }
 
   @override
@@ -117,7 +117,8 @@ class _AddQuizState extends State<AddQuiz> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _questionController.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -139,7 +140,8 @@ class _AddQuizState extends State<AddQuiz> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _correctAnswerController.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -161,7 +163,8 @@ class _AddQuizState extends State<AddQuiz> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _option1Controller.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -183,7 +186,8 @@ class _AddQuizState extends State<AddQuiz> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _option2Controller.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -205,7 +209,8 @@ class _AddQuizState extends State<AddQuiz> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _option3Controller.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -227,7 +232,8 @@ class _AddQuizState extends State<AddQuiz> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _option4Controller.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -240,59 +246,28 @@ class _AddQuizState extends State<AddQuiz> {
                       hintText: "Option 4*"),
                 ),
                 SizedBox(
-                  height: 1.h,
+                  height: AppSize.paddingAll,
                 ),
-                Container(
-                  width: double.infinity,
-                  height: 6.h,
-                  decoration: BoxDecoration(
-                      color: AppColors.textboxfillcolor,
-                      border: Border.all(color: AppColors.textboxfillcolor),
-                      borderRadius: BorderRadius.circular(20.0)),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.sp),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        borderRadius: BorderRadius.circular(20),
-                        icon: Icon(
-                          AppIcons.dropdownIcon,
-                          color: AppColors.blueColor,
-                        ),
-                        isExpanded: true,
-                        value: categoryDropDown,
-                        items: [
-                          'Select Category',
-                          'Flutter',
-                          'React Native',
-                          'Hybrid',
-                          'Remote'
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                              value: value,
-                              child: CustomText(
-                                text: value,
-                                fontWeight: FontWeight.normal,
-                                fontColor: Colors.grey.shade600,
-                              ));
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            categoryDropDown = newValue!;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
+                CustomButton(
+                  text: "Add Mcq",
+                  onTap: () {
+                    addSampleMCQ();
+                  },
                 ),
                 SizedBox(
                   height: AppSize.paddingAll,
                 ),
-                CustomButton(
-                  text: "Next",
-                  onTap: () {
-                    addSampleMCQ();
-                  },
-                )
+                widget.text == "edit"
+                    ? SizedBox()
+                    : CustomButton(
+                        text: "Don't add mcqs",
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PostedJobsScreen()));
+                        },
+                      )
               ],
             ),
           ),

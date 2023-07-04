@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/add_education.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/resume_experience.dart';
+import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/resume_skills.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 
@@ -53,126 +54,143 @@ class _ResumeEducationState extends State<ResumeEducation> {
   @override
   Widget build(BuildContext context) {
     AppSize().init(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.blueColor,
-        title: CustomText(
-          text: 'Add your Education',
-          fontColor: AppColors.primaryWhite,
-        ),
-      ),
-      body: SafeArea(
-          child: Form(
-        key: _formKey,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.sp),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: AppSize.paddingBottom,
-                ),
-                TextFormField(
-                  cursorHeight: AppSize.textSize * 1.2,
-                  style: TextStyle(
-                    color: AppColors.primaryBlack,
-                    fontSize: AppSize.textSize * 1.2,
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "* Required";
-                    }
-                    return null;
-                  },
-                  cursorColor: AppColors.blueColor,
-                  controller: _qualificationcontroller,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: AppDecorations.customTextFieldDecoration(
-                      hintText: "Qualification*"),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                TextFormField(
-                  cursorHeight: AppSize.textSize * 1.2,
-                  style: TextStyle(
-                    color: AppColors.primaryBlack,
-                    fontSize: AppSize.textSize * 1.2,
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "* Required";
-                    }
-                    return null;
-                  },
-                  cursorColor: AppColors.blueColor,
-                  controller: _passingYearcontroller,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  keyboardType: TextInputType.number,
-                  decoration: AppDecorations.customTextFieldDecoration(
-                      hintText: "Passing Year*"),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                TextFormField(
-                  cursorHeight: AppSize.textSize * 1.2,
-                  style: TextStyle(
-                    color: AppColors.primaryBlack,
-                    fontSize: AppSize.textSize * 1.2,
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "* Required";
-                    }
-                    return null;
-                  },
-                  cursorColor: AppColors.blueColor,
-                  controller: _collegeNamecontroller,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: AppDecorations.customTextFieldDecoration(
-                      hintText: "School/College Name*"),
-                ),
-                SizedBox(
-                  height: AppSize.paddingBottom * 5,
-                ),
-                CustomButton(
-                    text: "Add Education",
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        addeducation();
-                      }
-                    }),
-                SizedBox(
-                  height: 1.h,
-                ),
-                CustomButton(
-                    text: "View Education",
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddEducation()));
-                    }),
-                SizedBox(
-                  height: 1.h,
-                ),
-                CustomButton(
-                  text: 'Next',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ResumeExperience()));
-                  },
-                ),
-              ],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ResumeSkills()));
+        return false;
+      },
+      child: WillPopScope(
+        onWillPop: () async {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddEducation()));
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: AppColors.blueColor,
+            title: CustomText(
+              text: 'Add your Education',
+              fontColor: AppColors.primaryWhite,
             ),
           ),
+          body: SafeArea(
+              child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.sp),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: AppSize.paddingBottom,
+                    ),
+                    TextFormField(
+                      cursorHeight: AppSize.textSize * 1.2,
+                      style: TextStyle(
+                        color: AppColors.primaryBlack,
+                        fontSize: AppSize.textSize * 1.2,
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty ||
+                            _qualificationcontroller.text.trim().isEmpty) {
+                          return "* Required";
+                        }
+                        return null;
+                      },
+                      cursorColor: AppColors.blueColor,
+                      controller: _qualificationcontroller,
+                      autovalidateMode: AutovalidateMode.disabled,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: AppDecorations.customTextFieldDecoration(
+                          hintText: "Qualification*"),
+                    ),
+                    SizedBox(
+                      height: 1.h,
+                    ),
+                    TextFormField(
+                      cursorHeight: AppSize.textSize * 1.2,
+                      style: TextStyle(
+                        color: AppColors.primaryBlack,
+                        fontSize: AppSize.textSize * 1.2,
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty ||
+                            _passingYearcontroller.text.trim().isEmpty) {
+                          return "* Required";
+                        }
+                        return null;
+                      },
+                      cursorColor: AppColors.blueColor,
+                      controller: _passingYearcontroller,
+                      autovalidateMode: AutovalidateMode.disabled,
+                      keyboardType: TextInputType.number,
+                      decoration: AppDecorations.customTextFieldDecoration(
+                          hintText: "Passing Year*"),
+                    ),
+                    SizedBox(
+                      height: 1.h,
+                    ),
+                    TextFormField(
+                      cursorHeight: AppSize.textSize * 1.2,
+                      style: TextStyle(
+                        color: AppColors.primaryBlack,
+                        fontSize: AppSize.textSize * 1.2,
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty ||
+                            _collegeNamecontroller.text.trim().isEmpty) {
+                          return "* Required";
+                        }
+                        return null;
+                      },
+                      cursorColor: AppColors.blueColor,
+                      controller: _collegeNamecontroller,
+                      autovalidateMode: AutovalidateMode.disabled,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: AppDecorations.customTextFieldDecoration(
+                          hintText: "School/College Name*"),
+                    ),
+                    SizedBox(
+                      height: AppSize.paddingBottom * 5,
+                    ),
+                    CustomButton(
+                        text: "Add Education",
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            addeducation();
+                          }
+                        }),
+                    SizedBox(
+                      height: 1.h,
+                    ),
+                    CustomButton(
+                        text: "View Education",
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddEducation()));
+                        }),
+                    SizedBox(
+                      height: 1.h,
+                    ),
+                    CustomButton(
+                      text: 'Next',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ResumeExperience()));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )),
         ),
-      )),
+      ),
     );
   }
 }

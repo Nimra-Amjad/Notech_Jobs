@@ -137,11 +137,17 @@ class Interviews {
   final String? date;
   final String? time;
   final String? id;
+  final String? jobid;
+  final String? companyUid;
+  final String? userUid;
   Interviews({
     this.jobtitle,
     this.date,
     this.time,
     this.id,
+    this.jobid,
+    this.companyUid,
+    this.userUid,
   });
 
   static Interviews fromSnap(DocumentSnapshot snap) {
@@ -151,6 +157,9 @@ class Interviews {
       date: snapshot['date'],
       time: snapshot['time'],
       id: snapshot['id'],
+      jobid: snapshot['jobid'],
+      companyUid: snapshot['companyUid'],
+      userUid: snapshot['userUid'],
     );
   }
 
@@ -159,5 +168,8 @@ class Interviews {
         "date": date,
         "time": time,
         "id": id,
+        "jobid": jobid,
+        "companyUid": companyUid,
+        "userUid": userUid
       };
 }

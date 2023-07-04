@@ -93,7 +93,8 @@ class _AddJobDescriptionState extends State<AddJobDescription> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _jobTitlecontroller.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -118,7 +119,8 @@ class _AddJobDescriptionState extends State<AddJobDescription> {
                       child: TextFormField(
                         controller: _jobDescriptioncontroller,
                         validator: (value) {
-                          if (value!.isEmpty) {
+                          if (value!.isEmpty ||
+                              _jobDescriptioncontroller.text.trim().isEmpty) {
                             return "* Required";
                           }
                           return null;
@@ -193,7 +195,8 @@ class _AddJobDescriptionState extends State<AddJobDescription> {
                       child: TextFormField(
                         controller: _jobyearsRequiredcontroller,
                         validator: (value) {
-                          if (value!.isEmpty) {
+                          if (value!.isEmpty ||
+                              _jobyearsRequiredcontroller.text.trim().isEmpty) {
                             return "* Required";
                           }
                           return null;

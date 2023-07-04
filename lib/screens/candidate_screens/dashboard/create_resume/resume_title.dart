@@ -100,7 +100,10 @@ class _ResumeTitleScreenState extends State<ResumeTitleScreen> {
                               child: TextFormField(
                                 controller: _resumeTitlecontroller,
                                 validator: (value) {
-                                  if (value!.isEmpty) {
+                                  if (value!.isEmpty ||
+                                      _resumeTitlecontroller.text
+                                          .trim()
+                                          .isEmpty) {
                                     return "* Required";
                                   }
                                   return null;
@@ -130,7 +133,10 @@ class _ResumeTitleScreenState extends State<ResumeTitleScreen> {
                               child: TextFormField(
                                 controller: _yearsOfExperiencecontroller,
                                 validator: (value) {
-                                  if (value!.isEmpty) {
+                                  if (value!.isEmpty ||
+                                      _yearsOfExperiencecontroller.text
+                                          .trim()
+                                          .isEmpty) {
                                     return "* Required";
                                   }
                                   return null;
@@ -224,14 +230,12 @@ class _ResumeTitleScreenState extends State<ResumeTitleScreen> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                EditResumeTitle(
-                                                    candidate: model.Candidate(
-                                                        resumeTitle:
-                                                            loggedinUser
-                                                                .resumeTitle,
-                                                        yearsOfExperience: loggedinUser
-                                                            .yearsOfExperience))));
+                                            builder: (context) => EditResumeTitle(
+                                                candidate: model.Candidate(
+                                                    resumeTitle: loggedinUser
+                                                        .resumeTitle,
+                                                    yearsOfExperience: loggedinUser
+                                                        .yearsOfExperience))));
                                   },
                                   child: Icon(Icons.edit)),
                             ],

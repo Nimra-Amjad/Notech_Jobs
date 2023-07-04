@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/dashboard/candidate_resume_screen.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/add_experience.dart';
+import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/resume_education.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:notech_mobile_app/model/candidate_model.dart' as model;
 
@@ -55,148 +56,159 @@ class _ResumeExperienceState extends State<ResumeExperience> {
   @override
   Widget build(BuildContext context) {
     AppSize().init(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.blueColor,
-        title: CustomText(
-          text: 'Add your Experience',
-          fontColor: AppColors.primaryWhite,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ResumeEducation()));
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.blueColor,
+          title: CustomText(
+            text: 'Add your Experience',
+            fontColor: AppColors.primaryWhite,
+          ),
         ),
-      ),
-      body: SafeArea(
-          child: Form(
-        key: _formKey,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.sp),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: AppSize.paddingBottom,
-                ),
-                TextFormField(
-                  cursorHeight: AppSize.textSize * 1.2,
-                  style: TextStyle(
-                    color: AppColors.primaryBlack,
-                    fontSize: AppSize.textSize * 1.2,
+        body: SafeArea(
+            child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.sp),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: AppSize.paddingBottom,
                   ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "* Required";
-                    }
-                    return null;
-                  },
-                  cursorColor: AppColors.blueColor,
-                  controller: _companyNamecontroller,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: AppDecorations.customTextFieldDecoration(
-                      hintText: "Company Name*"),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                TextFormField(
-                  cursorHeight: AppSize.textSize * 1.2,
-                  style: TextStyle(
-                    color: AppColors.primaryBlack,
-                    fontSize: AppSize.textSize * 1.2,
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "* Required";
-                    }
-                    return null;
-                  },
-                  cursorColor: AppColors.blueColor,
-                  controller: _designationcontroller,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: AppDecorations.customTextFieldDecoration(
-                      hintText: "Designation*"),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                TextFormField(
-                  cursorHeight: AppSize.textSize * 1.2,
-                  style: TextStyle(
-                    color: AppColors.primaryBlack,
-                    fontSize: AppSize.textSize * 1.2,
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "* Required";
-                    }
-                    return null;
-                  },
-                  cursorColor: AppColors.blueColor,
-                  controller: _joinDatecontroller,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: AppDecorations.customTextFieldDecoration(
-                      hintText: "Joining Date*"),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                TextFormField(
-                  cursorHeight: AppSize.textSize * 1.2,
-                  style: TextStyle(
-                    color: AppColors.primaryBlack,
-                    fontSize: AppSize.textSize * 1.2,
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "* Required";
-                    }
-                    return null;
-                  },
-                  cursorColor: AppColors.blueColor,
-                  controller: _endDatecontroller,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: AppDecorations.customTextFieldDecoration(
-                      hintText: "End Date*"),
-                ),
-                SizedBox(
-                  height: AppSize.paddingBottom * 5,
-                ),
-                CustomButton(
-                    text: "Add Experience",
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        addexperience();
+                  TextFormField(
+                    cursorHeight: AppSize.textSize * 1.2,
+                    style: TextStyle(
+                      color: AppColors.primaryBlack,
+                      fontSize: AppSize.textSize * 1.2,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty ||
+                          _companyNamecontroller.text.trim().isEmpty) {
+                        return "* Required";
                       }
-                    }),
-                SizedBox(
-                  height: 1.h,
-                ),
-                CustomButton(
-                    text: "View Experience",
+                      return null;
+                    },
+                    cursorColor: AppColors.blueColor,
+                    controller: _companyNamecontroller,
+                    autovalidateMode: AutovalidateMode.disabled,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: AppDecorations.customTextFieldDecoration(
+                        hintText: "Company Name*"),
+                  ),
+                  SizedBox(
+                    height: 1.h,
+                  ),
+                  TextFormField(
+                    cursorHeight: AppSize.textSize * 1.2,
+                    style: TextStyle(
+                      color: AppColors.primaryBlack,
+                      fontSize: AppSize.textSize * 1.2,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty ||
+                          _designationcontroller.text.trim().isEmpty) {
+                        return "* Required";
+                      }
+                      return null;
+                    },
+                    cursorColor: AppColors.blueColor,
+                    controller: _designationcontroller,
+                    autovalidateMode: AutovalidateMode.disabled,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: AppDecorations.customTextFieldDecoration(
+                        hintText: "Designation*"),
+                  ),
+                  SizedBox(
+                    height: 1.h,
+                  ),
+                  TextFormField(
+                    cursorHeight: AppSize.textSize * 1.2,
+                    style: TextStyle(
+                      color: AppColors.primaryBlack,
+                      fontSize: AppSize.textSize * 1.2,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty ||
+                          _joinDatecontroller.text.trim().isEmpty) {
+                        return "* Required";
+                      }
+                      return null;
+                    },
+                    cursorColor: AppColors.blueColor,
+                    controller: _joinDatecontroller,
+                    autovalidateMode: AutovalidateMode.disabled,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: AppDecorations.customTextFieldDecoration(
+                        hintText: "Joining Date*"),
+                  ),
+                  SizedBox(
+                    height: 1.h,
+                  ),
+                  TextFormField(
+                    cursorHeight: AppSize.textSize * 1.2,
+                    style: TextStyle(
+                      color: AppColors.primaryBlack,
+                      fontSize: AppSize.textSize * 1.2,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty ||
+                          _endDatecontroller.text.trim().isEmpty) {
+                        return "* Required";
+                      }
+                      return null;
+                    },
+                    cursorColor: AppColors.blueColor,
+                    controller: _endDatecontroller,
+                    autovalidateMode: AutovalidateMode.disabled,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: AppDecorations.customTextFieldDecoration(
+                        hintText: "End Date*"),
+                  ),
+                  SizedBox(
+                    height: AppSize.paddingBottom * 5,
+                  ),
+                  CustomButton(
+                      text: "Add Experience",
+                      onTap: () {
+                        if (_formKey.currentState!.validate()) {
+                          addexperience();
+                        }
+                      }),
+                  SizedBox(
+                    height: 1.h,
+                  ),
+                  CustomButton(
+                      text: "View Experience",
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddExperience()));
+                      }),
+                  SizedBox(
+                    height: 1.h,
+                  ),
+                  CustomButton(
+                    text: 'View Resume',
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AddExperience()));
-                    }),
-                SizedBox(
-                  height: 1.h,
-                ),
-                CustomButton(
-                  text: 'Next',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CandidateResumeScreen()));
-                  },
-                ),
-              ],
+                              builder: (context) => CandidateResumeScreen()));
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      )),
+        )),
+      ),
     );
   }
 }

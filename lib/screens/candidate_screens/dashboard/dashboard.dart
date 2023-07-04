@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notech_mobile_app/components/text/custom_text.dart';
 import 'package:notech_mobile_app/components/utils/app_colors.dart';
 import 'package:notech_mobile_app/components/utils/app_size.dart';
 import 'package:notech_mobile_app/screens/candidate_screens/dashboard/create_resume/resume_title.dart';
@@ -26,13 +27,22 @@ class _CandidateDashboardScreenState extends State<CandidateDashboardScreen> {
   Widget build(BuildContext context) {
     AppSize().init(context);
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: CustomText(
+          text: "Candidate Dashboard",
+          fontColor: AppColors.primaryWhite,
+        ),
+        backgroundColor: AppColors.blueColor,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
             child: Column(
               children: [
                 SizedBox(
-                  height: AppSize.paddingBottom * 3,
+                  height: AppSize.paddingBottom * 1,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

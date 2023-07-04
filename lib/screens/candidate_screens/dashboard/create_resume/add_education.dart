@@ -63,98 +63,112 @@ class _AddEducationState extends State<AddEducation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.blueColor,
-        title: CustomText(
-          text: 'Your Education',
-          fontColor: AppColors.primaryWhite,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ResumeEducation()));
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.blueColor,
+          title: CustomText(
+            text: 'Your Education',
+            fontColor: AppColors.primaryWhite,
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: ListView.builder(
-            itemCount: educationlist.length,
-            itemBuilder: (context, index) {
-              Map<String, dynamic> education = educationlist[index];
-              String qualification = education['qualification'];
-              String passingYear = education['passingYear'];
-              String collegeName = education['collegeName'];
-              return Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: 16.sp, vertical: 10.sp),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 80.w,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          border: Border.all(color: AppColors.lightGrey)),
-                      child: Padding(
+        body: SafeArea(
+          child: ListView.builder(
+              itemCount: educationlist.length,
+              itemBuilder: (context, index) {
+                Map<String, dynamic> education = educationlist[index];
+                String qualification = education['qualification'];
+                String passingYear = education['passingYear'];
+                String collegeName = education['collegeName'];
+                return educationlist.isEmpty
+                    ? CustomText(text: "You have not add any skill yet")
+                    : Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 15.sp, vertical: 14.sp),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                            horizontal: 16.sp, vertical: 10.sp),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            Container(
+                              width: 80.w,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  border:
+                                      Border.all(color: AppColors.lightGrey)),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15.sp, vertical: 14.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        CustomText(
+                                            text: qualification,
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.w500,
+                                            fontColor: AppColors.primaryGrey),
+                                        CustomText(
+                                            text: passingYear,
+                                            fontSize: 15.sp,
+                                            fontWeight: FontWeight.w500,
+                                            fontColor: AppColors.primaryBlack),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    CustomText(
+                                        text: collegeName,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w500,
+                                        fontColor: AppColors.primaryBlack),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Column(
                               children: [
-                                CustomText(
-                                    text: qualification,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontColor: AppColors.primaryGrey),
-                                CustomText(
-                                    text: passingYear,
-                                    fontSize: 15.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontColor: AppColors.primaryBlack),
+                                GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditResumeEducation(
+                                                    candidate: education,
+                                                    index: index,
+                                                  )));
+                                    },
+                                    child: Icon(Icons.edit)),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      _alert(index);
+                                    },
+                                    child: Icon(Icons.delete))
                               ],
-                            ),
-                            SizedBox(
-                              height: 1.h,
-                            ),
-                            CustomText(
-                                text: collegeName,
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                                fontColor: AppColors.primaryBlack),
+                            )
                           ],
                         ),
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => EditResumeEducation(
-                                          candidate: education,index: index,)));
-                            },
-                            child: Icon(Icons.edit)),
-                        SizedBox(
-                          height: 1.h,
-                        ),
-                        GestureDetector(
-                            onTap: () {
-                              _alert(index);
-                            },
-                            child: Icon(Icons.delete))
-                      ],
-                    )
-                  ],
-                ),
-              );
-            }),
-      ),
-      bottomNavigationBar: CustomButton(
-        text: 'Back',
-        onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ResumeEducation()));
-        },
+                      );
+              }),
+        ),
+        bottomNavigationBar: CustomButton(
+          text: 'Back',
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ResumeEducation()));
+          },
+        ),
       ),
     );
   }

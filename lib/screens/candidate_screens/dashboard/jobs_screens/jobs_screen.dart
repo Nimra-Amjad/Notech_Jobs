@@ -34,20 +34,55 @@ class _JobsScreenState extends State<JobsScreen> {
   model.Candidate loggedinUser = model.Candidate();
   List<dynamic> job_required_skills = [];
   List<dynamic> job_match = [];
+  String _searchQuery = '';
 
   //<---------------------------------Get All Jobs--------------------------------------------->
+  // List<dynamic> allJobs = [];
+  // Future<void> getAllJobs() async {
+  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //   QuerySnapshot querySnapshot = await firestore.collectionGroup('jobs').get();
+  //   List<DocumentSnapshot> documents = querySnapshot.docs;
+  //   job_match.clear();
+  //   for (DocumentSnapshot document in documents) {
+  //     // allJobs.add(document.data());
+
+  //     job_required_skills = document["skills"]
+  //         .toSet()
+  //         .intersection(candidateSkills.toSet())
+  //         .toList();
+  //     print('//////////////////////////////');
+  //     print(job_required_skills.toString());
+  //     print('//////////////////////////////');
+
+  //     if (job_required_skills.isNotEmpty) {
+  //       job_match.add(document.data());
+  //       print(job_match);
+  //     }
+  //   }
+  // }
+
   List<dynamic> allJobs = [];
+
   Future<void> getAllJobs() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     QuerySnapshot querySnapshot = await firestore.collectionGroup('jobs').get();
     List<DocumentSnapshot> documents = querySnapshot.docs;
     job_match.clear();
+
     for (DocumentSnapshot document in documents) {
       // allJobs.add(document.data());
 
-      job_required_skills = document["skills"]
+      List<dynamic> skills = List<dynamic>.from(document["skills"])
+          .map((skill) => skill.toString().toLowerCase())
+          .toList();
+
+      List<dynamic> lowercaseCandidateSkills = candidateSkills
+          .map((skill) => skill.toString().toLowerCase())
+          .toList();
+
+      job_required_skills = skills
           .toSet()
-          .intersection(candidateSkills.toSet())
+          .intersection(lowercaseCandidateSkills.toSet())
           .toList();
       print('//////////////////////////////');
       print(job_required_skills.toString());
@@ -58,7 +93,6 @@ class _JobsScreenState extends State<JobsScreen> {
         print(job_match);
       }
     }
-    // print(allJobs);
   }
 
   //<---------------------------------Get Candidate Skills--------------------------------------------->
@@ -72,9 +106,6 @@ class _JobsScreenState extends State<JobsScreen> {
       setState(() {
         candidateSkills = value['skills'];
       });
-      // print('//////////////////////////////');
-      // print(candidateSkills);
-      // print('//////////////////////////////');
     });
   }
 
@@ -145,7 +176,8 @@ class _JobsScreenState extends State<JobsScreen> {
         .collection("jobs")
         .doc(uid2)
         .update({
-      "applicants": FieldValue.arrayUnion([appl.toJson()])
+      "applicants": FieldValue.arrayUnion([appl.toJson()]),
+      "applicantsUID": FieldValue.arrayUnion([loggedinUser.uid]),
     });
     print(uid1);
     print(uid2);
@@ -175,6 +207,11 @@ class _JobsScreenState extends State<JobsScreen> {
               height: AppSize.paddingAll,
             ),
             TextFormField(
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
               cursorHeight: AppSize.textSize * 1.2,
               style: TextStyle(
                 color: AppColors.primaryBlack,
@@ -196,7 +233,12 @@ class _JobsScreenState extends State<JobsScreen> {
                   future: getAllJobs(),
                   builder: (context, AsyncSnapshot snapshot) {
                     return job_match.isEmpty
-                        ? CircularProgressIndicator()
+                        ? Center(
+                            child: CustomText(
+                              text: "No job found that matches your resume",
+                              fontWeight: FontWeight.normal,
+                            ),
+                          )
                         : StreamBuilder(
                             stream: FirebaseFirestore.instance
                                 .collectionGroup("jobs")
@@ -218,19 +260,22 @@ class _JobsScreenState extends State<JobsScreen> {
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         JobDetailScreen(
-                                                            jobTitle: job_match[
-                                                                    index]
-                                                                ["jobtitle"],
-                                                            jobDescription:
-                                                                job_match[index]
-                                                                    ["jobdes"],
-                                                            jobType:
-                                                                job_match[index]
-                                                                    ["jobtype"],
-                                                            requiredskills:
-                                                                job_match[index]
-                                                                    [
-                                                                    "skills"])));
+                                                          jobTitle:
+                                                              job_match[index]
+                                                                  ["jobtitle"],
+                                                          jobDescription:
+                                                              job_match[index]
+                                                                  ["jobdes"],
+                                                          jobType:
+                                                              job_match[index]
+                                                                  ["jobtype"],
+                                                          requiredskills:
+                                                              job_match[index]
+                                                                  ["skills"],
+                                                          yearsrequired: job_match[
+                                                                  index]
+                                                              ["yearsrequired"],
+                                                        )));
                                           },
                                           child: Card(
                                             child: Padding(
@@ -279,55 +324,78 @@ class _JobsScreenState extends State<JobsScreen> {
                                                     height: 20.0,
                                                     color: Colors.grey,
                                                   ),
-                                                  hasApplied == false
-                                                      ? GestureDetector(
-                                                          onTap: () {
-                                                            // apply(jobs['uid'],
-                                                            //     jobs['id']);
-                                                            // print(jobs['uid']);
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) => MCQScreen(
-                                                                        uid1: jobs[
-                                                                            'uid'],
-                                                                        uid2: jobs[
-                                                                            'id'])));
-                                                          },
-                                                          child: Container(
-                                                            width: 150,
-                                                            height: 50,
-                                                            decoration: BoxDecoration(
-                                                                color: AppColors
-                                                                    .blueLight,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            12)),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceAround,
-                                                              children: const [
-                                                                Text(
-                                                                  "Apply Now",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                                Icon(
-                                                                  Icons
-                                                                      .arrow_upward_outlined,
-                                                                  color: Colors
-                                                                      .white,
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : CustomText(
+                                                  // (jobs['applicantsUID'] ==
+                                                  //             null ||
+                                                  // index >=
+                                                  //     jobs['applicantsUID']
+                                                  //         .length ||
+                                                  (jobs['failedapplicantsUID'] ??
+                                                              [])
+                                                          .contains(
+                                                              loggedinUser.uid)
+                                                      ? CustomText(
                                                           text:
-                                                              "Your Resume has been submitted")
+                                                              "You haved failed the exam try next time",
+                                                          fontColor: Colors.red,
+                                                        )
+                                                      : (jobs['applicantsUID'] ??
+                                                                  [])
+                                                              .contains(
+                                                                  loggedinUser
+                                                                      .uid)
+                                                          ? CustomText(
+                                                              text:
+                                                                  "Your Resume has been submitted",
+                                                              fontColor:
+                                                                  Colors.green,
+                                                            )
+                                                          : GestureDetector(
+                                                              onTap: () {
+                                                                (jobs['mcqs'] ==
+                                                                            null ||
+                                                                        jobs['mcqs']
+                                                                            .isEmpty)
+                                                                    ? apply(
+                                                                        jobs[
+                                                                            'uid'],
+                                                                        jobs[
+                                                                            'id'])
+                                                                    : Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                MCQScreen(uid1: jobs['uid'].toString(), uid2: jobs['id'].toString())));
+                                                              },
+                                                              child: Container(
+                                                                width: 150,
+                                                                height: 50,
+                                                                decoration: BoxDecoration(
+                                                                    color: AppColors
+                                                                        .blueLight,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12)),
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceAround,
+                                                                  children: [
+                                                                    Text(
+                                                                      "Apply Now",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                    ),
+                                                                    Icon(
+                                                                      Icons
+                                                                          .arrow_upward_outlined,
+                                                                      color: Colors
+                                                                          .white,
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            )
                                                 ],
                                               ),
                                             ),
@@ -335,7 +403,9 @@ class _JobsScreenState extends State<JobsScreen> {
                                         );
                                         // return Text('${jobs_match}');
                                       })
-                                  : const CircularProgressIndicator();
+                                  : const Center(
+                                      child: Text("No job matches your resume"),
+                                    );
                             });
                   }),
             ))

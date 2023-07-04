@@ -49,27 +49,43 @@ class _EditResumeEducationState extends State<EditResumeEducation> {
     super.dispose();
   }
 
-  ///<------------------------------Add Candidate Education to Database------------------------------>
-  editeducation() async {
-    model.Education edu = model.Education(
-      qualification: _qualificationController.text,
-      passingYear: _passingYearController.text,
-      collegeName: _collegeNameController.text,
-    );
+  ///<------------------------------Edit Candidate Education to Database------------------------------>
+  Future<void> updateMCQ(
+    int index,
+    String collegeName,
+    String passingyear,
+    String qualification,
+  ) async {
+    var mcqData = {
+      'collegeName': collegeName,
+      'passingYear': passingyear,
+      'qualification': qualification,
+    };
 
-    // Retrieve the current education list from the candidate map
-    List<dynamic> educationList = widget.candidate['educations'];
+    final docRef =
+        FirebaseFirestore.instance.collection('users').doc(user!.uid);
 
-    // Update the educations at the specified index
-    educationList[widget.index] = edu.toJson();
+    await docRef.get().then((value) async {
+      if (value.exists) {
+        var jobData = value.data();
+        var mcqs = jobData!['educations'] ?? [];
 
-    // Update the 'educations' field in the 'candidate' map
-    widget.candidate['educations'] = educationList;
+        if (index >= 0 && index < mcqs.length) {
+          mcqs[index] = mcqData; // Update the MCQ data at the specified index
+        }
 
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .update({"educations": widget.candidate});
+        await docRef.update({'educations': mcqs});
+      }
+    });
+  }
+
+  void updateSampleMCQ() async {
+    final collegename = _collegeNameController.text;
+    final passingyear = _passingYearController.text;
+    final qualification = _qualificationController.text;
+
+    final index =
+        await updateMCQ(widget.index, collegename, passingyear, qualification);
 
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => AddEducation()));
@@ -105,7 +121,8 @@ class _EditResumeEducationState extends State<EditResumeEducation> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _qualificationController.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -127,7 +144,8 @@ class _EditResumeEducationState extends State<EditResumeEducation> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _passingYearController.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -149,7 +167,8 @@ class _EditResumeEducationState extends State<EditResumeEducation> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _collegeNameController.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -168,7 +187,7 @@ class _EditResumeEducationState extends State<EditResumeEducation> {
                     text: "Update Education",
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        editeducation();
+                        updateSampleMCQ();
                       }
                     }),
               ],

@@ -86,38 +86,40 @@ class _ResumeSkillsState extends State<ResumeSkills> {
               scrollDirection: Axis.vertical,
               itemCount: candidateSkills.length,
               itemBuilder: (context, index) {
-                return Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  height: 7.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.sp),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomText(
-                            text: candidateSkills[index].toString(),
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w500,
-                            fontColor: AppColors.primaryBlack),
-                        GestureDetector(
-                          onTap: () {
-                            removeElementFromList(
-                              candidateSkills[index].toString(),
-                            );
-                          },
-                          child: Icon(
-                            Icons.remove_circle,
-                            color: AppColors.blueColor,
+                return candidateSkills.isEmpty
+                    ? CustomText(text: "You have not add any skill yet")
+                    : Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        height: 7.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.sp),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomText(
+                                  text: candidateSkills[index].toString(),
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500,
+                                  fontColor: AppColors.primaryBlack),
+                              GestureDetector(
+                                onTap: () {
+                                  removeElementFromList(
+                                    candidateSkills[index].toString(),
+                                  );
+                                },
+                                child: Icon(
+                                  Icons.remove_circle,
+                                  color: AppColors.blueColor,
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
+                        ),
+                      );
               }),
         )),
         floatingActionButton: Padding(

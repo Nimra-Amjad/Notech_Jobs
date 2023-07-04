@@ -13,6 +13,7 @@ import '../../../../components/utils/app_size.dart';
 import 'edit_job_description.dart';
 
 class EditMCQsScreen extends StatefulWidget {
+  final model.JobPosted? user;
   final String jobid;
   final int index;
   final String question;
@@ -25,6 +26,7 @@ class EditMCQsScreen extends StatefulWidget {
     required this.option,
     required this.index,
     required this.jobid,
+    this.user,
   });
 
   @override
@@ -111,7 +113,18 @@ class _EditMCQsScreenState extends State<EditMCQsScreen> {
         await updateMCQ(widget.index, question, options, correctAnswer);
 
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => EditJobDescription()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => EditJobDescription(
+                  user: model.JobPosted(
+                      id: widget.user!.id,
+                      jobtitle: widget.user!.jobtitle,
+                      jobdes: widget.user!.jobdes,
+                      jobtype: widget.user!.jobtype,
+                      yearsrequired: widget.user!.yearsrequired,
+                      skills: widget.user!.skills,
+                      mcqs: widget.user!.mcqs),
+                )));
   }
 
   Future<void> deleteMCQ(int index) async {
@@ -139,7 +152,18 @@ class _EditMCQsScreenState extends State<EditMCQsScreen> {
     await deleteMCQ(widget.index);
 
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => EditJobDescription()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => EditJobDescription(
+                  user: model.JobPosted(
+                      id: widget.user!.id,
+                      jobtitle: widget.user!.jobtitle,
+                      jobdes: widget.user!.jobdes,
+                      jobtype: widget.user!.jobtype,
+                      yearsrequired: widget.user!.yearsrequired,
+                      skills: widget.user!.skills,
+                      mcqs: widget.user!.mcqs),
+                )));
   }
 
   @override
@@ -171,7 +195,8 @@ class _EditMCQsScreenState extends State<EditMCQsScreen> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _questionController.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -193,7 +218,8 @@ class _EditMCQsScreenState extends State<EditMCQsScreen> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _correctAnswerController.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -215,7 +241,8 @@ class _EditMCQsScreenState extends State<EditMCQsScreen> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _option1Controller.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -237,7 +264,8 @@ class _EditMCQsScreenState extends State<EditMCQsScreen> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _option2Controller.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -259,7 +287,8 @@ class _EditMCQsScreenState extends State<EditMCQsScreen> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _option3Controller.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;
@@ -281,7 +310,8 @@ class _EditMCQsScreenState extends State<EditMCQsScreen> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _option4Controller.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;

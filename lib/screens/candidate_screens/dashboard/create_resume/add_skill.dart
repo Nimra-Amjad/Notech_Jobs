@@ -43,6 +43,9 @@ class _AddSkillState extends State<AddSkill> {
   Widget build(BuildContext context) {
     AppSize().init(context);
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.blueColor,
+      ),
       body: SafeArea(
           child: Form(
         key: _formKey,
@@ -52,11 +55,6 @@ class _AddSkillState extends State<AddSkill> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BackButtonRounded(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
                 SizedBox(height: AppSize.paddingBottom * 1),
                 TextFormField(
                   cursorHeight: AppSize.textSize * 1.2,
@@ -65,7 +63,8 @@ class _AddSkillState extends State<AddSkill> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _skillcontroller.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;

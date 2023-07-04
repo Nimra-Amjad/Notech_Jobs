@@ -15,21 +15,35 @@ import '../../../../../components/text/custom_text.dart';
 import '../../../../../components/utils/app_colors.dart';
 import '../applied_candidates_screen.dart';
 
-class ScheduleInterview extends StatefulWidget {
+class ReScheduleInterview extends StatefulWidget {
+  final int index;
+  final String? zoomID;
+  final String? companyID;
+  final String? date;
+  final String? time;
   final String? job_id;
   final String? appl_id;
   final String? appl_name;
   final String? job_title;
-  const ScheduleInterview(
-      {super.key, this.job_id, this.appl_id, this.appl_name, this.job_title});
+  const ReScheduleInterview(
+      {super.key,
+      this.date,
+      this.time,
+      this.job_id,
+      this.appl_id,
+      this.job_title,
+      this.appl_name,
+      required this.index,
+      this.zoomID,
+      this.companyID});
 
   @override
-  State<ScheduleInterview> createState() => _ScheduleInterviewState();
+  State<ReScheduleInterview> createState() => _ReScheduleInterviewState();
 }
 
-class _ScheduleInterviewState extends State<ScheduleInterview> {
-  final TextEditingController _datecontroller = TextEditingController();
-  final TextEditingController _timecontroller = TextEditingController();
+class _ReScheduleInterviewState extends State<ReScheduleInterview> {
+  TextEditingController _datecontroller = TextEditingController();
+  TextEditingController _timecontroller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   User? user = FirebaseAuth.instance.currentUser;
   recruiterModel.Recruiter loggedinUser = recruiterModel.Recruiter();
@@ -37,6 +51,8 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
   @override
   void initState() {
     super.initState();
+    _datecontroller = TextEditingController(text: widget.date);
+    _timecontroller = TextEditingController(text: widget.time);
     getdata();
   }
 
@@ -49,6 +65,84 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
     setState(() {
       loggedinUser = recruiterModel.Recruiter.fromSnap(snap);
     });
+  }
+
+  Future<void> updateMCQ(
+    int index,
+    String date,
+    String time,
+  ) async {
+    var recruiterinterview = {
+      'applicantName': widget.appl_name,
+      'companyUid': widget.companyID,
+      'date': date,
+      'id': widget.zoomID,
+      'jobTitle': widget.job_title,
+      'jobid': widget.job_id,
+      'time': time,
+      'userUid': widget.appl_id
+    };
+
+    final docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .collection('jobs')
+        .doc(widget.job_id);
+
+    await docRef.get().then((value) async {
+      if (value.exists) {
+        var jobData = value.data();
+        var re_interview = jobData!['interviews'] ?? [];
+
+        if (index >= 0 && index < re_interview.length) {
+          re_interview[index] = recruiterinterview;
+        }
+
+        await docRef.update({'interviews': re_interview});
+      }
+    });
+
+    var candidateinterview = {
+      'companyUid': widget.companyID,
+      'date': date,
+      'id': widget.zoomID,
+      'jobtitle': widget.job_title,
+      'jobid': widget.job_id,
+      'time': time,
+      'userUid': widget.appl_id
+    };
+
+    final candidateDocRef =
+        FirebaseFirestore.instance.collection('users').doc(widget.appl_id);
+
+    await candidateDocRef.get().then((value) async {
+      if (value.exists) {
+        var jobData = value.data();
+        var can_interview = jobData!['interviews'] ?? [];
+
+        int index = -1;
+        for (var i = 0; i < can_interview.length; i++) {
+          if (can_interview[i]['id'] == widget.zoomID) {
+            index = i;
+            break;
+          }
+        }
+
+        if (index >= 0 && index < can_interview.length) {
+          can_interview[index] = recruiterinterview;
+        }
+
+        await candidateDocRef.update({'interviews': can_interview});
+      }
+    });
+  }
+
+  void updateSampleMCQ() async {
+    final date = _datecontroller.text;
+    final time = _timecontroller.text;
+    final index = await updateMCQ(widget.index, date, time);
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => RecruiterInterviewsScreen()));
   }
 
   ///<------------------------------Add Candidate Interviews to Database------------------------------>
@@ -215,7 +309,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                     text: "Schedule Interview",
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        addinterview();
+                        updateSampleMCQ();
                       }
                     }),
               ],

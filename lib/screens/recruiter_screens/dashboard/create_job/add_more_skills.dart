@@ -79,7 +79,8 @@ class _AddMoreSkillsState extends State<AddMoreSkills> {
                     fontSize: AppSize.textSize * 1.2,
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.isEmpty ||
+                        _skillcontroller.text.trim().isEmpty) {
                       return "* Required";
                     }
                     return null;

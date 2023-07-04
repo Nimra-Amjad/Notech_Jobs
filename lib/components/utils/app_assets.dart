@@ -19,6 +19,9 @@ class AppAssets {
   static String videoOff = 'assets/icons/videoOff.png';
   static String micOn = 'assets/icons/micOn.png';
   static String micOff = 'assets/icons/micOff.png';
+
+  static String lightOn = 'assets/icons/lightOn.png';
+  static String lightOff = 'assets/icons/lightOff.png';
   static String flipBack = 'assets/icons/cameraBackFace.png';
   static String flipFront = 'assets/icons/cameraFrontFace.png';
   static String callDecline = 'assets/icons/callDecline.png';
