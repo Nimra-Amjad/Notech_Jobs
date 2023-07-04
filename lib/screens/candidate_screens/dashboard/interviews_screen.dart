@@ -102,7 +102,7 @@ class _CandidateInterviewsScreenState extends State<CandidateInterviewsScreen> {
                               fontWeight: FontWeight.bold,
                               fontColor: AppColors.primaryBlack),
                           CustomText(
-                              text: all_interviews[index]['jobTitle'],
+                              text: all_interviews[index]['jobtitle'],
                               fontSize: 17.sp,
                               fontWeight: FontWeight.bold,
                               fontColor: AppColors.primaryBlack),
@@ -118,19 +118,10 @@ class _CandidateInterviewsScreenState extends State<CandidateInterviewsScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // deleteNestedSubcollections(
-                          //     jobs['id']);
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => VideoCallingScreen(
-                          //             channelId: roomId,
-                          //             isAudioMuted: isAudioMuted,
-                          //             isAudioOnly: isAudioOnly,
-                          //             isVideoMuted: isVideoMuted,
-                          //             firstName: "Nimra",
-                          //             lastName: "Amjad",
-                          //             userType: "candidate")));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => VideoCallingScreen()));
                         },
                         child: Container(
                             width: 80,
